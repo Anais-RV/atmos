@@ -1,0 +1,54 @@
+# Gitignore global del proyecto Atmos
+
+# Sistema Operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Editores e IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Archivos temporales
+*.tmp
+*.temp
+*.log
+.cache/
+
+# Archivos de video temporales (el video ya está en frontend/public/)
+*.mp4
+!frontend/public/*.mp4
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Entornos virtuales
+venv/
+env/
+ENV/
+
+# Node
+node_modules/
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Build folders
+dist/
+build/
