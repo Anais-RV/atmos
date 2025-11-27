@@ -1,113 +1,183 @@
-# Backend - Atmos
+# Backend Django - Atmos
 
-Backend API construido con **FastAPI** para el proyecto Atmos.
+Backend construido con **Django** y **Django REST Framework** para el proyecto Atmos.
 
-## Requisitos
+---
+
+## 📋 Requisitos
 
 - Python 3.10 o superior
 - pip (gestor de paquetes de Python)
 
-## Configuración inicial
+---
 
-### 1. Crear y activar entorno virtual
+## 🚀 Configuración Inicial
 
-Es importante trabajar en un entorno virtual para aislar las dependencias del proyecto.
+### 1. Navegar a la carpeta backend
 
-#### En Windows (PowerShell):
-
-```powershell
+```bash
 cd backend
+```
+
+### 2. Crear entorno virtual
+
+#### Windows (PowerShell):
+```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
-#### En Linux/Mac:
-
+#### Linux/Mac:
 ```bash
-cd backend
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 2. Instalar dependencias
-
-Con el entorno virtual activado, instala las dependencias:
-
-```bash
-pip install -e .
-```
-
-Para desarrollo (incluye pytest):
-
-```bash
-pip install -e ".[dev]"
-```
-
-## Ejecutar el servidor
-
-Con el entorno virtual activado, ejecuta:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-El servidor estará disponible en: **http://localhost:8000**
-
-### Endpoints disponibles
-
-- `GET /` - Información básica de la API
-- `GET /health` - Comprobación de salud de la API
-- `GET /docs` - Documentación interactiva (Swagger UI)
-- `GET /redoc` - Documentación alternativa (ReDoc)
-
-## Ejecutar los tests
+### 3. Instalar dependencias
 
 Con el entorno virtual activado:
 
 ```bash
-pytest
+pip install -r requirements.txt
 ```
 
-Para ver más detalles:
+### 4. Configurar variables de entorno
+
+Copia el archivo de ejemplo y edita según necesites:
 
 ```bash
-pytest -v
+cp .env.example .env
 ```
 
-## Estructura del proyecto
+### 5. Crear el proyecto Django
+
+**IMPORTANTE**: El equipo debe ejecutar esto para inicializar Django:
+
+```bash
+django-admin startproject config .
+```
+
+Este comando crea la estructura base de Django en la carpeta actual.
+
+### 6. Aplicar migraciones
+
+```bash
+python manage.py migrate
+```
+
+### 7. Crear superusuario (opcional)
+
+```bash
+python manage.py createsuperuser
+```
+
+---
+
+## ▶️ Ejecutar el servidor
+
+```bash
+python manage.py runserver
+```
+
+El servidor estará disponible en: **http://127.0.0.1:8000**
+
+---
+
+## 🏗️ Estructura Recomendada
+
+Una vez creado el proyecto, la estructura será:
 
 ```
 backend/
-├── app/
-│   ├── api/
-│   │   └── v1/              # Endpoints de la versión 1 de la API
-│   │       ├── health.py    # Endpoint /health
-│   │       └── __init__.py
-│   ├── core/
-│   │   └── config.py        # Configuración de la aplicación
-│   ├── models/              # Modelos de base de datos (futuro)
-│   ├── schemas/             # Esquemas Pydantic (futuro)
-│   ├── services/            # Lógica de negocio (futuro)
-│   └── main.py              # Punto de entrada de la aplicación
-├── tests/
-│   └── test_health.py       # Tests de ejemplo
-├── pyproject.toml           # Configuración y dependencias
+├── venv/                    # Entorno virtual
+├── config/                  # Configuración del proyecto Django
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+├── apps/                    # Carpeta para las apps (crear manualmente)
+│   └── (tus apps aquí)
+├── manage.py
+├── requirements.txt
+├── .env
 └── README.md
 ```
 
-## Próximos pasos
+---
 
-Este es el esqueleto inicial. A partir de aquí se implementará:
+## 📱 Crear Apps
 
-- Conexión a base de datos
-- Autenticación y autorización
-- Endpoints para datos meteorológicos
-- Modelos y schemas específicos del dominio
-- Servicios de lógica de negocio
+Para cada funcionalidad, crea una app Django:
 
-## Notas
+```bash
+python manage.py startapp nombre_app
+```
 
-- El servidor usa el flag `--reload` para recargarse automáticamente cuando detecta cambios en el código.
-- La configuración CORS está activada para permitir peticiones desde el frontend en desarrollo.
-- Las variables de entorno se pueden configurar creando un archivo `.env` en la raíz del backend.
-- **Consulta `docs/best-practices.md`** para guía de buenas prácticas con FastAPI y evitar usar Django innecesariamente.
+**Recomendación**: Crea las apps dentro de una carpeta `apps/`:
+
+```bash
+mkdir apps
+python manage.py startapp weather apps/weather
+python manage.py startapp users apps/users
+```
+
+No olvides registrar las apps en `settings.py`:
+
+```python
+INSTALLED_APPS = [
+    ...
+    'apps.weather',
+    'apps.users',
+]
+```
+
+---
+
+## 🔧 Comandos Útiles
+
+```bash
+# Crear migraciones después de cambiar modelos
+python manage.py makemigrations
+
+# Aplicar migraciones
+python manage.py migrate
+
+# Crear superusuario para admin
+python manage.py createsuperuser
+
+# Abrir shell de Django
+python manage.py shell
+
+# Ejecutar tests
+python manage.py test
+
+# Crear app nueva
+python manage.py startapp nombre_app
+```
+
+---
+
+## 📚 Próximos Pasos
+
+Consulta la documentación en `docs/` para:
+- Conceptos fundamentales de Django
+- Mejores prácticas
+- Guía de desarrollo paso a paso
+
+---
+
+## 🆘 Solución de Problemas
+
+### Error: "No module named 'django'"
+- Verifica que el entorno virtual esté activado
+- Ejecuta `pip install -r requirements.txt`
+
+### Error al ejecutar manage.py
+- Asegúrate de haber ejecutado `django-admin startproject config .`
+
+### Puerto ocupado
+- Usa otro puerto: `python manage.py runserver 8001`
+
+---
+
+**Consulta `docs/django-guide.md` para una guía completa con conceptos y ejemplos.**

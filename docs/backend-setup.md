@@ -1,275 +1,385 @@
-# Configuración del Backend - Atmos
+# Configuración del Backend Django - Atmos
 
-Esta guía te ayudará a poner en marcha el backend de Atmos, construido con **FastAPI**.
+Esta guía te ayudará a configurar el backend de Atmos con **Django** y **Django REST Framework**.
 
-## Requisitos previos
+---
 
-Antes de empezar, asegúrate de tener instalado:
+## 📋 Requisitos Previos
 
 - **Python 3.10 o superior**
 - **pip** (gestor de paquetes de Python)
 
 ### Verificar instalación
 
-Abre una terminal y ejecuta:
-
 ```bash
 python --version
 ```
 
-Deberías ver algo como `Python 3.10.x` o superior.
+Deberías ver `Python 3.10.x` o superior.
 
 ---
 
-## Pasos para configurar el backend
+## 🚀 Configuración Paso a Paso
 
-### 1. Navega a la carpeta del backend
-
-Desde la raíz del proyecto:
+### 1. Navegar a la carpeta backend
 
 ```bash
 cd backend
 ```
 
-### 2. Crea un entorno virtual
+### 2. Crear entorno virtual
 
-Es importante usar un entorno virtual para aislar las dependencias del proyecto.
-
-#### En Windows (PowerShell):
+#### Windows (PowerShell):
 
 ```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
-Si tienes problemas de permisos, ejecuta esto primero:
+Si tienes problemas de permisos:
 
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-#### En Linux/Mac:
+#### Linux/Mac:
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-Cuando el entorno esté activado, verás `(venv)` al inicio de tu línea de comandos.
+Verás `(venv)` al inicio de tu terminal cuando esté activado.
 
-### 3. Instala las dependencias
+### 3. Instalar dependencias
 
 Con el entorno virtual activado:
 
 ```bash
-pip install -e .
-```
-
-Para incluir las dependencias de desarrollo (necesarias para ejecutar tests):
-
-```bash
-pip install -e ".[dev]"
+pip install -r requirements.txt
 ```
 
 Esto instalará:
-- FastAPI
-- Uvicorn (servidor ASGI)
-- Pytest (para tests)
-- Y otras dependencias necesarias
+- Django 5.0
+- Django REST Framework
+- django-cors-headers (para conectar con el frontend)
+- python-decouple (para variables de entorno)
+- psycopg2-binary (para PostgreSQL)
+- Pillow (para manejo de imágenes)
+
+### 4. Configurar variables de entorno
+
+Copia el archivo de ejemplo:
+
+```bash
+cp .env.example .env
+```
+
+Edita `.env` si necesitas cambiar algo. Por defecto funciona correctamente.
+
+### 5. Inicializar el proyecto Django
+
+**IMPORTANTE**: Este comando crea la estructura base de Django:
+
+```bash
+django-admin startproject config .
+```
+
+El `.` al final es importante: crea el proyecto en la carpeta actual.
+
+### 6. Configurar CORS
+
+Edita `config/settings.py` y añade:
+
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    # Apps de terceros
+    'rest_framework',
+    'corsheaders',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # ← AÑADIR AQUÍ
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+# Al final del archivo
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+]
+```
+
+### 7. Aplicar migraciones
+
+```bash
+python manage.py migrate
+```
+
+Esto crea las tablas base de datos (usuarios, sesiones, etc.).
+
+### 8. Crear superusuario (opcional pero recomendado)
+
+```bash
+python manage.py createsuperuser
+```
+
+Te pedirá:
+- Username
+- Email (puedes dejarlo vacío)
+- Password
+
+Este usuario te permite acceder al admin de Django.
 
 ---
 
-## Ejecutar el servidor
+## ▶️ Ejecutar el Servidor
 
-Con el entorno virtual activado y las dependencias instaladas, ejecuta:
+Con todo configurado, ejecuta:
 
 ```bash
-uvicorn app.main:app --reload
+python manage.py runserver
 ```
-
-### Explicación del comando:
-
-- `app.main:app` → carga la instancia FastAPI desde `app/main.py`
-- `--reload` → recarga automáticamente el servidor cuando detecta cambios en el código
 
 ### Salida esperada:
 
 ```
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process
-INFO:     Started server process
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
+System check identified no issues (0 silenced).
+November 27, 2025 - 10:00:00
+Django version 5.0, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
 ```
 
-El servidor estará disponible en: **http://localhost:8000**
+El servidor estará disponible en: **http://127.0.0.1:8000**
 
 ---
 
-## Probar que funciona
+## 🧪 Probar que funciona
 
-### 1. Endpoint raíz
+### 1. Página de bienvenida
 
-Abre tu navegador y visita:
+Visita: http://127.0.0.1:8000
 
-```
-http://localhost:8000
-```
+Deberías ver el cohete de Django.
 
-Deberías ver un JSON como:
+### 2. Panel de administración
 
-```json
-{
-  "app": "Atmos",
-  "version": "1.0.0",
-  "message": "Bienvenido a la API de Atmos"
-}
-```
+Visita: http://127.0.0.1:8000/admin
 
-### 2. Endpoint de salud
-
-Visita:
-
-```
-http://localhost:8000/health
-```
-
-Deberías ver:
-
-```json
-{
-  "status": "ok",
-  "app": "Atmos backend"
-}
-```
-
-### 3. Documentación interactiva
-
-FastAPI genera documentación automática. Visita:
-
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
-Aquí puedes ver todos los endpoints disponibles y probarlos directamente desde el navegador.
+Inicia sesión con el superusuario que creaste.
 
 ---
 
-## Ejecutar los tests
+## 📱 Crear tu Primera App
 
-Con el entorno virtual activado:
+Las apps en Django son módulos que hacen **una cosa**. Para Atmos, crearemos una app de datos meteorológicos:
+
+### 1. Crear carpeta para apps
 
 ```bash
-pytest
+mkdir apps
 ```
 
-### Ver más detalles:
+### 2. Crear app
 
 ```bash
-pytest -v
+python manage.py startapp weather apps/weather
 ```
 
-### Salida esperada:
+### 3. Registrar la app
 
+En `config/settings.py`:
+
+```python
+INSTALLED_APPS = [
+    ...
+    'apps.weather',  # ← AÑADIR
+]
 ```
-tests/test_health.py::test_health_endpoint PASSED
-tests/test_health.py::test_root_endpoint PASSED
 
-====== 2 passed in 0.15s ======
+### 4. Crear modelo de ejemplo
+
+En `apps/weather/models.py`:
+
+```python
+from django.db import models
+
+class WeatherData(models.Model):
+    temperature = models.FloatField(help_text="Temperatura en °C")
+    humidity = models.FloatField(help_text="Humedad en %")
+    pressure = models.FloatField(help_text="Presión en hPa")
+    recorded_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = "Dato Meteorológico"
+        verbose_name_plural = "Datos Meteorológicos"
+        ordering = ['-recorded_at']
+    
+    def __str__(self):
+        return f"{self.temperature}°C - {self.recorded_at.strftime('%Y-%m-%d %H:%M')}"
 ```
 
----
-
-## Detener el servidor
-
-Para detener el servidor, presiona `Ctrl + C` en la terminal donde está corriendo.
-
----
-
-## Desactivar el entorno virtual
-
-Cuando termines de trabajar:
+### 5. Crear migraciones
 
 ```bash
-deactivate
+python manage.py makemigrations
+python manage.py migrate
 ```
+
+### 6. Registrar en el admin
+
+En `apps/weather/admin.py`:
+
+```python
+from django.contrib import admin
+from .models import WeatherData
+
+@admin.register(WeatherData)
+class WeatherAdmin(admin.ModelAdmin):
+    list_display = ['temperature', 'humidity', 'pressure', 'recorded_at']
+    list_filter = ['recorded_at']
+    date_hierarchy = 'recorded_at'
+```
+
+### 7. Ver en el admin
+
+Visita http://127.0.0.1:8000/admin y verás "Datos Meteorológicos" en el panel.
 
 ---
 
-## Estructura del backend
-
-```
-backend/
-├── app/
-│   ├── api/
-│   │   └── v1/
-│   │       ├── health.py        # Endpoints de salud
-│   │       └── __init__.py
-│   ├── core/
-│   │   └── config.py            # Configuración de la app
-│   ├── models/                  # Modelos de BD (futuro)
-│   ├── schemas/                 # Schemas Pydantic (futuro)
-│   ├── services/                # Lógica de negocio (futuro)
-│   └── main.py                  # Punto de entrada
-├── tests/
-│   └── test_health.py           # Tests de ejemplo
-├── pyproject.toml               # Configuración y dependencias
-└── README.md
-```
-
----
-
-## Próximos pasos
-
-Una vez que tengas el backend funcionando, el siguiente paso es:
-
-1. Conectar una base de datos
-2. Implementar endpoints para datos meteorológicos
-3. Añadir autenticación con JWT
-4. Crear modelos y schemas
-5. Implementar lógica de negocio en services
-
----
-
-## Solución de problemas
-
-### Error: "python no se reconoce como comando"
-
-Asegúrate de tener Python instalado y añadido al PATH del sistema.
-
-### Error: "No module named 'fastapi'"
-
-Verifica que:
-1. El entorno virtual esté activado (debe aparecer `(venv)`)
-2. Hayas ejecutado `pip install -e .`
-
-### El servidor no recarga automáticamente
-
-Asegúrate de usar el flag `--reload`:
+## 🔧 Comandos Útiles
 
 ```bash
-uvicorn app.main:app --reload
+# Ejecutar servidor
+python manage.py runserver
+
+# Ejecutar en otro puerto
+python manage.py runserver 8001
+
+# Crear migraciones
+python manage.py makemigrations
+
+# Aplicar migraciones
+python manage.py migrate
+
+# Ver migraciones pendientes
+python manage.py showmigrations
+
+# Abrir shell de Django
+python manage.py shell
+
+# Crear superusuario
+python manage.py createsuperuser
+
+# Crear nueva app
+python manage.py startapp nombre_app
+
+# Ejecutar tests
+python manage.py test
+
+# Recoger archivos estáticos
+python manage.py collectstatic
 ```
 
-### Puerto 8000 ya en uso
+---
 
-Si el puerto está ocupado, puedes usar otro:
+## 🆘 Solución de Problemas
 
+### Error: "No module named 'django'"
+
+**Causa**: Entorno virtual no activado o Django no instalado  
+**Solución**:
 ```bash
-uvicorn app.main:app --reload --port 8001
+# Activa el entorno
+.\venv\Scripts\Activate.ps1  # Windows
+source venv/bin/activate      # Linux/Mac
+
+# Instala dependencias
+pip install -r requirements.txt
 ```
 
-Recuerda actualizar la URL en el frontend si cambias el puerto.
+### Error: "django-admin: command not found"
+
+**Causa**: Django no está instalado  
+**Solución**:
+```bash
+pip install Django
+```
+
+### Error: "Table doesn't exist"
+
+**Causa**: No has aplicado las migraciones  
+**Solución**:
+```bash
+python manage.py migrate
+```
+
+### Error: "Port is already in use"
+
+**Causa**: El puerto 8000 está ocupado  
+**Solución**:
+```bash
+python manage.py runserver 8001
+```
+
+### Error: CORS en el frontend
+
+**Causa**: No configuraste `corsheaders` correctamente  
+**Solución**: Revisa el paso 6 de la configuración
+
+### Error: "You have unapplied migrations"
+
+**Causa**: Cambiaste modelos pero no creaste/aplicaste migraciones  
+**Solución**:
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
 
 ---
 
-## Consejos
+## 📚 Próximos Pasos
 
-- **Mantén el entorno virtual activado** mientras trabajas en el backend.
-- **Usa `--reload`** durante el desarrollo para ver cambios automáticamente.
-- **Revisa los logs** en la terminal si algo no funciona.
-- **Ejecuta los tests** después de hacer cambios para asegurar que todo funciona.
-- **Consulta la documentación** en `/docs` para ver los endpoints disponibles.
+1. ✅ Tienes Django funcionando
+2. ✅ Tienes el admin configurado
+3. ✅ Has creado tu primera app
+
+Ahora:
+
+1. Lee **`docs/django-guide.md`** para entender los conceptos fundamentales
+2. Consulta **`docs/best-practices.md`** para buenas prácticas
+3. Diseña tus modelos para Atmos
+4. Crea serializers y viewsets con DRF
+5. Conecta con el frontend
 
 ---
 
-¡Listo! Ya tienes el backend de Atmos funcionando. 🚀
+## 💡 Consejos
+
+- **Usa el admin de Django** para todo lo que puedas. Es muy potente.
+- **Haz migraciones frecuentes**. Pequeños cambios = pequeñas migraciones = menos problemas.
+- **Lee los mensajes de error**. Django es muy explicativo.
+- **Documenta tus modelos** con `help_text` y docstrings.
+- **Consulta la documentación oficial** de Django. Es excelente.
+
+---
+
+**¿Dudas?** Consulta:
+- `docs/django-guide.md` para conceptos con analogías
+- `docs/best-practices.md` para buenas prácticas
+- [Documentación oficial de Django](https://docs.djangoproject.com/)
+
+¡Que vuelen los patos! 🦆☕

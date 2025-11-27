@@ -218,254 +218,395 @@ const handleClick = useCallback(() => {
 
 ---
 
-## 🚀 Backend - FastAPI
+## 🐍 Backend - Django + Django REST Framework
 
 ### Estructura del Proyecto
 
 ```
 backend/
-├── app/
-│   ├── api/
-│   │   └── v1/          # Endpoints versionados
-│   ├── core/            # Configuración
-│   ├── models/          # Modelos de BD
-│   ├── schemas/         # Schemas Pydantic
-│   ├── services/        # Lógica de negocio
-│   └── main.py
+├── config/              # Configuración del proyecto Django
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── apps/
+│   ├── weather/         # App de datos meteorológicos
+│   │   ├── models.py    # Modelos de BD
+│   │   ├── views.py     # Lógica de vistas
+│   │   ├── serializers.py  # Serializers DRF
+│   │   ├── urls.py      # URLs de la app
+│   │   └── admin.py     # Configuración del admin
+│   └── core/            # App con funcionalidad compartida
 ├── tests/               # Tests
-└── pyproject.toml
+├── manage.py
+└── requirements.txt
 ```
 
-### Endpoints y Rutas
+### Modelos
 
 #### ✅ Buenas prácticas
 
 ```python
-# Usa verbos HTTP correctamente
-@router.get("/users")           # Listar
-@router.get("/users/{id}")      # Obtener uno
-@router.post("/users")          # Crear
-@router.put("/users/{id}")      # Actualizar completo
-@router.patch("/users/{id}")    # Actualizar parcial
-@router.delete("/users/{id}")   # Eliminar
+from django.db import models
 
-# Usa nombres en plural para colecciones
-@router.get("/users")           # ✅
-@router.get("/user")            # ❌
-
-# Usa path parameters para IDs
-@router.get("/users/{user_id}")
-
-# Usa query parameters para filtros
-@router.get("/users?role=admin&active=true")
+class WeatherData(models.Model):
+    # Usa nombres descriptivos
+    temperature = models.FloatField(help_text="Temperatura en °C")
+    humidity = models.FloatField(help_text="Humedad en %")
+    pressure = models.FloatField(help_text="Presión en hPa")
+    
+    # Timestamps automáticos
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        # Nombres en español para el admin
+        verbose_name = "Dato Meteorológico"
+        verbose_name_plural = "Datos Meteorológicos"
+        # Orden por defecto
+        ordering = ['-created_at']
+        # Índices para mejorar consultas
+        indexes = [
+            models.Index(fields=['-created_at']),
+        ]
+    
+    def __str__(self):
+        # Representación legible
+        return f"{self.temperature}°C - {self.created_at.strftime('%Y-%m-%d %H:%M')}"
 ```
 
 #### ❌ Evitar
 
 ```python
-# ❌ No uses verbos en las URLs
-@router.get("/get-users")
-@router.post("/create-user")
+# ❌ No uses nombres poco descriptivos
+class Data(models.Model):
+    t = models.FloatField()  # ¿Qué es t?
+    h = models.FloatField()  # ¿Qué es h?
 
-# ❌ No mezcles estilos
-@router.get("/users")
-@router.get("/getUserById/{id}")
+# ❌ No olvides __str__
+class WeatherData(models.Model):
+    temperature = models.FloatField()
+    # Sin __str__ verás "WeatherData object (1)" en el admin
+
+# ❌ No olvides Meta.verbose_name
+# El admin mostrará "Weather datas" (inglés + plural mal)
 ```
 
-### Schemas Pydantic
+### Serializers (DRF)
 
 ```python
-# ✅ Separa schemas de entrada y salida
-class UserCreate(BaseModel):
-    email: str
-    password: str
-    name: str
+from rest_framework import serializers
+from .models import WeatherData
 
-class UserResponse(BaseModel):
-    id: int
-    email: str
-    name: str
-    # ❌ No devuelvas el password
-
-    class Config:
-        from_attributes = True  # Para convertir desde modelos ORM
-
-# ✅ Usa validadores
-from pydantic import validator, EmailStr
-
-class UserCreate(BaseModel):
-    email: EmailStr  # Validación automática de email
-    password: str
+# ✅ Usa ModelSerializer para simplificar
+class WeatherDataSerializer(serializers.ModelSerializer):
+    # Campo calculado
+    temperature_fahrenheit = serializers.SerializerMethodField()
     
-    @validator('password')
-    def password_strength(cls, v):
-        if len(v) < 8:
-            raise ValueError('Password must be at least 8 characters')
-        return v
-```
-
-### Dependency Injection
-
-```python
-# ✅ Usa Depends para inyectar dependencias
-from fastapi import Depends
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-@router.get("/users")
-def get_users(db: Session = Depends(get_db)):
-    return db.query(User).all()
-
-# ✅ Usa Depends para autenticación
-def get_current_user(token: str = Depends(oauth2_scheme)):
-    # Validar token
-    return user
-
-@router.get("/me")
-def read_users_me(current_user: User = Depends(get_current_user)):
-    return current_user
-```
-
-### Manejo de Errores
-
-```python
-# ✅ Usa HTTPException para errores esperados
-from fastapi import HTTPException, status
-
-@router.get("/users/{user_id}")
-def get_user(user_id: int, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found"
-        )
-    return user
-
-# ✅ Crea excepciones personalizadas para casos comunes
-class UserNotFoundException(HTTPException):
-    def __init__(self, user_id: int):
-        super().__init__(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User {user_id} not found"
-        )
-```
-
-### Async/Await
-
-```python
-# ✅ Usa async para operaciones I/O
-@router.get("/users")
-async def get_users(db: Session = Depends(get_db)):
-    users = await db.query(User).all()
-    return users
-
-# ❌ No uses async si no hay await dentro
-# FastAPI puede manejar funciones síncronas
-@router.get("/health")
-def health_check():  # Sin async si no lo necesitas
-    return {"status": "ok"}
-```
-
-### Configuración
-
-```python
-# ✅ Usa Pydantic Settings para configuración
-from pydantic_settings import BaseSettings
-
-class Settings(BaseSettings):
-    app_name: str = "Atmos"
-    database_url: str
-    secret_key: str
+    class Meta:
+        model = WeatherData
+        fields = ['id', 'temperature', 'humidity', 'pressure', 
+                  'temperature_fahrenheit', 'created_at']
+        read_only_fields = ['id', 'created_at']
     
-    class Config:
-        env_file = ".env"
+    def get_temperature_fahrenheit(self, obj):
+        return (obj.temperature * 9/5) + 32
+    
+    # Validación personalizada
+    def validate_temperature(self, value):
+        if value < -100 or value > 100:
+            raise serializers.ValidationError(
+                "Temperatura fuera de rango válido"
+            )
+        return value
 
-settings = Settings()
+# ✅ Separa serializers de entrada/salida si es necesario
+class WeatherDataCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeatherData
+        fields = ['temperature', 'humidity', 'pressure']
 
-# ❌ No hardcodees configuración
-database_url = "postgresql://user:pass@localhost/db"  # ❌
+class WeatherDataDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeatherData
+        fields = '__all__'
+```
+
+### ViewSets y Views
+
+```python
+from rest_framework import viewsets, filters
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+
+# ✅ Usa ViewSets para CRUD completo
+class WeatherDataViewSet(viewsets.ModelViewSet):
+    queryset = WeatherData.objects.all()
+    serializer_class = WeatherDataSerializer
+    
+    # Filtros y búsqueda
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['created_at']
+    ordering_fields = ['created_at', 'temperature']
+    
+    # Action personalizada
+    @action(detail=False, methods=['get'])
+    def latest(self, request):
+        """Obtiene los últimos 10 registros"""
+        latest_data = self.queryset.order_by('-created_at')[:10]
+        serializer = self.get_serializer(latest_data, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def average(self, request):
+        """Calcula promedios"""
+        from django.db.models import Avg
+        averages = self.queryset.aggregate(
+            avg_temp=Avg('temperature'),
+            avg_humidity=Avg('humidity'),
+            avg_pressure=Avg('pressure')
+        )
+        return Response(averages)
+
+# ✅ Usa APIView para casos más simples
+from rest_framework.views import APIView
+
+class HealthCheckView(APIView):
+    def get(self, request):
+        return Response({"status": "ok"})
+```
+
+### URLs
+
+```python
+# apps/weather/urls.py
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import WeatherDataViewSet
+
+# ✅ Usa Router para ViewSets
+router = DefaultRouter()
+router.register(r'weather', WeatherDataViewSet, basename='weather')
+
+urlpatterns = [
+    path('', include(router.urls)),
+]
+
+# config/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/v1/', include('apps.weather.urls')),  # ✅ Versionado
+]
+```
+
+### Admin
+
+```python
+from django.contrib import admin
+from .models import WeatherData
+
+# ✅ Personaliza el admin
+@admin.register(WeatherData)
+class WeatherDataAdmin(admin.ModelAdmin):
+    # Columnas visibles
+    list_display = ['temperature', 'humidity', 'pressure', 'created_at']
+    
+    # Filtros laterales
+    list_filter = ['created_at']
+    
+    # Campos de búsqueda
+    search_fields = ['temperature']
+    
+    # Ordenamiento por defecto
+    ordering = ['-created_at']
+    
+    # Jerarquía de fechas
+    date_hierarchy = 'created_at'
+    
+    # Campos de solo lectura
+    readonly_fields = ['created_at', 'updated_at']
+    
+    # Organización en fieldsets
+    fieldsets = (
+        ('Datos Meteorológicos', {
+            'fields': ('temperature', 'humidity', 'pressure')
+        }),
+        ('Metadatos', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)  # Colapsado por defecto
+        }),
+    )
+```
+
+### Migraciones
+
+```python
+# ✅ Crea migraciones frecuentemente
+python manage.py makemigrations
+python manage.py migrate
+
+# ✅ Revisa las migraciones antes de aplicarlas
+python manage.py sqlmigrate weather 0001
+
+# ✅ Nombra migraciones personalizadas
+python manage.py makemigrations --name add_weather_indexes
+
+# ❌ No edites migraciones después de aplicarlas en producción
+# ❌ No borres migraciones que ya están en producción
+```
+
+### Querysets y ORM
+
+```python
+# ✅ Usa select_related para ForeignKey
+users = User.objects.select_related('profile').all()
+
+# ✅ Usa prefetch_related para ManyToMany
+posts = Post.objects.prefetch_related('tags').all()
+
+# ✅ Usa filter en lugar de múltiples queries
+# Mal:
+for data in WeatherData.objects.all():
+    if data.temperature > 30:
+        print(data)
+
+# Bien:
+hot_days = WeatherData.objects.filter(temperature__gt=30)
+
+# ✅ Usa annotate para agregaciones
+from django.db.models import Avg, Count
+
+stats = WeatherData.objects.aggregate(
+    avg_temp=Avg('temperature'),
+    count=Count('id')
+)
+
+# ✅ Usa exists() para verificar existencia
+if WeatherData.objects.filter(temperature__gt=40).exists():
+    # Hay días muy calurosos
+
+# ❌ No hagas esto:
+if len(WeatherData.objects.filter(temperature__gt=40)) > 0:  # Carga todos
+```
+
+### Configuración (Settings)
+
+```python
+# ✅ Usa python-decouple para variables de entorno
+from decouple import config
+
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
+
+# ✅ Configuración de CORS
+INSTALLED_APPS = [
+    ...
+    'corsheaders',
+]
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # Al inicio
+    ...
+]
+
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    cast=lambda v: [s.strip() for s in v.split(',')]
+)
+
+# ❌ No hardcodees configuración sensible
+SECRET_KEY = 'mi-clave-secreta-123'  # ❌ NUNCA HAGAS ESTO
 ```
 
 ### Testing
 
 ```python
-# ✅ Usa TestClient para probar endpoints
-from fastapi.testclient import TestClient
+from django.test import TestCase
+from rest_framework.test import APITestCase
+from rest_framework import status
 
-def test_health_endpoint():
-    response = client.get("/health")
-    assert response.status_code == 200
-    assert response.json()["status"] == "ok"
+# ✅ Usa APITestCase para probar APIs
+class WeatherAPITestCase(APITestCase):
+    def setUp(self):
+        # Datos de prueba
+        self.weather_data = {
+            'temperature': 25.5,
+            'humidity': 60.0,
+            'pressure': 1013.25
+        }
+    
+    def test_create_weather_data(self):
+        response = self.client.post('/api/v1/weather/', self.weather_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(WeatherData.objects.count(), 1)
+    
+    def test_get_weather_list(self):
+        WeatherData.objects.create(**self.weather_data)
+        response = self.client.get('/api/v1/weather/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
 
-# ✅ Usa fixtures para datos de prueba
-import pytest
-
-@pytest.fixture
-def test_user():
-    return {"email": "test@example.com", "password": "testpass123"}
-
-def test_create_user(test_user):
-    response = client.post("/users", json=test_user)
-    assert response.status_code == 201
-```
-
-### Documentación Automática
-
-```python
-# ✅ Añade descripciones a tus endpoints
-@router.get(
-    "/users/{user_id}",
-    response_model=UserResponse,
-    summary="Obtener usuario por ID",
-    description="Devuelve la información de un usuario específico",
-    tags=["Users"]
-)
-def get_user(user_id: int):
-    pass
-
-# ✅ Documenta los posibles errores
-@router.get(
-    "/users/{user_id}",
-    responses={
-        404: {"description": "Usuario no encontrado"},
-        401: {"description": "No autorizado"}
-    }
-)
-def get_user(user_id: int):
-    pass
+# ✅ Usa TestCase para probar modelos
+class WeatherModelTestCase(TestCase):
+    def test_str_representation(self):
+        weather = WeatherData.objects.create(
+            temperature=25.5,
+            humidity=60.0,
+            pressure=1013.25
+        )
+        self.assertIn("25.5°C", str(weather))
 ```
 
 ### Seguridad
 
 ```python
-# ✅ Usa CORS correctamente
-from fastapi.middleware.cors import CORSMiddleware
+# ✅ Usa django-environ o python-decouple
+from decouple import config
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Solo orígenes específicos
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+SECRET_KEY = config('SECRET_KEY')
 
-# ❌ No uses allow_origins=["*"] en producción
+# ✅ CORS específico
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+]
+# ❌ No uses CORS_ALLOW_ALL_ORIGINS = True en producción
 
-# ✅ Hash passwords
-from passlib.context import CryptContext
+# ✅ CSRF protección (activada por defecto)
+# Solo desactívala en endpoints de API que usen tokens
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# ✅ Hash passwords (automático con User de Django)
+from django.contrib.auth.hashers import make_password
 
-def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+password = make_password('mi-contraseña')  # Hasheada automáticamente
 
-# ❌ Nunca guardes passwords en texto plano
+# ❌ NUNCA guardes passwords en texto plano
+```
+
+### Comandos Personalizados
+
+```python
+# apps/weather/management/commands/import_weather.py
+from django.core.management.base import BaseCommand
+
+class Command(BaseCommand):
+    help = 'Importa datos meteorológicos'
+    
+    def add_arguments(self, parser):
+        parser.add_argument('file', type=str, help='Archivo CSV')
+    
+    def handle(self, *args, **options):
+        file_path = options['file']
+        self.stdout.write(f"Importando desde {file_path}...")
+        # Lógica de importación
+        self.stdout.write(self.style.SUCCESS('✅ Importación completada'))
+
+# Ejecutar:
+# python manage.py import_weather datos.csv
 ```
 
 ---
@@ -604,29 +745,41 @@ function Component() {
 
 ### Backend
 
-❌ No retornes objetos ORM directamente
+❌ No hagas queries en un bucle (N+1 problem)
 ```python
-# ❌ Mal
-@router.get("/users/{id}")
-def get_user(id: int, db: Session = Depends(get_db)):
-    return db.query(User).filter(User.id == id).first()
+# ❌ Mal - hace 1 + N queries
+posts = Post.objects.all()
+for post in posts:
+    print(post.author.name)  # Query por cada post
 
-# ✅ Bien - usa schemas
-@router.get("/users/{id}", response_model=UserResponse)
-def get_user(id: int, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == id).first()
-    return UserResponse.from_orm(user)
+# ✅ Bien - hace 1 query
+posts = Post.objects.select_related('author').all()
+for post in posts:
+    print(post.author.name)
 ```
 
-❌ No olvides cerrar conexiones de BD
+❌ No uses filter().count() para verificar existencia
 ```python
-# ✅ Usa context managers o Depends
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()  # Siempre se cierra
+# ❌ Mal - cuenta todos
+if WeatherData.objects.filter(temperature__gt=40).count() > 0:
+    pass
+
+# ✅ Bien - se detiene en el primero
+if WeatherData.objects.filter(temperature__gt=40).exists():
+    pass
+```
+
+❌ No retornes objetos de modelo directamente desde DRF
+```python
+# ❌ Mal
+class WeatherViewSet(viewsets.ModelViewSet):
+    queryset = WeatherData.objects.all()
+    # Falta serializer_class
+
+# ✅ Bien
+class WeatherViewSet(viewsets.ModelViewSet):
+    queryset = WeatherData.objects.all()
+    serializer_class = WeatherDataSerializer
 ```
 
 ---
@@ -639,9 +792,10 @@ def get_db():
 - [pnpm Docs](https://pnpm.io/)
 
 ### Backend
-- [FastAPI Docs (oficial)](https://fastapi.tiangolo.com/)
-- [Pydantic Docs](https://docs.pydantic.dev/)
+- [Django Docs (oficial)](https://docs.djangoproject.com/)
+- [Django REST Framework](https://www.django-rest-framework.org/)
 - [Python Type Hints](https://docs.python.org/3/library/typing.html)
+- [Django Best Practices](https://django-best-practices.readthedocs.io/)
 
 ### General
 - [PEP 8 - Python Style Guide](https://pep8.org/)
