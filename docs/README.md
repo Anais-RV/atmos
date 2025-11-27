@@ -64,9 +64,9 @@ Bienvenido a la documentación del proyecto **Atmos** - Sistema de gestión de d
 - **Pytest** - Framework de testing
 
 ### Frontend
-- **React 18** - Librería UI
-- **Vite** - Build tool y dev server
-- **pnpm** - Gestor de paquetes (más rápido que npm)
+- **React 19.2** - Librería UI (versión más reciente con mejoras de rendimiento)
+- **Vite 7.2** - Build tool y dev server de nueva generación
+- **pnpm 10.24** - Gestor de paquetes (más rápido que npm)
 - **JavaScript (ES6+)** - Lenguaje de programación
 
 ### Herramientas
