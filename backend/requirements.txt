@@ -4,3 +4,5 @@ django-cors-headers>=4.6.0
 python-decouple>=3.8
 psycopg2-binary>=2.9.10
 Pillow>=11.0.0
+pytest>=8.3.0
+pytest-django>=4.9.0
