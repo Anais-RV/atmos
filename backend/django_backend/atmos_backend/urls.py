@@ -15,4 +15,5 @@ urlpatterns = [
 
     # Rutas de registro / me / admin-only
     path("api/auth/", include("users.urls")),
+    path("", include("weather.urls")),
 ]
