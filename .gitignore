@@ -24,6 +24,7 @@ Desktop.ini
 *.temp
 *.log
 .cache/
+logs/
 
 # Archivos de video temporales (el video ya está en frontend/public/)
 *.mp4
