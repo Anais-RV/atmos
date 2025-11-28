@@ -414,7 +414,7 @@ python manage.py runserver
     Write-Log "Iniciando servidor Vite en background"
     try {
         $frontendPath = Join-Path $PWD "frontend"
-        Start-Process -FilePath "cmd.exe" -ArgumentList "/c npm run dev" -WorkingDirectory $frontendPath -WindowStyle Hidden
+        Start-Process -FilePath "cmd.exe" -ArgumentList "/c pnpm run dev" -WorkingDirectory $frontendPath -WindowStyle Hidden
         Write-Host "Servidor Vite iniciado correctamente" -ForegroundColor Green
         Write-Log "Servidor Vite iniciado correctamente"
     }
