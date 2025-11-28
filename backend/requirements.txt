@@ -6,3 +6,4 @@ psycopg2-binary>=2.9.10
 Pillow>=11.0.0
 prophet==1.2.1
 pandas==2.3.3
+djangorestframework-simplejwt==5.3.1
