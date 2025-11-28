@@ -1,0 +1,426 @@
+/* =========================
+   Global layout / App
+   ========================= */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #020617; /* azul muy oscuro */
+  color: #e5e7eb;      /* gris clarito */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* Contenido principal */
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1120px; /* contenedor global, pero el dashboard va más estrecho */
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+/* =========================
+   Dashboard (estructura visual)
+   ========================= */
+
+/* Contenedor principal del dashboard
+   (compartido con el antiguo .dashboard-card por compatibilidad) */
+.dashboard,
+.dashboard-card {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid #1e293b;
+  border-radius: 1.25rem;
+  padding: 1rem;           /* más compacto */
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+  max-width: 460px;        /* contenedor más estrecho, abraza las cards */
+  margin: 0 auto;          /* centrado dentro de app-main */
+  transition: background 0.4s ease; /* transición suave del color de fondo */
+}
+
+.dashboard-header h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.dashboard-header p {
+  font-size: 0.9rem;
+  color: #cbd5f5;
+}
+
+/* Layout de dos columnas (izquierda/derecha) - no usado ahora,
+   pero lo dejamos por si en el futuro añadimos más secciones */
+.dashboard-layout {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .dashboard-layout {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  }
+}
+
+.dashboard-left,
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Panel genérico del dashboard */
+.panel {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid #1f2937;
+  border-radius: 1rem;
+  padding: 1rem 1.1rem;
+}
+
+.panel h2 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #e5e7eb;
+  margin-bottom: 0.4rem;
+}
+
+/* Paneles con variaciones (puedes tunear más adelante) */
+.panel-search {
+  border-style: dashed;
+  border-color: #1d4ed8;
+}
+
+.panel-current {
+  /* hueco para estilos específicos de condiciones actuales */
+}
+
+.panel-details {
+  /* hueco para estilos específicos de métricas detalladas */
+}
+
+.panel-forecast-main {
+  min-height: 220px;
+}
+
+.panel-forecast-summary {
+  min-height: 100px;
+}
+
+/* Texto de placeholders para componentes futuros */
+.placeholder-text {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* =========================
+   Dashboard - Sección central vertical
+   ========================= */
+
+.dashboard-center {
+  /* Antes tenía margin-top: 1.5rem; lo quitamos para usar márgenes en las cards */
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;        /* centra horizontalmente las tarjetas */
+}
+
+/* Tarjetas cuadradas centrales */
+.center-card {
+  width: 100%;
+  max-width: 420px;           /* tamaño base de las cards */
+  aspect-ratio: 1 / 1;        /* cuadrado */
+  border-radius: 1.25rem;
+  border: 1px solid #1f2937;
+  background: rgba(15, 23, 42, 0.98);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;    /* centra contenido verticalmente */
+  align-items: center;        /* centra contenido horizontalmente */
+  text-align: center;
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.9);
+}
+
+/* Estilos específicos para distinguir las dos tarjetas */
+.center-card-top {
+  background: radial-gradient(circle at top, rgba(56, 189, 248, 0.18), #020617);
+  margin-top: 1.5rem;   /* ESPACIO ARRIBA DEL MAIN TEMPERATURE CARD */
+}
+
+.center-card-bottom {
+  background: radial-gradient(circle at bottom, rgba(22, 163, 74, 0.18), #020617);
+  margin-bottom: 1.5rem; /* MISMO ESPACIO ABAJO DEL ENVIRONMENTAL METRICS */
+}
+
+/* Títulos y texto de las tarjetas centrales */
+.center-card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  color: #e5e7eb;
+}
+
+.center-card-text {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  max-width: 320px;
+}
+
+/* =========================
+   Grid clásica (por si la sigues usando)
+   ========================= */
+
+/* Grid de cajas (estructura anterior, por si algo la usa todavía) */
+.dashboard-grid {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.dashboard-box {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid #1f2937;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.dashboard-box h2 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #e5e7eb;
+  margin-bottom: 0.4rem;
+}
+
+.dashboard-box p {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+/* =========================
+   Navbar
+   ========================= */
+
+.navbar {
+  width: 100%;
+  border-bottom: 1px solid #1e293b;
+  background: rgba(2, 6, 23, 0.95);
+  backdrop-filter: blur(12px);
+}
+
+.navbar-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* IZQUIERDA: CAMPANA */
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-icon-button {
+  position: relative;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  border: 1px solid #1e293b;
+  background: rgba(15, 23, 42, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    transform 0.1s ease;
+}
+
+.navbar-icon-button:hover {
+  border-color: #38bdf8;
+  background: rgba(15, 23, 42, 1);
+  transform: translateY(-1px);
+}
+
+.navbar-bell {
+  font-size: 1rem;
+}
+
+.navbar-notification-dot {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #f97316; /* naranja notificación */
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.9);
+}
+
+/* CENTRO: MARCA */
+
+.navbar-center {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  pointer-events: none; /* para que no moleste a los clics laterales */
+}
+
+.navbar-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.navbar-brand-main {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.navbar-brand-sub {
+  font-size: 0.7rem;
+  color: #9ca3af;
+}
+
+/* DERECHA: MENÚ + SIGN IN */
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Botón menú desplegable (placeholder) */
+
+.navbar-menu-button {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  border: 1px solid #1e293b;
+  background: rgba(15, 23, 42, 0.95);
+  color: #e5e7eb;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    transform 0.1s ease;
+}
+
+.navbar-menu-button:hover {
+  border-color: #38bdf8;
+  background: rgba(15, 23, 42, 1);
+  transform: translateY(-1px);
+}
+
+/* Botón Sign in */
+
+.navbar-cta {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(56, 189, 248, 0.6);
+  color: #7dd3fc;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
+}
+
+.navbar-cta:hover {
+  background: rgba(56, 189, 248, 0.12);
+  transform: translateY(-1px);
+}
+
+/* No usamos navbar-links ahora, pero lo dejamos apagado por si acaso */
+.navbar-links {
+  display: none;
+}
+
+/* =========================
+   Footer
+   ========================= */
+
+.footer {
+  width: 100%;
+  border-top: 1px solid #1e293b;
+  background: rgba(2, 6, 23, 0.95);
+  margin-top: 1.5rem;
+}
+
+.footer-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0.9rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;    /* centramos el bloque de slots */
+}
+
+/* Contenedor de los 3 huecos para componentes */
+.footer-slots {
+  display: flex;
+  gap: 1rem;                 /* más separación entre slots */
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cada hueco de componente */
+.footer-slot {
+  width: 140px;              /* MÁS ANCHO */
+  height: 44px;              /* MÁS ALTO */
+  border-radius: 999px;
+  border: 1px dashed #374151;
+  background: rgba(15, 23, 42, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-slot-placeholder {
+  font-size: 0.8rem;         /* texto un poco más grande */
+  color: #6b7280;
+}
+
+/* Por compatibilidad: dejamos estas clases por si las usas en el futuro */
+.footer-links {
+  display: none;
+}
+
+.footer-link {
+  color: #9ca3af;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-link:hover {
+  color: #38bdf8;
+}
