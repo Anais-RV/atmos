@@ -1,49 +1,36 @@
-// frontend/src/components/layout/BasePageLayout.jsx
-import styled from "styled-components";
-import { MEDIA } from "../../styles/breakpoints";
+// frontend/src/pages/DashboardPage.jsx
 
+import BasePageLayout from "../components/layout/BasePageLayout";
+import { getTemperatureColor } from "../styles/temperatureColors";
 
-const AppMain = styled.main`
-  flex: 1;
-  width: 100%;
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 1.5rem 1rem;
+function DashboardPage() {
+  // TODO: esta temperatura vendrá del backend
+  const temperatureC = 7; // cambia este valor para probar (-5, 0, 10, 25, 35...)
+  const containerColor = getTemperatureColor(temperatureC);
 
-  ${MEDIA.tablet} {
-    max-width: 960px;
-    padding: 2rem 1.5rem;
-  }
-
-  ${MEDIA.laptop} {
-    max-width: 1120px;
-    padding: 2.5rem 2rem;
-  }
-`;
-
-const Dashboard = styled.section`
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid #1e293b;
-  border-radius: 1.25rem;
-  padding: 1rem;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
-  max-width: 460px;
-  margin: 0 auto;
-`;
-
-function BasePageLayout({ title, description, children }) {
   return (
-    <AppMain>
-      <Dashboard>
-        <header className="dashboard-header">
-          <h1>{title}</h1>
-          {description && <p>{description}</p>}
-        </header>
+    <BasePageLayout
+      title=""
+      description=""
+      containerColor={containerColor}
+    >
+      <section className="center-card center-card-top">
+        <h2 className="center-card-title">Main temperature card</h2>
+        <p className="center-card-text">
+          Placeholder for the main component that will show temperature,
+          feels like, city name and main weather icon.
+        </p>
+      </section>
 
-        <section className="dashboard-center">{children}</section>
-      </Dashboard>
-    </AppMain>
+      <section className="center-card center-card-bottom">
+        <h2 className="center-card-title">Environmental metrics</h2>
+        <p className="center-card-text">
+          Placeholder for the component that will show wind, rain,
+          pressure, lux, humidity and dew point.
+        </p>
+      </section>
+    </BasePageLayout>
   );
 }
 
-export default BasePageLayout;
+export default DashboardPage;
