@@ -2,6 +2,7 @@
    Global layout / App
    ========================= */
 
+/* Layout general de la app */
 .app {
   min-height: 100vh;
   display: flex;
@@ -12,31 +13,32 @@
     sans-serif;
 }
 
-/* Contenido principal */
+/* Contenedor principal (entre navbar y footer) */
 .app-main {
   flex: 1;
   width: 100%;
-  max-width: 1120px; /* contenedor global, pero el dashboard va más estrecho */
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 1.5rem 1rem;
+  padding-top: 1.5rem;   /* espacio arriba (navbar → contenedor) */
+  padding-inline: 1rem;
+  padding-bottom: 0.6rem; /* espacio abajo ajustado (contenedor → footer slots) */
 }
 
 /* =========================
    Dashboard (estructura visual)
    ========================= */
 
-/* Contenedor principal del dashboard
-   (compartido con el antiguo .dashboard-card por compatibilidad) */
+/* Contenedor principal del dashboard */
 .dashboard,
 .dashboard-card {
   background: rgba(15, 23, 42, 0.9);
   border: 1px solid #1e293b;
   border-radius: 1.25rem;
-  padding: 1rem;           /* más compacto */
+  padding: 1rem;
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
-  max-width: 460px;        /* contenedor más estrecho, abraza las cards */
-  margin: 0 auto;          /* centrado dentro de app-main */
-  transition: background 0.4s ease; /* transición suave del color de fondo */
+  max-width: 460px;
+  margin: 0 auto;
+  transition: background 0.4s ease;
 }
 
 .dashboard-header h1 {
@@ -50,8 +52,7 @@
   color: #cbd5f5;
 }
 
-/* Layout de dos columnas (izquierda/derecha) - no usado ahora,
-   pero lo dejamos por si en el futuro añadimos más secciones */
+/* Layout de dos columnas opcional */
 .dashboard-layout {
   margin-top: 1.5rem;
   display: grid;
@@ -88,18 +89,16 @@
   margin-bottom: 0.4rem;
 }
 
-/* Paneles con variaciones (puedes tunear más adelante) */
+/* Variaciones de panel */
 .panel-search {
   border-style: dashed;
   border-color: #1d4ed8;
 }
 
 .panel-current {
-  /* hueco para estilos específicos de condiciones actuales */
 }
 
 .panel-details {
-  /* hueco para estilos específicos de métricas detalladas */
 }
 
 .panel-forecast-main {
@@ -110,7 +109,7 @@
   min-height: 100px;
 }
 
-/* Texto de placeholders para componentes futuros */
+/* Texto de placeholder */
 .placeholder-text {
   font-size: 0.8rem;
   color: #6b7280;
@@ -122,43 +121,40 @@
    ========================= */
 
 .dashboard-center {
-  /* Antes tenía margin-top: 1.5rem; lo quitamos para usar márgenes en las cards */
   margin-top: 0;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  align-items: center;        /* centra horizontalmente las tarjetas */
+  align-items: center;
 }
 
-/* Tarjetas cuadradas centrales */
+/* Tarjetas centrales */
 .center-card {
   width: 100%;
-  max-width: 420px;           /* tamaño base de las cards */
-  aspect-ratio: 1 / 1;        /* cuadrado */
+  max-width: 420px;
+  aspect-ratio: 1 / 1;
   border-radius: 1.25rem;
   border: 1px solid #1f2937;
   background: rgba(15, 23, 42, 0.98);
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;    /* centra contenido verticalmente */
-  align-items: center;        /* centra contenido horizontalmente */
+  justify-content: center;
+  align-items: center;
   text-align: center;
   box-shadow: 0 16px 30px rgba(15, 23, 42, 0.9);
 }
 
-/* Estilos específicos para distinguir las dos tarjetas */
 .center-card-top {
   background: radial-gradient(circle at top, rgba(56, 189, 248, 0.18), #020617);
-  margin-top: 1.5rem;   /* ESPACIO ARRIBA DEL MAIN TEMPERATURE CARD */
+  margin-top: 1.5rem;
 }
 
 .center-card-bottom {
   background: radial-gradient(circle at bottom, rgba(22, 163, 74, 0.18), #020617);
-  margin-bottom: 1.5rem; /* MISMO ESPACIO ABAJO DEL ENVIRONMENTAL METRICS */
+  margin-bottom: 1.5rem;
 }
 
-/* Títulos y texto de las tarjetas centrales */
 .center-card-title {
   font-size: 0.95rem;
   font-weight: 600;
@@ -175,10 +171,9 @@
 }
 
 /* =========================
-   Grid clásica (por si la sigues usando)
+   Grid clásica (opcional)
    ========================= */
 
-/* Grid de cajas (estructura anterior, por si algo la usa todavía) */
 .dashboard-grid {
   margin-top: 1.5rem;
   display: grid;
@@ -233,7 +228,7 @@
   gap: 1rem;
 }
 
-/* IZQUIERDA: CAMPANA */
+/* Izquierda: campana */
 
 .navbar-left {
   display: flex;
@@ -274,17 +269,17 @@
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 999px;
-  background: #f97316; /* naranja notificación */
+  background: #f97316;
   box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.9);
 }
 
-/* CENTRO: MARCA */
+/* Centro: marca */
 
 .navbar-center {
   flex: 1 1 auto;
   display: flex;
   justify-content: center;
-  pointer-events: none; /* para que no moleste a los clics laterales */
+  pointer-events: none;
 }
 
 .navbar-brand-text {
@@ -306,15 +301,13 @@
   color: #9ca3af;
 }
 
-/* DERECHA: MENÚ + SIGN IN */
+/* Derecha: menú + Sign in */
 
 .navbar-right {
   display: flex;
   align-items: center;
   gap: 0.4rem;
 }
-
-/* Botón menú desplegable (placeholder) */
 
 .navbar-menu-button {
   width: 2.1rem;
@@ -340,8 +333,6 @@
   transform: translateY(-1px);
 }
 
-/* Botón Sign in */
-
 .navbar-cta {
   font-size: 0.75rem;
   padding: 0.4rem 0.9rem;
@@ -360,7 +351,7 @@
   transform: translateY(-1px);
 }
 
-/* No usamos navbar-links ahora, pero lo dejamos apagado por si acaso */
+/* No usamos navbar-links ahora */
 .navbar-links {
   display: none;
 }
@@ -373,7 +364,7 @@
   width: 100%;
   border-top: 1px solid #1e293b;
   background: rgba(2, 6, 23, 0.95);
-  margin-top: 1.5rem;
+  margin-top: 0; /* el espaciado lo controla app-main */
 }
 
 .footer-inner {
@@ -382,21 +373,21 @@
   padding: 0.9rem 1rem;
   display: flex;
   align-items: center;
-  justify-content: center;    /* centramos el bloque de slots */
+  justify-content: center;
 }
 
 /* Contenedor de los 3 huecos para componentes */
 .footer-slots {
   display: flex;
-  gap: 1rem;                 /* más separación entre slots */
+  gap: 1rem;
   align-items: center;
   justify-content: center;
 }
 
-/* Cada hueco de componente */
+/* Cada hueco de componente (component slot 1, 2 y 3) */
 .footer-slot {
-  width: 140px;              /* MÁS ANCHO */
-  height: 44px;              /* MÁS ALTO */
+  width: 140px;
+  height: 44px;
   border-radius: 999px;
   border: 1px dashed #374151;
   background: rgba(15, 23, 42, 0.95);
@@ -406,11 +397,10 @@
 }
 
 .footer-slot-placeholder {
-  font-size: 0.8rem;         /* texto un poco más grande */
+  font-size: 0.8rem;
   color: #6b7280;
 }
 
-/* Por compatibilidad: dejamos estas clases por si las usas en el futuro */
 .footer-links {
   display: none;
 }
@@ -423,4 +413,46 @@
 
 .footer-link:hover {
   color: #38bdf8;
+}
+
+/* =========================
+   Breakpoints / Responsive
+   ========================= */
+
+@media (min-width: 768px) {
+  /* Tablet / portátil: ajustamos espacio para igualar visualmente arriba y abajo */
+  .app-main {
+    max-width: 960px;
+    padding-top: 2rem;      /* navbar → contenedor */
+    padding-inline: 1.5rem;
+    padding-bottom: 1.1rem; /* contenedor → footer slots (1.1 + 0.9 ≈ 2) */
+  }
+
+  .dashboard,
+  .dashboard-card {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dashboard-center {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  .center-card {
+    flex: 1;
+    max-width: none;
+    aspect-ratio: 4 / 5;
+    padding: 1rem 1rem;
+  }
+
+  .center-card-top,
+  .center-card-bottom {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 }
