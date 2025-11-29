@@ -13,6 +13,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import UserPanelPage from "./pages/UserPanelPage";
 import DataProtectionPage from "./pages/DataProtectionPage";
+import ForecastChartPage from "./chart/ForecastChartPage";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/user-panel" element={<UserPanelPage />} />
           <Route path="/data-protection" element={<DataProtectionPage />} />
+          <Route path="/charts" element={<ForecastChartPage />} />
         </Routes>
 
         <Footer />
