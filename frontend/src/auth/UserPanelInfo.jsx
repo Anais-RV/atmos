@@ -3,9 +3,8 @@
 function UserPanelInfo() {
   // TODO: replace with real user data from backend / context
   const user = {
-    name: "Julia Example",
-    email: "julia@example.com",
-    plan: "Free tier",
+    name: "SuperKode",
+    email: "SomosLaHostia@SuperKode.es",
     location: "Madrid, ES",
   };
 
@@ -21,22 +20,9 @@ function UserPanelInfo() {
         </div>
       </div>
 
-      <div className="auth-user-meta">
-        <div>
-          <span className="auth-user-meta-label">Plan</span>
-          <span className="auth-user-meta-value">{user.plan}</span>
-        </div>
-        <div>
-          <span className="auth-user-meta-label">Location</span>
-          <span className="auth-user-meta-value">{user.location}</span>
-        </div>
-      </div>
 
       <div className="auth-user-actions">
         <button className="auth-button-secondary">
-          Manage alerts
-        </button>
-        <button className="auth-button-ghost">
           Sign out
         </button>
       </div>

@@ -1,76 +1,69 @@
-// frontend/src/components/auth/RegisterForm.jsx
+// frontend/src/auth/RegisterForm.jsx
+
+import { Link } from "react-router-dom";
 
 function RegisterForm() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // TODO: send register data to backend
-  };
-
   return (
-    <form className="auth-form" onSubmit={handleSubmit}>
+    <form className="auth-form">
       <div className="auth-field">
-        <label className="auth-label" htmlFor="register-name">
-          Full name
+        <label htmlFor="name" className="auth-label">
+          Nombre
         </label>
         <input
-          id="register-name"
+          id="name"
           type="text"
           className="auth-input"
-          placeholder="Your name"
-          required
+          placeholder="Tu nombre"
         />
       </div>
 
       <div className="auth-field">
-        <label className="auth-label" htmlFor="register-email">
-          Email
+        <label htmlFor="email" className="auth-label">
+          Correo electrónico
         </label>
         <input
-          id="register-email"
+          id="email"
           type="email"
           className="auth-input"
-          placeholder="you@example.com"
-          required
+          placeholder="tu@email.com"
         />
       </div>
 
       <div className="auth-field">
-        <label className="auth-label" htmlFor="register-password">
-          Password
+        <label htmlFor="password" className="auth-label">
+          Contraseña
         </label>
         <input
-          id="register-password"
+          id="password"
           type="password"
           className="auth-input"
-          placeholder="••••••••"
-          required
+          placeholder="Elige una contraseña segura"
         />
       </div>
 
       <div className="auth-field">
-        <label className="auth-label" htmlFor="register-confirm">
-          Confirm password
+        <label htmlFor="confirmPassword" className="auth-label">
+          Repite la contraseña
         </label>
         <input
-          id="register-confirm"
+          id="confirmPassword"
           type="password"
           className="auth-input"
-          placeholder="Repeat your password"
-          required
+          placeholder="Vuelve a escribir la contraseña"
         />
       </div>
 
       <div className="auth-form-footer">
-        <span className="auth-footer-text">
-          By creating an account you accept our{" "}
-          <a href="/data-protection" className="auth-link">
-            data protection policy
-          </a>.
-        </span>
-
         <button type="submit" className="auth-button-primary">
-          Create account
+          Crear cuenta
         </button>
+
+        <p className="auth-footer-text">
+          ¿Ya tienes cuenta?{" "}
+          <Link to="/login" className="auth-link">
+            Inicia sesión
+          </Link>
+        </p>
       </div>
     </form>
   );

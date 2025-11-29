@@ -96,6 +96,23 @@
   gap: 0.5rem;
 }
 
+/* En pantallas un poco más grandes, pie en fila: remember + botones */
+@media (min-width: 480px) {
+  .auth-form-footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* Contenedor para Sign in + Register */
+.auth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
 .auth-remember {
   display: flex;
   align-items: center;
@@ -113,9 +130,9 @@
   color: #9ca3af;
 }
 
-.auth-button-primary {
-  width: 100%;
-  margin-top: 0.5rem;
+/* MISMO estilo para Sign in y Register */
+.auth-button-primary,
+.auth-button-secondary {
   border-radius: 999px;
   padding: 0.5rem 1rem;
   border: 1px solid rgba(56, 189, 248, 0.8);
@@ -128,22 +145,17 @@
     background 0.15s ease,
     transform 0.1s ease,
     box-shadow 0.15s ease;
+  text-decoration: none;       /* para el <Link> */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.auth-button-primary:hover {
+.auth-button-primary:hover,
+.auth-button-secondary:hover {
   background: rgba(56, 189, 248, 0.26);
   transform: translateY(-1px);
   box-shadow: 0 10px 25px rgba(8, 47, 73, 0.6);
-}
-
-.auth-button-secondary {
-  border-radius: 999px;
-  padding: 0.45rem 1rem;
-  border: 1px solid #4ade80;
-  background: rgba(22, 163, 74, 0.18);
-  color: #bbf7d0;
-  font-size: 0.8rem;
-  cursor: pointer;
 }
 
 .auth-button-ghost {
@@ -266,6 +278,7 @@
    ========================= */
 
 .auth-login-card {
+  /* ajustes específicos del login si hacen falta */
 }
 
 .auth-login-inner {
@@ -299,7 +312,7 @@
   .auth-login-inner {
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-between; 
     gap: 4rem;
     width: 100%;
   }
@@ -315,8 +328,41 @@
   }
 
   .auth-login-content {
-    flex: 0 1 360px;
+    flex: 0 1 360px;                 /* bloque de formulario relativamente estrecho */
     max-width: 380px;
     width: 100%;
+  }
+}
+
+/* Card azul de acciones rápidas del panel de usuario */
+.user-panel-actions-card {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.9rem 0.85rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  background: rgba(37, 99, 235, 0.16); /* azul suave */
+}
+
+.user-panel-actions-text {
+  font-size: 0.8rem;
+  color: #e5e7eb;
+  margin-bottom: 0.75rem;
+}
+
+/* Botones internos: usan el mismo estilo que Sign in */
+.user-panel-actions-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.user-panel-actions-buttons .auth-button-primary {
+  flex: 1 1 100%;
+}
+
+@media (min-width: 640px) {
+  .user-panel-actions-buttons .auth-button-primary {
+    flex: 1 1 calc(50% - 0.5rem);
   }
 }

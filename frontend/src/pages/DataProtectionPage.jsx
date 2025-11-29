@@ -1,12 +1,13 @@
-// frontend/src/pages/DataProtectionPage.jsx
+// src/pages/DataProtectionPage.jsx
 
+import { Link } from "react-router-dom";
 import BasePageLayout from "../components/layout/BasePageLayout";
-import AuthCard from "../auth/AuthCard";
 import { getTemperatureColor } from "../styles/temperatureColors";
-
+import "../styles/auth.css";
 
 function DataProtectionPage() {
-  const temperatureC = 18;
+  // Misma lógica de contenedor que en LoginPage / DashboardPage
+  const temperatureC = 7;
   const containerColor = getTemperatureColor(temperatureC);
 
   return (
@@ -15,30 +16,54 @@ function DataProtectionPage() {
       description=""
       containerColor={containerColor}
     >
-      <AuthCard
-        title="Data protection"
-        subtitle="How ATMOS handles and protects your personal data."
-      >
-        <div className="auth-text-block">
-          <p>
-            ATMOS collects only the information needed to provide the service:
-            account data (email, password hash) and basic usage data
-            (requests, saved locations, preferences).
+      <section className="auth-card">
+        <header className="auth-card-header">
+          <h1 className="auth-card-title">Protección de datos</h1>
+          <p className="auth-card-subtitle">
+            Resumen de cómo usamos, almacenamos y protegemos tu información.
           </p>
+        </header>
 
-          <ul className="auth-list">
-            <li>We never sell your data to third parties.</li>
-            <li>Your password is stored using secure hashing.</li>
-            <li>You can request deletion of your account data at any time.</li>
-            <li>We only keep logs as long as necessary for security and debugging.</li>
-          </ul>
+        <div className="auth-card-body">
+          <div className="auth-text-block">
+            <p>
+              ATMOS recopila únicamente la información necesaria para ofrecerte el
+              servicio: datos de cuenta (correo electrónico, contraseña cifrada) y
+              datos básicos de uso (consultas realizadas, ubicaciones guardadas,
+              preferencias).
+            </p>
 
-          <p>
-            This page is a placeholder for your real legal text. Here you will
-            eventually paste the full GDPR-compliant document.
-          </p>
+            <ul className="auth-list">
+              <li>Nunca vendemos tus datos a terceros.</li>
+              <li>
+                Tu contraseña se almacena utilizando técnicas de cifrado y hash seguras.
+              </li>
+              <li>
+                Puedes solicitar la eliminación de tu cuenta y de tus datos en
+                cualquier momento.
+              </li>
+              <li>
+                Solo conservamos los registros el tiempo necesario para garantizar
+                la seguridad y depurar posibles errores.
+              </li>
+            </ul>
+
+            <p>
+              Esta página es un marcador de posición para tu texto legal real. Aquí,
+              más adelante, pegarás el documento completo adaptado al RGPD y a la
+              normativa vigente.
+            </p>
+          </div>
+
+          <div className="auth-form-footer" style={{ marginTop: "1.2rem" }}>
+            <Link to="/login">
+              <button type="button" className="auth-button-primary">
+                Volver al inicio de sesión
+              </button>
+            </Link>
+          </div>
         </div>
-      </AuthCard>
+      </section>
     </BasePageLayout>
   );
 }

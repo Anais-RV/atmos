@@ -1,4 +1,5 @@
 // frontend/src/components/auth/LoginForm.jsx
+import { Link } from "react-router-dom";
 
 function LoginForm() {
   const handleSubmit = (event) => {
@@ -38,13 +39,20 @@ function LoginForm() {
         <div className="auth-remember">
           <input id="remember-me" type="checkbox" className="auth-checkbox" />
           <label htmlFor="remember-me" className="auth-remember-label">
-            Recuérdame
+            Remember me
           </label>
         </div>
 
-        <button type="submit" className="auth-button-primary">
-          Sign in
-        </button>
+        {/* Botones Sign in + Register en la misma fila */}
+        <div className="auth-actions">
+          <button type="submit" className="auth-button-primary">
+            Sign in
+          </button>
+
+          <Link to="/register" className="auth-button-secondary">
+            Register
+          </Link>
+        </div>
       </div>
     </form>
   );

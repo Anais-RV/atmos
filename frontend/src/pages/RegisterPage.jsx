@@ -5,13 +5,19 @@ import AuthCard from "../auth/AuthCard";
 import RegisterForm from "../auth/RegisterForm";
 import { getTemperatureColor } from "../styles/temperatureColors";
 
-
 function RegisterPage() {
+  const temperatureC = 7;
+  const containerColor = getTemperatureColor(temperatureC);
+
   return (
-    <BasePageLayout title="" description="">
+    <BasePageLayout
+      title=""
+      description=""
+      containerColor={containerColor}
+    >
       <AuthCard
-        title="Create your account"
-        subtitle="Join ATMOS and track your environment with context."
+        title="Crea tu cuenta"
+        subtitle="Únete a ATMOS y sigue tu entorno con contexto."
       >
         <RegisterForm />
       </AuthCard>
