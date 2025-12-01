@@ -60,8 +60,8 @@ pip install -r requirements.txt
 ```
 
 Esto instalará:
-- Django 5.0
-- Django REST Framework
+- Django 5.1 (LTS - Long Term Support)
+- Django REST Framework 3.16
 - django-cors-headers (para conectar con el frontend)
 - python-decouple (para variables de entorno)
 - psycopg2-binary (para PostgreSQL)
