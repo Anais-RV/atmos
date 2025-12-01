@@ -32,6 +32,20 @@ setup-backend:
 
 dev-backend:
 	@echo "🚀 Ejecutando backend Django..."
+	@if [ ! -f backend/manage.py ]; then \
+		echo "❌ ERROR: No se encontró manage.py"; \
+		echo ""; \
+		echo "Parece que no has inicializado Django todavía."; \
+		echo ""; \
+		echo "Sigue estos pasos:"; \
+		echo "1. Activa el entorno virtual: source venv/bin/activate"; \
+		echo "2. Instala dependencias: pip install -r requirements.txt"; \
+		echo "3. Inicializa Django: django-admin startproject config ."; \
+		echo "4. Aplica migraciones: python manage.py migrate"; \
+		echo ""; \
+		echo "📖 Consulta: docs/backend-setup.md para más detalles"; \
+		exit 1; \
+	fi
 	cd backend && python manage.py runserver
 
 migrate:
