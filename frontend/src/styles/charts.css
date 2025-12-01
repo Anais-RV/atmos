@@ -1,0 +1,102 @@
+/* =========================
+   Charts / Forecast layouts
+   ========================= */
+
+/* Layout general: dos tarjetas como en el dashboard */
+.chart-layout {
+  width: 100%;
+  max-width: 1120px;
+  margin: 1.5rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* En tablet y superior: las dos tarjetas en fila */
+@media (min-width: 768px) {
+  .chart-layout {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .chart-card-main,
+  .chart-card-summary {
+    flex: 1;
+    max-width: none;
+  }
+}
+
+/* Contenido interno de cada tarjeta */
+.chart-card-inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Texto de cabecera ya lo dan .center-card-title y .center-card-text */
+
+/* Zona principal donde irá la gráfica (azul claro) */
+.chart-main-viewport {
+  margin-top: 0.5rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(56, 189, 248, 0.6);
+  background: rgba(37, 99, 235, 0.16); /* azul más claro que el fondo */
+  padding: 1rem;
+  min-height: 220px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Placeholder de la gráfica */
+.chart-placeholder {
+  width: 100%;
+  text-align: center;
+}
+
+.chart-placeholder-text {
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+/* Grid de las 3 secciones: día / semana / mes */
+.chart-summary-grid {
+  margin-top: 0.75rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* En pantallas medianas y grandes, las 3 en fila */
+@media (min-width: 640px) {
+  .chart-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Tarjetas pequeñas: azul claro */
+.chart-summary-item {
+  border-radius: 0.9rem;
+  border: 1px solid rgba(56, 189, 248, 0.6);
+  background: rgba(37, 99, 235, 0.16); /* azul claro */
+  padding: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-summary-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #e5e7eb;
+  text-align: center;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
