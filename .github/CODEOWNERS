@@ -1,0 +1,14 @@
+# CODEOWNERS - Define code ownership and review requirements
+# These owners will be requested for review when someone opens a pull request
+
+# Global owners - all files
+* @Anais-RV
+
+# Backend ownership
+/backend/ @Anais-RV @Yeraldsb
+
+# Frontend ownership
+/frontend/ @Anais-RV @Yeraldsb
+
+# Documentation ownership
+/docs/ @Anais-RV
