@@ -59,6 +59,18 @@ django-admin startproject config .
 
 Este comando crea la estructura base de Django en la carpeta actual.
 
+**⚠️ Si ya existe una carpeta `config/` de intentos anteriores:**
+```bash
+# Windows
+Remove-Item -Recurse -Force config
+
+# Linux/Mac
+rm -rf config
+
+# Luego vuelve a ejecutar
+django-admin startproject config .
+```
+
 ### 6. Aplicar migraciones
 
 ```bash
