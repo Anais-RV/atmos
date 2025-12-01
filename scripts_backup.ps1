@@ -70,9 +70,9 @@ function Dev-Backend {
     Set-Location backend
     
     if (-not (Test-Path "manage.py")) {
-        Write-Host "[ERROR] No se encontro manage.py" -ForegroundColor Red
+        Write-Host "❌ ERROR: No se encontró manage.py" -ForegroundColor Red
         Write-Host ""
-        Write-Host "Parece que no has inicializado Django todavia." -ForegroundColor Yellow
+        Write-Host "Parece que no has inicializado Django todavía." -ForegroundColor Yellow
         Write-Host ""
         Write-Host "Sigue estos pasos:" -ForegroundColor Cyan
         Write-Host "1. Activa el entorno virtual: .\venv\Scripts\Activate.ps1" -ForegroundColor White
@@ -80,7 +80,7 @@ function Dev-Backend {
         Write-Host "3. Inicializa Django: django-admin startproject config ." -ForegroundColor White
         Write-Host "4. Aplica migraciones: python manage.py migrate" -ForegroundColor White
         Write-Host ""
-        Write-Host "[INFO] Consulta: docs/backend-setup.md para mas detalles" -ForegroundColor Cyan
+        Write-Host "📖 Consulta: docs/backend-setup.md para más detalles" -ForegroundColor Cyan
         Set-Location ..
         return
     }
@@ -402,9 +402,24 @@ function Start-All-Servers {
     Write-Log "Iniciando servidor Django en background"
     try {
         $backendPath = Join-Path $PWD "backend"
-        Start-Process powershell -ArgumentList "-NoExit","-Command","cd '$backendPath'; & '.\venv\Scripts\Activate.ps1'; python manage.py runserver" -WindowStyle Normal
+        $activateScript = Join-Path $backendPath "venv\Scripts\Activate.ps1"
+        
+        # Crear script temporal para activar venv y ejecutar Django
+        $tempScript = Join-Path $env:TEMP "start_django_$(New-Guid).ps1"
+        $amp = [char]38
+        $scriptContent = "`$VerbosePreference = 'SilentlyContinue'`n"
+        $scriptContent += "Set-Location '$backendPath'`n"
+        $scriptContent += "$amp '$activateScript'`n"
+        $scriptContent += "python manage.py runserver"
+        Set-Content -Path $tempScript -Value $scriptContent
+        
+        Start-Process -FilePath "powershell.exe" -ArgumentList @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $tempScript) -WindowStyle Hidden
         Write-Host "Servidor Django iniciado correctamente" -ForegroundColor Green
         Write-Log "Servidor Django iniciado correctamente"
+        
+        # Limpiar script temporal después de 5 segundos
+        Start-Sleep -Seconds 1
+        Remove-Item $tempScript -Force -ErrorAction SilentlyContinue
     }
     catch {
         Write-Host "Error al iniciar Django: $_" -ForegroundColor Red
