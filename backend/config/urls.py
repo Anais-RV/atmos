@@ -15,5 +15,7 @@ urlpatterns = [
 
     # Rutas de registro / me / admin-only
     path("api/auth/", include("users.urls")),
+    
+    # Weather Prophet forecasts
     path("", include("weather.urls")),
 ]
