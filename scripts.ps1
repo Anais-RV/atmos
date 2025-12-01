@@ -1,6 +1,14 @@
 # Scripts PowerShell para Proyecto Atmos
 # Comandos utiles para desarrollo en Windows
 
+# Agregar pnpm al PATH si existe
+$npmPath = npm config get prefix 2>$null
+if ($npmPath -and (Test-Path $npmPath)) {
+    if ($env:PATH -notlike "*$npmPath*") {
+        $env:PATH += ";$npmPath"
+    }
+}
+
 # Crear carpeta de logs si no existe
 $logsFolder = "logs"
 if (-not (Test-Path $logsFolder)) {
@@ -290,7 +298,7 @@ function Show-Menu {
 
 function Setup-Frontend {
     Write-Host "Instalando dependencias frontend..." -ForegroundColor Green
-    Write-Log "Iniciando instalacion de dependencias frontend"
+    Write-Log "Instalando dependencias frontend"
     Set-Location frontend
     pnpm install
     Write-Host "Frontend configurado" -ForegroundColor Green
