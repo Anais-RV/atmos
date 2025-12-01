@@ -13,7 +13,6 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import UserPanelPage from "./pages/UserPanelPage";
 import DataProtectionPage from "./pages/DataProtectionPage";
-import ForecastChartPage from "./chart/ForecastChartPage";
 import WeatherHistoryPage from "./history/WeatherHistoryPage";
 
 function App() {
@@ -28,8 +27,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/user-panel" element={<UserPanelPage />} />
           <Route path="/data-protection" element={<DataProtectionPage />} />
-          <Route path="/charts" element={<ForecastChartPage />} />
-          <Route path="/history" element={<WeatherHistoryPage />} /> {/* 👈 FALTABA ESTA */}
+          <Route path="/history" element={<WeatherHistoryPage />} />
         </Routes>
 
         <Footer />
