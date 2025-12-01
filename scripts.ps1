@@ -68,6 +68,23 @@ function Dev-Backend {
     Write-Host "Ejecutando backend Django..." -ForegroundColor Yellow
     Write-Log "Iniciando servidor Django"
     Set-Location backend
+    
+    if (-not (Test-Path "manage.py")) {
+        Write-Host "❌ ERROR: No se encontró manage.py" -ForegroundColor Red
+        Write-Host ""
+        Write-Host "Parece que no has inicializado Django todavía." -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "Sigue estos pasos:" -ForegroundColor Cyan
+        Write-Host "1. Activa el entorno virtual: .\venv\Scripts\Activate.ps1" -ForegroundColor White
+        Write-Host "2. Instala dependencias: pip install -r requirements.txt" -ForegroundColor White
+        Write-Host "3. Inicializa Django: django-admin startproject config ." -ForegroundColor White
+        Write-Host "4. Aplica migraciones: python manage.py migrate" -ForegroundColor White
+        Write-Host ""
+        Write-Host "📖 Consulta: docs/backend-setup.md para más detalles" -ForegroundColor Cyan
+        Set-Location ..
+        return
+    }
+    
     python manage.py runserver
     Set-Location ..
     Write-Log "Servidor Django detenido"
