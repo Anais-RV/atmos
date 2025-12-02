@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+import math
 
 class City(models.Model):
     # Modelo para almacenar ciudades en ubicaciones geográficas
@@ -85,3 +86,18 @@ class WeatherObservation(models.Model):
         hi += 0.00072546 * T * (H ** 2) + -0.000003582 * (T ** 2) * (H ** 2)
 
         return f"Índice de calor según la fórmula de Steadman: {hi:.2f}"
+
+    def dew_point_calculator(self):
+        """
+        Calcula el punto de rocío usando la fórmula de Magnus-Tetens
+        """
+        T = self.temperature
+        H = self.humidity
+
+        a = 17.27
+        b = 237.7
+        
+        alpha = ((a * T) / (b + T)) + math.log(H / 100.0)
+        dew_point = (b * alpha) / (a - alpha)
+
+        return f"Punto rocío según la fórmula de Magnus-Tetens: {dew_point:.2f}"
