@@ -1,9 +1,9 @@
 // frontend/src/components/charts/ForecastChartPage.jsx
 
-import BasePageLayout from "../components/layout/BasePageLayout";
-import { getTemperatureColor } from "../styles/temperatureColors";
-import ForecastChart from "./ForecastChart";   // 👈 IMPORT CORRECTO
-import "../styles/charts.css";
+import BasePageLayout from "../layout/BasePageLayout";
+import { getTemperatureColor } from "../../styles/temperatureColors";
+import ForecastChart from "./ForecastChart";
+import "../../styles/charts.css";
 
 function ForecastChartPage() {
   const temperatureC = 7;
