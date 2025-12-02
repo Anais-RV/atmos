@@ -86,7 +86,6 @@ La carpeta **[REFERENCIAS/](./REFERENCIAS/)** contiene documentación técnica d
 **¿Qué contiene?**
 - **best-practices.md** - Guía completa de buenas prácticas (Python, React, Django, ORM, performance)
 - **git-workflow.md** - Flujo Git detallado con resolución avanzada de conflictos
-- **archivo/** - Documentación histórica archivada (backend-setup, django-guide, etc.)
 
 **¿Necesito leerla?** → **NO**, a menos que quieras profundizar más allá de lo básico en GUIA_CONTRIBUCION.md
 
