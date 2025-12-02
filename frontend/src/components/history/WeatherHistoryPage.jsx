@@ -1,4 +1,4 @@
-// frontend/src/history/WeatherHistoryPage.jsx
+// frontend/src/components/history/WeatherHistoryPage.jsx
 
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";

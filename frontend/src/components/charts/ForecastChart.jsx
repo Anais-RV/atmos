@@ -1,4 +1,4 @@
-// frontend/src/chart/ForecastChart.jsx
+// frontend/src/components/charts/ForecastChart.jsx
 
 function ForecastChart() {
   // Más adelante aquí irán los datos reales y la librería de gráficos

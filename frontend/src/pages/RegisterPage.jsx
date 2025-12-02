@@ -1,8 +1,8 @@
 // frontend/src/pages/RegisterPage.jsx
 
 import BasePageLayout from "../components/layout/BasePageLayout";
-import AuthCard from "../auth/AuthCard";
-import RegisterForm from "../auth/RegisterForm";
+import AuthCard from "../components/auth/AuthCard";
+import RegisterForm from "../components/auth/RegisterForm";
 import { getTemperatureColor } from "../styles/temperatureColors";
 
 function RegisterPage() {

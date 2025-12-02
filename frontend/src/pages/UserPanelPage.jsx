@@ -1,7 +1,7 @@
 // frontend/src/pages/UserPanelPage.jsx
 
 import BasePageLayout from "../components/layout/BasePageLayout";
-import UserPanelInfo from "../auth/UserPanelInfo";
+import UserPanelInfo from "../components/auth/UserPanelInfo";
 import { getTemperatureColor } from "../styles/temperatureColors";
 
 function UserPanelPage() {

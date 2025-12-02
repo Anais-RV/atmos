@@ -13,8 +13,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import UserPanelPage from "./pages/UserPanelPage";
 import DataProtectionPage from "./pages/DataProtectionPage";
-import ForecastChartPage from "./chart/ForecastChartPage";
-import WeatherHistoryPage from "./history/WeatherHistoryPage";
+import ForecastChartPage from "./components/charts/ForecastChartPage";
+import WeatherHistoryPage from "./components/history/WeatherHistoryPage";
 
 function App() {
   return (

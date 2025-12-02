@@ -1,4 +1,4 @@
-// frontend/src/chart/ForecastChartPage.jsx
+// frontend/src/components/charts/ForecastChartPage.jsx
 
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
