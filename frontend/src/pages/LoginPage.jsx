@@ -1,8 +1,8 @@
 // src/pages/LoginPage.jsx
 
 import BasePageLayout from "../components/layout/BasePageLayout";
-import LoginForm from "../auth/LoginForm";
-import DataProtectionNotice from "../auth/DataProtectionNotice";
+import LoginForm from "../components/auth/LoginForm";
+import DataProtectionNotice from "../components/auth/DataProtectionNotice";
 import { getTemperatureColor } from "../styles/temperatureColors";
 
 function LoginPage() {

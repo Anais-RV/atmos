@@ -1,4 +1,4 @@
-// frontend/src/history/WeatherHistory.jsx
+// frontend/src/components/history/WeatherHistory.jsx
 
 function WeatherHistory() {
   // Más adelante aquí irán los datos reales del historial y las gráficas
