@@ -61,12 +61,14 @@ Esta es tu guía para empezar y trabajar en el proyecto. Lee los documentos **en
 Antes de programar, asegúrate de haber hecho esto:
 
 - [ ] Leí [INICIO_RAPIDO.md](./INICIO_RAPIDO.md)
-- [ ] Ejecuté `.\run.ps1 setup` y funcionó
+- [ ] Ejecuté `.\menu.ps1` o `.\run.ps1 setup` y funcionó
 - [ ] El backend arranca en http://127.0.0.1:8000
 - [ ] El frontend arranca en http://localhost:5173
 - [ ] Leí [GUIA_CONTRIBUCION.md](./GUIA_CONTRIBUCION.md)
 - [ ] Sé cómo crear una rama `feat/`
 - [ ] Tengo el [FAQ.md](./FAQ.md) a mano por si algo falla
+
+**✅ ¿Quieres verificar que todo funciona?** → Usa [../VERIFICAR.md](../VERIFICAR.md)
 
 **Si completaste todo** → ¡Estás listo/a para programar! 🎉
 

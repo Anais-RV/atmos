@@ -35,14 +35,16 @@ make frontend           # Linux/Mac
 
 ##  Documentación
 
-**Todo lo que necesitas está aquí**  **[ docs/00_INDEX.md](./docs/00_INDEX.md)**
+**📘 Empieza aquí** → **[docs/00_INDEX.md](./docs/00_INDEX.md)**
 
 El índice te guía paso a paso:
 1. Setup inicial
 2. Cómo contribuir
 3. Solución de problemas
 
-**Empieza por ahí**  no necesitas leer nada más.
+**✅ ¿Todo instalado?** → **[VERIFICAR.md](./VERIFICAR.md)** - Checklist para comprobar que funciona
+
+**Empieza por ahí** → no necesitas leer nada más.
 
 ---
 
