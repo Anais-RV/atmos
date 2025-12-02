@@ -13,10 +13,20 @@ class City(models.Model):
 
 
 class WeatherObservation(models.Model):
-    # Modelo para observar el cambio climático
+    # Modelo para observar y almacenar datos meteorológicos
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name="observations")
-    timestamp = models.DateTimeField()
-    temperature = models.FloatField()
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    # Temperatura
+    temperature = models.FloatField(help_text="Temperatura en grados Celsius")
+    max_temperature = models.FloatField(null=True, blank=True)
+    min_temperature = models.FloatField(null=True, blank=True)
+
+    # Humedad y presión
+    humidity = models.FloatField(help_text="Humedad relativa en procentaje (0-100)")
+    pressure = models.FloatField(help_text="Presión atmosférica en hPa (hectopascal)")
 
     def __str__(self):
         return f"{self.city.name} @ {self.timestamp} -> {self.temperature}ºC"
+
+
