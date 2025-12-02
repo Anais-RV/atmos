@@ -54,7 +54,21 @@ pnpm dev
 
 Si prefieres **no cambiar de carpeta** manualmente, usa comandos automatizados desde la raíz:
 
-### Opción A: Makefile (Linux/Mac/Windows con make)
+### Opción A: Menú Interactivo (Windows - MÁS FÁCIL) 🎯
+
+```powershell
+# Desde la RAÍZ del proyecto:
+.\menu.ps1
+```
+
+**Menú con navegación por flechas ↑↓ y Enter**
+- ✅ Backend: setup, ejecutar, migraciones, superuser
+- ✅ Frontend: setup, ejecutar, build
+- ✅ Git: crear rama, traer cambios de dev, verificar cambios
+- ✅ Utilidades: encender/apagar todo, limpiar temporales
+- ✅ Registra todas las acciones en logs/
+
+### Opción B: Makefile (Linux/Mac/Windows con make)
 
 ```bash
 # Desde la RAÍZ del proyecto:
@@ -72,7 +86,7 @@ make frontend
 make help
 ```
 
-### Opción B: run.ps1 (Windows PowerShell)
+### Opción C: run.ps1 (Windows PowerShell - comandos directos)
 
 ```powershell
 # Desde la RAÍZ del proyecto:
