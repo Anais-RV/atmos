@@ -101,3 +101,14 @@ class WeatherObservation(models.Model):
         dew_point = (b * alpha) / (a - alpha)
 
         return f"Punto rocío según la fórmula de Magnus-Tetens: {dew_point:.2f}"
+    
+    def wind_direction_in_text(self):
+        """
+        Convierte los grados de dirección del viento a texto
+        """
+        direcciones = [
+            "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+            "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"
+        ]
+        indice = round(self.wind_direction / 22.5) % 16
+        return f"Dirección del viento: {direcciones[indice]}"
