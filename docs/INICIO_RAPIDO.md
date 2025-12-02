@@ -33,13 +33,43 @@ python manage.py runserver
 
 ### 3. Configurar frontend (nueva terminal)
 
+⚠️ **MUY IMPORTANTE**: Debes estar dentro de la carpeta `frontend/`
+
 ```powershell
+# Desde la RAÍZ del proyecto:
 cd frontend
+
+# Ahora instala y ejecuta:
 pnpm install
 pnpm dev
 ```
 
 **Frontend listo en**: http://localhost:5173
+
+❌ **Error común**: Si ves `ENOENT: no such file package.json`, es porque **NO estás en la carpeta frontend/**
+
+---
+
+## Alternativa: Usar run.ps1 (Recomendado)
+
+Si prefieres **no cambiar de carpeta** manualmente, usa el script unificado desde la raíz:
+
+```powershell
+# Desde la RAÍZ del proyecto (C:\...\atmos):
+
+# Configurar todo automáticamente
+.\run.ps1 setup
+
+# Iniciar backend
+.\run.ps1 backend
+
+# Iniciar frontend (en otra terminal)
+.\run.ps1 frontend
+```
+
+✅ **Ventaja**: El script cambia automáticamente a las carpetas correctas
+
+❌ **Error común**: NO ejecutes `pnpm dev` desde la raíz → usa `.\run.ps1 frontend` o muévete a `frontend/` primero
 
 ---
 
@@ -66,7 +96,12 @@ pytest
 
 ### Frontend
 
+⚠️ **Ejecuta estos comandos DENTRO de la carpeta `frontend/`**
+
 ```powershell
+# Asegúrate de estar en frontend/
+cd frontend
+
 # Iniciar servidor desarrollo
 pnpm dev
 
@@ -145,9 +180,25 @@ atmos/
 
 ---
 
-## Problemas Comunes
+## 🚨 Problemas Comunes
 
-### Backend no arranca
+### ❌ Error: "ENOENT: no such file package.json"
+
+**Causa**: Ejecutaste `pnpm dev` desde la raíz del proyecto
+
+**Solución**:
+```powershell
+# Opción 1: Usa el script (recomendado)
+.\run.ps1 frontend
+
+# Opción 2: Muévete a frontend/
+cd frontend
+pnpm dev
+```
+
+### ❌ Backend no arranca
+
+**Solución**:
 ```powershell
 # Activa el entorno virtual
 .\backend\venv\Scripts\Activate.ps1

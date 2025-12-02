@@ -51,10 +51,27 @@ python -m venv venv
    - Cierra otros procesos que lo usen
    - O usa otro puerto: `python manage.py runserver 8001`
 
-### ❌ El frontend no arranca
+### ❌ Error: "ENOENT: no such file package.json"
+
+**Causa**: Estás ejecutando `pnpm` desde la raíz del proyecto en lugar de `frontend/`
 
 **Solución**:
 ```powershell
+# Verifica dónde estás
+pwd
+
+# Si estás en C:\...\atmos, muévete a frontend:
+cd frontend
+
+# Ahora ejecuta:
+pnpm dev
+```
+
+### ❌ El frontend no arranca (otros errores)
+
+**Solución**:
+```powershell
+# Asegúrate de estar en frontend/
 cd frontend
 
 # Elimina node_modules
