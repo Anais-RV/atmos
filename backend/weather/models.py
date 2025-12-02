@@ -50,23 +50,38 @@ class WeatherObservation(models.Model):
         return f"{self.city.name} @ {self.timestamp.strftime('%Y-%m-%d %H:%M')} -> {self.temperature}ºC"
 
     def wind_chill_calculator(self):
-        """"""
-        # Calcula la sensación térmica según las condiciones:
-        # Wind Chill para temperaturas frías con viento
-        # Índice de Calor para temperaturas altas con humedad
-        """"""
+        """
+        Calcula la sensación térmica según las condiciones:
+        - Wind Chill para temperaturas frías con viento
+        - Índice de Calor para temperaturas altas con humedad
+        """
         temp = self.temperature
         wind = self.wind_speed
 
         # Wind Chill (para temp <= 10°C y viento > 4.8 km/h)
         if temp <= 10 and wind > 4.8:
             wc = 13.12 + 0.6215 * temp - 11.37 * (wind ** 0.16) + 0.3965 * temp * (wind ** 0.16)
-            return round(wc, 1)
+            return f"Sensación térmica actual: {wc:.2f}"
         
         # Índice de Calor (para temp >= 27°C)
         elif temp >= 27:
             hi = self.calcular_indice_calor()
-            return hi
+            return f"Índice da calor: {hi}"
         
         # Si no aplica ninguna fórmula, la sensación térmica es igual a la temperatura
         return temp
+    
+    def heat_index_calculator(self):
+        """
+        Calcula el índice de calor (Heat Index) usando la fórmula de Steadman
+        """
+        T = self.temperature
+        H = self.humidity
+
+        # Fórmula simplificada del Heat Index
+        hi = -8.78469475556 + 1.61139411 * T + 2.33854883889 * H
+        hi += -0.14611605 * T * H + -0.012308094 * (T ** 2)
+        hi += -0.0164248277778 * (H ** 2) + 0.002211732 * (T ** 2) * H
+        hi += 0.00072546 * T * (H ** 2) + -0.000003582 * (T ** 2) * (H ** 2)
+
+        return f"Índice de calor según la fórmula de Steadman: {hi:.2f}"
