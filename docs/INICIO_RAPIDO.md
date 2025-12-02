@@ -9,16 +9,75 @@
 
 ---
 
-## Setup en 3 Pasos
+## Setup Rápido (Recomendado para Principiantes) 🎯
 
-### 1. Clonar y preparar
+**Los scripts se encargan de todo automáticamente:**
+
+### Opción 1: Menú Interactivo (Windows - LA MÁS FÁCIL) 🌟
 
 ```powershell
+# 1. Clona el proyecto
 git clone https://github.com/Anais-RV/atmos.git
 cd atmos
+
+# 2. Abre el menú interactivo
+.\menu.ps1
 ```
 
-### 2. Configurar backend
+**Usa las flechas ↑↓ para navegar y Enter para seleccionar**
+- Primero: "🏗️ Setup Completo del Proyecto"
+- Después: "▶️ Iniciar Backend" y "▶️ Iniciar Frontend"
+
+✅ **Ventajas**:
+- No necesitas memorizar comandos
+- Registra todo en `logs/` por si algo falla
+- Te dice exactamente qué está haciendo
+- Perfecto para principiantes
+
+### Opción 2: Comandos Directos (Windows PowerShell)
+
+```powershell
+# 1. Clona el proyecto
+git clone https://github.com/Anais-RV/atmos.git
+cd atmos
+
+# 2. Configura todo automáticamente
+.\run.ps1 setup
+
+# 3. Inicia backend (en una terminal)
+.\run.ps1 backend
+
+# 4. Inicia frontend (en OTRA terminal)
+.\run.ps1 frontend
+```
+
+### Opción 3: Makefile (Linux/Mac/Windows con make)
+
+```bash
+# 1. Clona el proyecto
+git clone https://github.com/Anais-RV/atmos.git
+cd atmos
+
+# 2. Configura todo automáticamente
+make setup
+
+# 3. Inicia backend (en una terminal)
+make backend
+
+# 4. Inicia frontend (en OTRA terminal)
+make frontend
+```
+
+✅ **Ventaja de los scripts**: No tienes que cambiar de carpeta manualmente, ellos lo hacen por ti
+
+---
+
+## Setup Manual (Avanzado)
+
+<details>
+<summary>⚠️ Haz clic aquí solo si NO quieres usar los scripts automatizados</summary>
+
+### 1. Configurar backend manualmente
 
 ```powershell
 cd backend
@@ -31,82 +90,24 @@ python manage.py runserver
 
 **Backend listo en**: http://127.0.0.1:8000
 
-### 3. Configurar frontend (nueva terminal)
+### 2. Configurar frontend manualmente (nueva terminal)
 
-⚠️ **MUY IMPORTANTE**: Debes estar dentro de la carpeta `frontend/`
+⚠️ **IMPORTANTE**: Debes estar dentro de `frontend/`
 
 ```powershell
-# Desde la RAÍZ del proyecto:
+# Desde la raíz del proyecto:
 cd frontend
 
-# Ahora instala y ejecuta:
+# Instala y ejecuta:
 pnpm install
 pnpm dev
 ```
 
 **Frontend listo en**: http://localhost:5173
 
-❌ **Error común**: Si ves `ENOENT: no such file package.json`, es porque **NO estás en la carpeta frontend/**
+❌ **Error común**: Si ves `ENOENT: no such file package.json`, NO estás en la carpeta `frontend/`
 
----
-
-## Alternativa: Comandos Automatizados (Recomendado)
-
-Si prefieres **no cambiar de carpeta** manualmente, usa comandos automatizados desde la raíz:
-
-### Opción A: Menú Interactivo (Windows - MÁS FÁCIL) 🎯
-
-```powershell
-# Desde la RAÍZ del proyecto:
-.\menu.ps1
-```
-
-**Menú con navegación por flechas ↑↓ y Enter**
-- ✅ Backend: setup, ejecutar, migraciones, superuser
-- ✅ Frontend: setup, ejecutar, build
-- ✅ Git: crear rama, traer cambios de dev, verificar cambios
-- ✅ Utilidades: encender/apagar todo, limpiar temporales
-- ✅ Registra todas las acciones en logs/
-
-### Opción B: Makefile (Linux/Mac/Windows con make)
-
-```bash
-# Desde la RAÍZ del proyecto:
-
-# Configurar todo automáticamente
-make setup
-
-# Iniciar backend
-make backend
-
-# Iniciar frontend (en otra terminal)
-make frontend
-
-# Ver todos los comandos
-make help
-```
-
-### Opción C: run.ps1 (Windows PowerShell - comandos directos)
-
-```powershell
-# Desde la RAÍZ del proyecto:
-
-# Configurar todo automáticamente
-.\run.ps1 setup
-
-# Iniciar backend
-.\run.ps1 backend
-
-# Iniciar frontend (en otra terminal)
-.\run.ps1 frontend
-
-# Ver todos los comandos
-.\run.ps1 help
-```
-
-✅ **Ventaja**: Los scripts cambian automáticamente a las carpetas correctas
-
-❌ **Error común**: NO ejecutes `pnpm dev` desde la raíz → usa `make frontend` o `.\run.ps1 frontend` o muévete a `frontend/` primero
+</details>
 
 ---
 
