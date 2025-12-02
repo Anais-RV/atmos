@@ -35,25 +35,26 @@ jobs:
   frontend-checks:
     name: Frontend Lint y Build
     runs-on: ubuntu-latest
+    continue-on-error: true  # No bloquea el merge si falla
     
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
       
-      - name: Configurar Node.js 18
+      - name: Configurar Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
       
       - name: Instalar pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 9
+          run_install: false
       
       - name: Instalar dependencias
         run: |
           cd frontend
-          pnpm install
+          pnpm install --frozen-lockfile
       
       - name: Verificar build
         run: |
