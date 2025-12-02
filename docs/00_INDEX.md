@@ -76,20 +76,19 @@ Antes de programar, asegúrate de haber hecho esto:
 
 **⚠️ No necesitas leer esto para trabajar en el proyecto**
 
-La carpeta **[REFERENCIAS/](./REFERENCIAS/)** contiene documentación técnica sobre arquitectura, decisiones de diseño, y detalles avanzados del proyecto.
+La carpeta **[REFERENCIAS/](./REFERENCIAS/)** contiene documentación técnica detallada para consulta avanzada.
 
 **¿Para quién es?**
-- Responsables de arquitectura del proyecto
-- Quien necesite documentar cambios grandes
-- Quien quiera entender las decisiones técnicas a fondo
+- Quien quiera profundizar en buenas prácticas de código
+- Quien necesite entender el flujo Git completo con casos complejos
+- Responsables de arquitectura o mantenimiento del proyecto
 
 **¿Qué contiene?**
-- Guías completas de buenas prácticas (Python, React, Django)
-- Análisis de simplificación del repositorio
-- Flujo de Git detallado
-- Documentación histórica archivada
+- **best-practices.md** - Guía completa de buenas prácticas (Python, React, Django, ORM, performance)
+- **git-workflow.md** - Flujo Git detallado con resolución avanzada de conflictos
+- **archivo/** - Documentación histórica archivada (backend-setup, django-guide, etc.)
 
-**¿Necesito leerla?** → **NO**, a menos que seas responsable técnico o quieras profundizar en arquitectura.
+**¿Necesito leerla?** → **NO**, a menos que quieras profundizar más allá de lo básico en GUIA_CONTRIBUCION.md
 
 ---
 
