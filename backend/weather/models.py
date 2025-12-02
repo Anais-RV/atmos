@@ -112,3 +112,19 @@ class WeatherObservation(models.Model):
         ]
         indice = round(self.wind_direction / 22.5) % 16
         return f"Dirección del viento: {direcciones[indice]}"
+    
+    def save(self, *args, **kwargs):
+        """
+        Sobrescribe el método save para calcular automáticamente los campos derivados
+        """
+        # Calcular sensación térmica
+        self.wind_chill = self.wind_chill_calculator()
+        
+        # Calcular punto de rocío
+        self.dew_point = self.dew_point_calculator()
+        
+        # Calcular índice de calor si aplica
+        if self.temperature >= 27:
+            self.heat_index = self.heat_index_calculator()
+        
+        super().save(*args, **kwargs)
