@@ -50,12 +50,32 @@ pnpm dev
 
 ---
 
-## Alternativa: Usar run.ps1 (Recomendado)
+## Alternativa: Comandos Automatizados (Recomendado)
 
-Si prefieres **no cambiar de carpeta** manualmente, usa el script unificado desde la raíz:
+Si prefieres **no cambiar de carpeta** manualmente, usa comandos automatizados desde la raíz:
+
+### Opción A: Makefile (Linux/Mac/Windows con make)
+
+```bash
+# Desde la RAÍZ del proyecto:
+
+# Configurar todo automáticamente
+make setup
+
+# Iniciar backend
+make backend
+
+# Iniciar frontend (en otra terminal)
+make frontend
+
+# Ver todos los comandos
+make help
+```
+
+### Opción B: run.ps1 (Windows PowerShell)
 
 ```powershell
-# Desde la RAÍZ del proyecto (C:\...\atmos):
+# Desde la RAÍZ del proyecto:
 
 # Configurar todo automáticamente
 .\run.ps1 setup
@@ -65,11 +85,14 @@ Si prefieres **no cambiar de carpeta** manualmente, usa el script unificado desd
 
 # Iniciar frontend (en otra terminal)
 .\run.ps1 frontend
+
+# Ver todos los comandos
+.\run.ps1 help
 ```
 
-✅ **Ventaja**: El script cambia automáticamente a las carpetas correctas
+✅ **Ventaja**: Los scripts cambian automáticamente a las carpetas correctas
 
-❌ **Error común**: NO ejecutes `pnpm dev` desde la raíz → usa `.\run.ps1 frontend` o muévete a `frontend/` primero
+❌ **Error común**: NO ejecutes `pnpm dev` desde la raíz → usa `make frontend` o `.\run.ps1 frontend` o muévete a `frontend/` primero
 
 ---
 
@@ -187,9 +210,10 @@ atmos/
 **Causa**: Ejecutaste `pnpm dev` desde la raíz del proyecto
 
 **Solución**:
-```powershell
-# Opción 1: Usa el script (recomendado)
-.\run.ps1 frontend
+```bash
+# Opción 1: Usa comandos automatizados (recomendado)
+make frontend          # Linux/Mac
+.\run.ps1 frontend     # Windows
 
 # Opción 2: Muévete a frontend/
 cd frontend

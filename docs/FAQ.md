@@ -56,11 +56,15 @@ python -m venv venv
 **Causa**: Estás ejecutando `pnpm` desde la raíz del proyecto en lugar de `frontend/`
 
 **Solución**:
-```powershell
-# Verifica dónde estás
+```bash
+# Opción 1: Usa comandos automatizados (MÁS FÁCIL)
+make frontend          # Linux/Mac
+.\run.ps1 frontend     # Windows PowerShell
+
+# Opción 2: Manual - Verifica dónde estás
 pwd
 
-# Si estás en C:\...\atmos, muévete a frontend:
+# Si estás en .../atmos, muévete a frontend:
 cd frontend
 
 # Ahora ejecuta:

@@ -6,19 +6,22 @@ Sistema fullstack para gestión y visualización de datos meteorológicos.
 
 ##  Inicio Rápido
 
-```powershell
+```bash
 # 1. Clonar
 git clone https://github.com/Anais-RV/atmos.git
 cd atmos
 
 # 2. Configurar todo automáticamente
-.\run.ps1 setup
+make setup              # Linux/Mac
+.\run.ps1 setup         # Windows
 
 # 3. Iniciar backend (en esta terminal)
-.\run.ps1 backend
+make backend            # Linux/Mac
+.\run.ps1 backend       # Windows
 
 # 4. Iniciar frontend (en otra terminal)
-.\run.ps1 frontend
+make frontend           # Linux/Mac
+.\run.ps1 frontend      # Windows
 ```
 
 **¡Listo!**  
