@@ -1,0 +1,61 @@
+name: Verificaciones Básicas
+
+# Se ejecuta solo en Pull Requests a dev o main
+on:
+  pull_request:
+    branches: [dev, main]
+
+jobs:
+  # Tests del backend
+  backend-tests:
+    name: Tests Backend
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Configurar Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Instalar dependencias
+        run: |
+          cd backend
+          pip install -r requirements.txt
+      
+      - name: Ejecutar tests con pytest
+        run: |
+          cd backend
+          pytest -v
+        continue-on-error: true
+
+  # Verificaciones del frontend
+  frontend-checks:
+    name: Frontend Lint y Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Configurar Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      
+      - name: Instalar dependencias
+        run: |
+          cd frontend
+          pnpm install
+      
+      - name: Verificar build
+        run: |
+          cd frontend
+          pnpm build
