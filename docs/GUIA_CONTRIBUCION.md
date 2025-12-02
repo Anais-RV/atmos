@@ -217,6 +217,7 @@ git push -u origin feat/mi-feature
 
 - **Problemas técnicos** → [FAQ.md](./FAQ.md)
 - **Setup inicial** → [INICIO_RAPIDO.md](./INICIO_RAPIDO.md)
+- **Volver al índice** → [00_INDEX.md](./00_INDEX.md)
 - **Pregunta al equipo** antes de inventar
 
 Es mejor preguntar que romper `dev` 🚀

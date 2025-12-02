@@ -182,5 +182,6 @@ git checkout -b feat/mi-funcionalidad
 
 - **¿Dudas de desarrollo?** → [GUIA_CONTRIBUCION.md](./GUIA_CONTRIBUCION.md)
 - **¿Problemas técnicos?** → [FAQ.md](./FAQ.md)
+- **Volver al índice** → [00_INDEX.md](./00_INDEX.md)
 
 ¡Listo para programar! 🎉

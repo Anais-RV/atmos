@@ -11,21 +11,17 @@ Sistema fullstack para gestión y visualización de datos meteorológicos.
 git clone https://github.com/Anais-RV/atmos.git
 cd atmos
 
-# 2. Backend
-cd backend
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+# 2. Configurar todo automáticamente
+.\run.ps1 setup
 
-# 3. Frontend (nueva terminal)
-cd frontend
-pnpm install
-pnpm dev
+# 3. Iniciar backend (en esta terminal)
+.\run.ps1 backend
+
+# 4. Iniciar frontend (en otra terminal)
+.\run.ps1 frontend
 ```
 
-**Listo!**  
+**¡Listo!**  
 - Backend: http://127.0.0.1:8000  
 - Frontend: http://localhost:5173
 
@@ -33,9 +29,14 @@ pnpm dev
 
 ##  Documentación
 
-- **[Inicio Rápido](./INICIO_RAPIDO.md)** - Setup completo y comandos
-- **[Guía Contribución](./GUIA_CONTRIBUCION.md)** - Cómo colaborar
-- **[FAQ](./FAQ.md)** - Problemas comunes
+**Todo lo que necesitas está aquí**  **[ docs/00_INDEX.md](./docs/00_INDEX.md)**
+
+El índice te guía paso a paso:
+1. Setup inicial
+2. Cómo contribuir
+3. Solución de problemas
+
+**Empieza por ahí**  no necesitas leer nada más.
 
 ---
 
@@ -48,19 +49,6 @@ pnpm dev
 
 ---
 
-##  Flujo Git
-
-```bash
-git checkout -b feat/mi-funcionalidad  # 1. Crear rama
-git commit -m "feat: mi cambio"        # 2. Hacer cambios
-git push -u origin feat/mi-funcionalidad # 3. Subir
-# 4. Abrir PR en GitHub (feat/*  dev)
-```
-
-**Nunca** hacer push directo a `main` o `dev`
-
----
-
 ##  Equipo
 
 Desarrollado por **Super Kode**:
@@ -69,10 +57,4 @@ Desarrollado por **Super Kode**:
 
 ---
 
-##  Licencia
-
-Proyecto educativo - Programa Super Kode
-
----
-
-**¿Dudas?**  [FAQ.md](./FAQ.md) | **¿Problemas?**  Abre un issue 
+**¿Dudas?**  Lee **[docs/00_INDEX.md](./docs/00_INDEX.md)** primero, luego pregunta al equipo 

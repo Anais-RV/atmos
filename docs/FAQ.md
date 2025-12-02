@@ -397,8 +397,9 @@ Luego edita `backend/.env` con tus valores.
 
 1. **Busca en este FAQ**
 2. **Revisa** [INICIO_RAPIDO.md](./INICIO_RAPIDO.md) y [GUIA_CONTRIBUCION.md](./GUIA_CONTRIBUCION.md)
-3. **Pregunta en el chat del equipo**
-4. **Crea un issue en GitHub** describiendo el problema
+3. **Vuelve al índice** → [00_INDEX.md](./00_INDEX.md)
+4. **Pregunta en el chat del equipo**
+5. **Crea un issue en GitHub** describiendo el problema
 
 **Formato del issue**:
 ```
