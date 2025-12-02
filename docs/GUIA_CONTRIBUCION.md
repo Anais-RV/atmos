@@ -168,6 +168,106 @@ export default () => <div>...</div>  // ❌
 
 ---
 
+## Buenas Prácticas de Código
+
+### Python (Backend)
+
+```python
+# ✅ Nombres descriptivos en snake_case
+def get_average_temperature():
+    return WeatherData.objects.aggregate(Avg('temperature'))
+
+# ✅ Type hints
+def calculate_total(price: float, quantity: int) -> float:
+    """Calcula el total multiplicando precio por cantidad."""
+    return price * quantity
+
+# ✅ Usa f-strings
+message = f"Temperatura: {temp}°C"
+
+# ❌ Evita nombres poco claros
+def gat():  # ¿Qué hace?
+    return x
+```
+
+**ORM y consultas:**
+```python
+# ✅ Usa select_related para ForeignKey (evita N+1)
+users = User.objects.select_related('profile').all()
+
+# ✅ Usa exists() para verificar
+if WeatherData.objects.filter(temp__gt=40).exists():
+    # ...
+
+# ❌ No hagas esto (carga toda la tabla)
+if len(WeatherData.objects.all()) > 0:
+    # ...
+```
+
+### JavaScript/React (Frontend)
+
+```jsx
+// ✅ Componentes con function (no arrow)
+export default function UserCard() {
+  return <div>...</div>
+}
+
+// ✅ Desestructura props
+function Button({ text, onClick, variant = 'primary' }) {
+  return <button onClick={onClick}>{text}</button>
+}
+
+// ✅ useEffect con dependencias correctas
+useEffect(() => {
+  fetchData(userId)
+}, [userId])  // Incluye todas las dependencias
+
+// ❌ Evita modificar estado directamente
+state.items.push(newItem)  // ❌ Mal
+setItems([...items, newItem])  // ✅ Bien
+```
+
+**Llamadas a API:**
+```jsx
+// ✅ Maneja errores
+try {
+  const data = await apiClient.get('/endpoint')
+  setData(data)
+} catch (error) {
+  console.error('Error:', error)
+  // Muestra mensaje al usuario
+}
+
+// ❌ No hagas fetch directo en el render
+```
+
+### Git: Flujo de Ramas
+
+**Regla de oro**: NUNCA trabajes directamente en `main` o `dev`
+
+```bash
+# ✅ Siempre crea una rama feat/
+git checkout dev
+git pull origin dev
+git checkout -b feat/mi-funcionalidad
+
+# ✅ Mantén tu rama actualizada
+git checkout dev
+git pull origin dev
+git checkout feat/mi-funcionalidad
+git merge dev
+
+# ❌ No hagas push directo a dev/main
+```
+
+**Resolución de conflictos:**
+1. Git marca conflictos con `<<<<`, `====`, `>>>>`
+2. Abre el archivo y decide qué código mantener
+3. Elimina las marcas
+4. `git add .` y `git commit -m "merge: resuelve conflictos"`
+
+---
+
 ## Antes de Hacer Push
 
 - [ ] El código funciona en local
@@ -175,6 +275,8 @@ export default () => <div>...</div>  // ❌
 - [ ] Los imports están ordenados
 - [ ] Seguiste las convenciones de nombres
 - [ ] Eliminaste código comentado innecesario
+- [ ] Si usas ORM, evitaste queries N+1
+- [ ] Los useEffect tienen las dependencias correctas
 
 ---
 

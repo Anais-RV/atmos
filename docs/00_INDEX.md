@@ -76,21 +76,20 @@ Antes de programar, asegúrate de haber hecho esto:
 
 **⚠️ No necesitas leer esto para trabajar en el proyecto**
 
-Esta carpeta contiene documentación técnica sobre cómo se diseñó y simplificó el repositorio. Es útil si:
-- Quieres entender las decisiones de arquitectura
-- Necesitas documentar cambios grandes
-- Eres responsable de mantener el proyecto
+La carpeta **[REFERENCIAS/](./REFERENCIAS/)** contiene documentación técnica sobre arquitectura, decisiones de diseño, y detalles avanzados del proyecto.
 
-### Documentos técnicos disponibles:
+**¿Para quién es?**
+- Responsables de arquitectura del proyecto
+- Quien necesite documentar cambios grandes
+- Quien quiera entender las decisiones técnicas a fondo
 
-📁 **[REFERENCIAS/](./REFERENCIAS/)**
-- `INFORME_SIMPLIFICACION.md` - Análisis de problemas y soluciones aplicadas
-- `PLAN_ACCION.md` - Plan paso a paso de la refactorización
-- `IMPLEMENTACION_COMPLETADA.md` - Resumen completo de cambios realizados
-- `RESUMEN_EJECUTIVO.md` - Vista rápida de la simplificación
-- `PROJECT_STATUS.md` - Estado histórico del proyecto
+**¿Qué contiene?**
+- Guías completas de buenas prácticas (Python, React, Django)
+- Análisis de simplificación del repositorio
+- Flujo de Git detallado
+- Documentación histórica archivada
 
-**¿Necesito leerlos?** → **NO**, a menos que seas responsable de arquitectura o documentes cambios grandes.
+**¿Necesito leerla?** → **NO**, a menos que seas responsable técnico o quieras profundizar en arquitectura.
 
 ---
 
