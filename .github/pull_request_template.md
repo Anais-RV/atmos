@@ -1,45 +1,30 @@
-## 📋 Descripción
+## ¿Qué hace este PR?
 
-<!-- Describe brevemente qué hace este PR y por qué es necesario -->
+<!-- Describe en 2-3 líneas qué cambia -->
 
 
 
-## 🔧 Tipo de cambio
+## Tipo de cambio
 
-<!-- Marca con una X lo que corresponda -->
-
-- [ ] ✨ Nueva funcionalidad (feature)
-- [ ] 🐛 Fix/corrección de bug
-- [ ] ♻️ Refactor (mejora de código sin cambiar funcionalidad)
+- [ ] ✨ Nueva funcionalidad
+- [ ] 🐛 Corrección de bug
+- [ ] 💄 Cambios de estilo/CSS
 - [ ] 📝 Documentación
 
-## ✅ Checklist
+## Checklist
 
-<!-- Marca con una X cuando hayas completado cada item -->
+- [ ] El código funciona en local
+- [ ] No subí archivos `.env` ni credenciales
+- [ ] Revisé mi código antes de pedir revisión
 
-- [ ] He trabajado en una rama `feat/...` o `fix/...`, no en `dev` ni `main`
-- [ ] Mis cambios solo afectan a la parte que indica el título
-- [ ] Los tests pasan en local (si existen)
-- [ ] No he subido credenciales, `.env` ni datos sensibles
-- [ ] He revisado mi propio código antes de pedir revisión
-- [ ] Mi código sigue las buenas prácticas del proyecto
-
-## 🧪 Cómo probarlo
-
-<!-- Indica los pasos para probar tus cambios -->
+## ¿Cómo lo pruebo?
 
 1. 
 2. 
 3. 
 
-## 📸 Capturas (opcional)
+## Capturas (si aplica)
 
-<!-- Si hay cambios visuales, añade capturas de pantalla -->
-
-
-
-## 💬 Notas adicionales
-
-<!-- Cualquier información extra que quieras compartir -->
+<!-- Añade capturas si hay cambios visuales -->
 
 
