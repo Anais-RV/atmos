@@ -16,7 +16,7 @@ function Footer() {
           </div>
           <div className="footer-slot">
             <span className="footer-slot-placeholder">Predicción</span>
-            <span className="sr-only">Preddición</span>
+            <span className="sr-only">Predicción</span>
           </div>
         </div>
       </div>
