@@ -54,8 +54,8 @@ setup_backend() {
     write_log "Iniciando setup-backend"
     [[ ! -d backend ]] && { echo "❌ /backend no existe"; write_log "Backend no encontrado" "ERROR"; return; }
     pushd backend >/dev/null || return
-    [[ ! -d ".venv" ]] && { echo "Creando entorno virtual..."; python -m venv .venv; write_log "Entorno virtual creado"; }
-    [[ -f ".venv/bin/activate" ]] && source .venv/bin/activate || echo "❌ No existe entorno virtual en backend/.venv"
+    [[ ! -d "venv" ]] && { echo "Creando entorno virtual..."; python -m venv venv; write_log "Entorno virtual creado"; }
+    [[ -f "venv/bin/activate" ]] && source venv/bin/activate || echo "❌ No existe entorno virtual en backend/venv"
     [[ -f "requirements.txt" ]] && { pip install -r requirements.txt; write_log "Dependencias instaladas"; }
     popd >/dev/null
 }
@@ -65,11 +65,11 @@ run_migrate() { write_log "Aplicando migraciones"; (cd backend && python manage.
 run_migrations() { write_log "Creando migraciones"; (cd backend && python manage.py makemigrations); write_log "Migraciones creadas"; }
 activate_venv() {
     write_log "Activando entorno virtual"
-    if [[ -f "backend/.venv/bin/activate" ]]; then
-        source backend/.venv/bin/activate
+    if [[ -f "backend/venv/bin/activate" ]]; then
+        source backend/venv/bin/activate
         echo "✅ Entorno virtual activado"
     else
-        echo "❌ No existe entorno virtual en backend/.venv"
+        echo "❌ No existe entorno virtual en backend/venv"
     fi
 }
 create_superuser() { write_log "Creando superusuario"; (cd backend && python manage.py createsuperuser); write_log "Superusuario creado"; }
