@@ -1,9 +1,9 @@
-// frontend/src/history/WeatherHistoryPage.jsx
+// frontend/src/components/history/WeatherHistoryPage.jsx
 
-import BasePageLayout from "../components/layout/BasePageLayout";
-import { getTemperatureColor } from "../styles/temperatureColors";
+import BasePageLayout from "../layout/BasePageLayout";
+import { getTemperatureColor } from "../../styles/temperatureColors";
 import WeatherHistory from "./WeatherHistory";
-import "../styles/history.css";
+import "../../styles/history.css";
 
 function WeatherHistoryPage() {
   const temperatureC = 7; // igual que Dashboard/Charts para mantener coherencia

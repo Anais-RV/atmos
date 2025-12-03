@@ -1,4 +1,5 @@
 // frontend/src/components/layout/BasePageLayout.jsx
+import PropTypes from 'prop-types';
 import styled from "styled-components";
 import { MEDIA } from "../../styles/breakpoints";
 
@@ -63,5 +64,12 @@ function BasePageLayout({ title, description, children, containerColor }) {
     </AppMain>
   );
 }
+
+BasePageLayout.propTypes = {
+  title: PropTypes.string,
+  description: PropTypes.string,
+  children: PropTypes.node.isRequired,
+  containerColor: PropTypes.string,
+};
 
 export default BasePageLayout;
