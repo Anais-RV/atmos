@@ -1,4 +1,5 @@
 // src/components/layout/Navbar.jsx
+import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
@@ -34,9 +35,9 @@ function Navbar() {
             ⋮
           </button>
 
-          <button className="navbar-cta" type="button">
+          <Link to="/login" className="navbar-cta">
             Sign in
-          </button>
+          </Link>
         </div>
       </nav>
     </header>
