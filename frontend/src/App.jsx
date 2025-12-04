@@ -15,6 +15,8 @@ import UserPanelPage from "./pages/UserPanelPage";
 import DataProtectionPage from "./pages/DataProtectionPage";
 import ForecastChartPage from "./chart/ForecastChartPage";
 import WeatherHistoryPage from "./history/WeatherHistoryPage";
+import ForecastPage from "./forecast/ForecastPage";
+import ForecastExtendedPage from "./forecast/ForecastExtendedPage"; // ⬅️ NUEVA IMPORTACIÓN
 
 function App() {
   return (
@@ -30,6 +32,11 @@ function App() {
           <Route path="/data-protection" element={<DataProtectionPage />} />
           <Route path="/charts" element={<ForecastChartPage />} />
           <Route path="/history" element={<WeatherHistoryPage />} />
+          <Route path="/forecast" element={<ForecastPage />} />
+          <Route
+            path="/forecast-extended"
+            element={<ForecastExtendedPage />}   // ⬅️ NUEVA RUTA
+          />
         </Routes>
 
         <Footer />

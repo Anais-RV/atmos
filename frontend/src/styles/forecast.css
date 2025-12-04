@@ -62,3 +62,13 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
+
+/* Doble altura que una card normal (ajusta a tu gusto) */
+.forecast-extended-card {
+  min-height: 560px; 
+}
+
+/* Opcional: que se note que es clicable la vista previa */
+.forecast-clickable {
+  cursor: pointer;
+}
