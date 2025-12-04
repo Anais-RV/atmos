@@ -15,7 +15,7 @@ class City(models.Model):
 
 class WeatherObservation(models.Model):
     # Modelo para observar y almacenar datos meteorológicos
-    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name="Observaciones en ciudades")
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name="Observaciones en ciudades+")
     timestamp = models.DateTimeField(default=timezone.now)
 
     # Temperatura
@@ -46,6 +46,20 @@ class WeatherObservation(models.Model):
     wind_chill = models.FloatField(null=True, blank=True, editable=False)
     dew_point = models.FloatField(null=True, blank=True, editable=False)
     heat_index = models.FloatField(null=True, blank=True, editable=False)
+
+    # class Meta: clase especial que proporciona metadatos para personalizar su comportamiento
+    """
+    class Meta:
+        # Nombres en español para el admin
+        verbose_name = "Observación Meteorológica"
+        verbose_name_plural = "Datos Meteorológicos"
+        # Orden por defecto
+        ordering = ['-created_at']
+        # Índices para mejorar consultas
+        indexes = [
+            models.Index(fields=['-created_at']),
+        ]
+    """
 
     def __str__(self):
         return f"{self.city.name} @ {self.timestamp.strftime('%Y-%m-%d %H:%M')} -> {self.temperature}ºC"
