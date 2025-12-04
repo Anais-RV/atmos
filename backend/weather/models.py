@@ -5,8 +5,8 @@ import math
 class City(models.Model):
     # Modelo para almacenar ciudades en ubicaciones geográficas
     name = models.CharField(max_length=100)
-    latitud = models.FloatField()
-    longitud = models.FloatField()
+    latitud = models.FloatField(help_text="Latitud de la ciudad", default=0)
+    longitud = models.FloatField(help_text="Longitud de la ciudad", default=0)
     altitud = models.FloatField(null=True, blank=True, help_text="Metros sobre el nivel del mar")
 
     def __str__(self):
@@ -18,26 +18,27 @@ class WeatherObservation(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name="Observaciones en ciudades+")
     timestamp = models.DateTimeField(default=timezone.now)
 
+
     # Temperatura
     temperature = models.FloatField(help_text="Temperatura en grados Celsius")
     max_temperature = models.FloatField(null=True, blank=True)
     min_temperature = models.FloatField(null=True, blank=True)
 
     # Humedad y presión
-    humidity = models.FloatField(help_text="Humedad relativa en procentaje (0-100)")
-    pressure = models.FloatField(help_text="Presión atmosférica en hPa (hectopascal)")
+    humidity = models.FloatField(help_text="Humedad relativa en procentaje (0-100)", default=0)
+    pressure = models.FloatField(help_text="Presión atmosférica en hPa (hectopascal)", default=0)
 
     # Viento
-    wind_speed = models.FloatField(help_text="Velocidad del viento en km/h (kilómetros por hora)")
-    wind_direction = models.FloatField(help_text="Dirección del viento en grados (0-360)")
-    wind_gust = models.FloatField(null=True, blank=True, help_text="Ráfaga máxima de viento en km/h")
+    wind_speed = models.FloatField(help_text="Velocidad del viento en km/h (kilómetros por hora)", default=0)
+    wind_direction = models.FloatField(help_text="Dirección del viento en grados (0-360)", default=0)
+    wind_gust = models.FloatField(null=True, blank=True, help_text="Ráfaga máxima de viento en km/h", default=0)
 
     # Precipitación
     precipitation = models.FloatField(default=0, help_text="Precipitación en mm (milímetros)")
 
     # Otros datos
-    visibility = models.FloatField(null=True, blank=True, help_text="Visibilidad en km")
-    cloud_cover = models.FloatField(null=True, blank=True, help_text="Porcentaje de cobertura nubosa")
+    visibility = models.FloatField(null=True, blank=True, help_text="Visibilidad en km", default=0)
+    cloud_cover = models.FloatField(null=True, blank=True, help_text="Porcentaje de cobertura nubosa", default=0)
 
     # Campos calculados (se llenan automáticamente): 
     # 1. Sensación térmica
@@ -48,18 +49,18 @@ class WeatherObservation(models.Model):
     heat_index = models.FloatField(null=True, blank=True, editable=False)
 
     # class Meta: clase especial que proporciona metadatos para personalizar su comportamiento
-    """
+    
     class Meta:
         # Nombres en español para el admin
         verbose_name = "Observación Meteorológica"
         verbose_name_plural = "Datos Meteorológicos"
         # Orden por defecto
-        ordering = ['-created_at']
+        ordering = ['-timestamp']
         # Índices para mejorar consultas
         indexes = [
-            models.Index(fields=['-created_at']),
+            models.Index(fields=['-timestamp']),
         ]
-    """
+    
 
     def __str__(self):
         return f"{self.city.name} @ {self.timestamp.strftime('%Y-%m-%d %H:%M')} -> {self.temperature}ºC"
