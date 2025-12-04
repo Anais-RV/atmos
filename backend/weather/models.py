@@ -17,7 +17,8 @@ class WeatherObservation(models.Model):
     # Modelo para observar y almacenar datos meteorológicos
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name="Observaciones en ciudades+")
     timestamp = models.DateTimeField(default=timezone.now)
-
+    # Actualización en tiemstamp
+    updated_at = models.DateTimeField(auto_now=True)
 
     # Temperatura
     temperature = models.FloatField(help_text="Temperatura en grados Celsius")
