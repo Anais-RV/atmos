@@ -1,5 +1,6 @@
 // src/components/layout/Navbar.jsx
 import { Link } from "react-router-dom";
+import HamburgerMenu from "../hamburguer_menu/HamburgerMenu"; // 👈 añadido
 
 function Navbar() {
   return (
@@ -27,13 +28,8 @@ function Navbar() {
 
         {/* DERECHA: MENÚ DESPLEGABLE + SIGN IN */}
         <div className="navbar-right">
-          <button
-            className="navbar-menu-button"
-            type="button"
-            aria-label="Open menu"
-          >
-            ⋮
-          </button>
+          {/* aquí antes estaba el botón ⋮ */}
+          <HamburgerMenu />
 
           <Link to="/login" className="navbar-cta">
             Sign in
