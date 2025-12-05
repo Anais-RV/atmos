@@ -1,8 +1,11 @@
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions
+from rest_framework.response import Response
+
 from .serializers import (
     UserRegisterSerializer, ProfileSerializer, ProfileUpdateSerializer
 )
+
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
@@ -49,4 +52,3 @@ class PublicView(generics.GenericAPIView):
 
     def get(self, request):
         return Response({"message": "Este es un endpoint público."})
-from rest_framework.response import Response
