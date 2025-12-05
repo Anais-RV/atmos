@@ -3,8 +3,11 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 
 from .serializers import (
-    UserRegisterSerializer, ProfileSerializer, ProfileUpdateSerializer
+    UserRegisterSerializer,
+    ProfileSerializer,
+    ProfileUpdateSerializer,
 )
+from .permissions import IsSuperUser
 
 
 class RegisterView(generics.CreateAPIView):
@@ -24,13 +27,13 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_class(self):
+        """Usar un serializer distinto para GET vs PUT/PATCH."""
         if self.request.method in ["PUT", "PATCH"]:
             return ProfileUpdateSerializer
         return ProfileSerializer
 
     def get_object(self):
         return self.request.user
-
 
 
 class AdminOnlyView(generics.GenericAPIView):
@@ -41,14 +44,9 @@ class AdminOnlyView(generics.GenericAPIView):
 
 
 class SuperuserOnlyView(generics.GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsSuperUser]
 
     def get(self, request):
-        if not request.user.is_superuser:
-            return Response(
-                {"detail": "No tienes permiso para acceder a este recurso."},
-                status=403
-            )
         return Response({"message": "Solo los superusuarios pueden ver esto."})
 
 
