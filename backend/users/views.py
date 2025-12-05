@@ -102,3 +102,15 @@ class SuperuserOnlyView(APIView):
             {"message": "Solo los superusuarios pueden ver esto."},
             status=status.HTTP_200_OK,
         )
+    
+class PublicView(APIView):
+    """
+    Ejemplo de endpoint público accesible sin autenticación.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        return Response(
+            {"message": "Este es un endpoint público."},
+            status=status.HTTP_200_OK,
+        )
