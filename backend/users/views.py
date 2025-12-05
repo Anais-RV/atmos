@@ -1,116 +1,52 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.contrib.auth.models import User
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status, permissions
+from rest_framework import generics, permissions
+from .serializers import (
+    UserRegisterSerializer, ProfileSerializer, ProfileUpdateSerializer
+)
 
-from .serializers import UserRegisterSerializer, ProfileSerializer, ProfileUpdateSerializer
-
-
-class RegisterView(APIView):
-    """
-    Registro de usuarios (público).
-    """
+class RegisterView(generics.CreateAPIView):
+    serializer_class = UserRegisterSerializer
     permission_classes = [permissions.AllowAny]
 
-    def post(self, request):
-        serializer = UserRegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
-                {"message": "Usuario creado correctamente"},
-                status=status.HTTP_201_CREATED,
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class MeView(APIView):
-    """
-    Devuelve los datos del usuario autenticado.
-    Requiere JWT válido.
-    """
+class MeView(generics.RetrieveAPIView):
+    serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        user: User = request.user
-        data = {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "is_staff": user.is_staff,
-            "is_superuser": user.is_superuser,
-        }
-        return Response(data, status=status.HTTP_200_OK)
+    def get_object(self):
+        return self.request.user
 
 
-class ProfileView(APIView):
+class ProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = ProfileUpdateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        serializer = ProfileSerializer(request.user)
-        return Response(serializer.data)
-
-    def put(self, request):
-        serializer = ProfileUpdateSerializer(
-            request.user, data=request.data, context={"request": request}
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request):
-        serializer = ProfileUpdateSerializer(
-            request.user,
-            data=request.data,
-            partial=True,
-            context={"request": request},
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_object(self):
+        return self.request.user
 
 
-class AdminOnlyView(APIView):
-    """
-    Ejemplo de endpoint solo para admins (is_staff=True).
-    """
+class AdminOnlyView(generics.GenericAPIView):
     permission_classes = [permissions.IsAdminUser]
 
     def get(self, request):
-        return Response(
-            {"message": "Solo los admins pueden ver esto."},
-            status=status.HTTP_200_OK,
-        )
+        return Response({"message": "Solo los admins pueden ver esto."})
 
-class SuperuserOnlyView(APIView):
-    """
-    Ejemplo de endpoint solo para superusuarios (is_superuser=True).
-    """
-    permission_classes = [permissions.IsAdminUser]
+
+class SuperuserOnlyView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         if not request.user.is_superuser:
             return Response(
                 {"detail": "No tienes permiso para acceder a este recurso."},
-                status=status.HTTP_403_FORBIDDEN,
+                status=403
             )
-        return Response(
-            {"message": "Solo los superusuarios pueden ver esto."},
-            status=status.HTTP_200_OK,
-        )
-    
-class PublicView(APIView):
-    """
-    Ejemplo de endpoint público accesible sin autenticación.
-    """
+        return Response({"message": "Solo los superusuarios pueden ver esto."})
+
+
+class PublicView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
-        return Response(
-            {"message": "Este es un endpoint público."},
-            status=status.HTTP_200_OK,
-        )
+        return Response({"message": "Este es un endpoint público."})
+from rest_framework.response import Response
