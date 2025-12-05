@@ -1,0 +1,37 @@
+/* =========================
+   Loader overlay para el dashboard
+   ========================= */
+
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+
+.loader-spinner {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  border: 3px solid rgba(148, 163, 184, 0.35);
+  border-top-color: #38bdf8;
+  animation: loader-spin 0.9s linear infinite;
+  margin-bottom: 0.9rem;
+}
+
+.loader-text {
+  font-size: 0.85rem;
+  color: #e5e7eb;
+  opacity: 0.9;
+}
+
+/* Animación del spinner */
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
