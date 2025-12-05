@@ -146,3 +146,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:5173",
 ]
+
+EMBLEM_PHOTO_BASE_URL = config(
+    "EMBLEM_PHOTO_BASE_URL",
+    default="https://cdn.example.com/emblems/",
+)
