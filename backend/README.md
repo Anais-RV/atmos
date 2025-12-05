@@ -41,43 +41,26 @@ Con el entorno virtual activado:
 pip install -r requirements.txt
 ```
 
-### 4. Configurar variables de entorno
+### 4. Configurar variables de entorno (opcional)
 
-Copia el archivo de ejemplo y edita según necesites:
+**El proyecto ya está configurado**, pero si quieres personalizar algo:
 
 ```bash
+# Copia el archivo de ejemplo
 cp .env.example .env
+
+# Edita .env con tus valores (opcional)
 ```
 
-### 5. Crear el proyecto Django
+**Por defecto funciona sin .env** (usa SQLite y valores seguros de desarrollo)
 
-**IMPORTANTE**: El equipo debe ejecutar esto para inicializar Django:
-
-```bash
-django-admin startproject config .
-```
-
-Este comando crea la estructura base de Django en la carpeta actual.
-
-**⚠️ Si ya existe una carpeta `config/` de intentos anteriores:**
-```bash
-# Windows
-Remove-Item -Recurse -Force config
-
-# Linux/Mac
-rm -rf config
-
-# Luego vuelve a ejecutar
-django-admin startproject config .
-```
-
-### 6. Aplicar migraciones
+### 5. Aplicar migraciones
 
 ```bash
 python manage.py migrate
 ```
 
-### 7. Crear superusuario (opcional)
+### 6. Crear superusuario (opcional)
 
 ```bash
 python manage.py createsuperuser

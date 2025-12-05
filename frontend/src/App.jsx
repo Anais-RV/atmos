@@ -13,10 +13,10 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import UserPanelPage from "./pages/UserPanelPage";
 import DataProtectionPage from "./pages/DataProtectionPage";
-import ForecastChartPage from "./chart/ForecastChartPage";
-import WeatherHistoryPage from "./history/WeatherHistoryPage";
-import ForecastPage from "./forecast/ForecastPage";
-import ForecastExtendedPage from "./forecast/ForecastExtendedPage"; // ⬅️ NUEVA IMPORTACIÓN
+import ForecastChartPage from "./components/charts/ForecastChartPage";
+import WeatherHistoryPage from "./components/history/WeatherHistoryPage";
+import ForecastPage from "./pages/ForecastPage";
+import ForecastExtendedPage from "./pages/ForecastExtendedPage";
 
 function App() {
   return (
@@ -33,10 +33,7 @@ function App() {
           <Route path="/charts" element={<ForecastChartPage />} />
           <Route path="/history" element={<WeatherHistoryPage />} />
           <Route path="/forecast" element={<ForecastPage />} />
-          <Route
-            path="/forecast-extended"
-            element={<ForecastExtendedPage />}   // ⬅️ NUEVA RUTA
-          />
+          <Route path="/forecast-extended" element={<ForecastExtendedPage />} />
         </Routes>
 
         <Footer />

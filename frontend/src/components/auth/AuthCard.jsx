@@ -1,4 +1,5 @@
 // frontend/src/components/auth/AuthCard.jsx
+import PropTypes from 'prop-types';
 
 function AuthCard({ title, subtitle, children }) {
   return (
@@ -16,5 +17,11 @@ function AuthCard({ title, subtitle, children }) {
     </section>
   );
 }
+
+AuthCard.propTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  children: PropTypes.node.isRequired,
+};
 
 export default AuthCard;

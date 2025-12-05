@@ -1,8 +1,8 @@
-// frontend/src/forecast/ForecastPage.jsx
+// frontend/src/pages/ForecastPage.jsx
 
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
-import Forecast from "./Forecast";
+import Forecast from "../components/forecast/Forecast";
 import "../styles/forecast.css";
 
 function ForecastPage() {

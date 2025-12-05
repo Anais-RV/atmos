@@ -1,4 +1,4 @@
-// frontend/src/forecast/Forecast.jsx
+// frontend/src/components/forecast/Forecast.jsx
 
 import { useNavigate } from "react-router-dom";
 
