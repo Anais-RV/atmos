@@ -1,0 +1,74 @@
+/* =========================
+   Forecast layouts
+   ========================= */
+
+.forecast-main-viewport {
+  margin-top: 0.75rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(56, 189, 248, 0.6);
+  background: rgba(37, 99, 235, 0.16); /* azul claro */
+  padding: 1rem;
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Placeholder de la gráfica de forecast */
+.forecast-placeholder {
+  width: 100%;
+  text-align: center;
+}
+
+.forecast-placeholder-text {
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+/* Grid de las 3 secciones: día / semana / mes */
+.forecast-summary-grid {
+  margin-top: 0.9rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* En pantallas medianas y grandes, las 3 en fila */
+@media (min-width: 640px) {
+  .forecast-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Tarjetas pequeñas dentro de la center-card-bottom */
+.forecast-summary-item {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(56, 189, 248, 0.6);
+  background: rgba(15, 23, 42, 0.96);
+  padding: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.forecast-summary-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #e5e7eb;
+  text-align: center;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Doble altura que una card normal (ajusta a tu gusto) */
+.forecast-extended-card {
+  min-height: 560px; 
+}
+
+/* Opcional: que se note que es clicable la vista previa */
+.forecast-clickable {
+  cursor: pointer;
+}
