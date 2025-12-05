@@ -1,11 +1,12 @@
 // frontend/src/pages/DashboardPage.jsx
 
+import { useState } from "react";
 import BasePageLayout from "../components/layout/BasePageLayout";
+import WeatherInfo from "../components/weather/WeatherInfo";
 import { getTemperatureColor } from "../styles/temperatureColors";
 
 function DashboardPage() {
-  // TODO: esta temperatura vendrá del backend
-  const temperatureC = 7; // cambia este valor para probar (-5, 0, 10, 25, 35...)
+  const [temperatureC, setTemperatureC] = useState(15);
   const containerColor = getTemperatureColor(temperatureC);
 
   return (
@@ -14,19 +15,20 @@ function DashboardPage() {
       description=""
       containerColor={containerColor}
     >
-      <section className="center-card center-card-top" aria-labelledby="main-temp-title">
-        <h2 id="main-temp-title" className="center-card-title">Main temperature card</h2>
-        <p className="center-card-text">
-          Placeholder for the main component that will show temperature,
-          feels like, city name and main weather icon.
-        </p>
+      <section className="center-card center-card-top">
+        <WeatherInfo onTemperatureChange={setTemperatureC} />
       </section>
 
-      <section className="center-card center-card-bottom" aria-labelledby="env-metrics-title">
-        <h2 id="env-metrics-title" className="center-card-title">Environmental metrics</h2>
+      <section
+        className="center-card center-card-bottom"
+        aria-labelledby="env-metrics-title"
+      >
+        <h2 id="env-metrics-title" className="center-card-title">
+          Environmental metrics
+        </h2>
         <p className="center-card-text">
-          Placeholder for the component that will show wind, rain,
-          pressure, lux, humidity and dew point.
+          Placeholder for the component that will show wind, rain, pressure,
+          lux, humidity and dew point.
         </p>
       </section>
     </BasePageLayout>

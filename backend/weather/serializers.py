@@ -25,3 +25,4 @@ class CurrentWeatherSerializer(serializers.Serializer):
     city_name = serializers.CharField()
     temperature = serializers.FloatField()
     timestamp = serializers.DateTimeField()
+    condition = serializers.CharField(required=False)

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -146,3 +147,13 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:5173",
 ]
+
+EMBLEM_PHOTO_BASE_URL = config(
+    "EMBLEM_PHOTO_BASE_URL",
+    default="https://cdn.example.com/emblems/",
+)
+
+CITY_PHOTO_BASE_URL = config(
+    "CITY_PHOTO_BASE_URL",
+    default="https://cdn.example.com/cities/",
+)

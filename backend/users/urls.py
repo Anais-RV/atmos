@@ -12,3 +12,4 @@ urlpatterns = [
     path("superuser-only/", SuperuserOnlyView.as_view(), name="superuser-only"),
     path("public/", PublicView.as_view(), name="public"),
 ]
+

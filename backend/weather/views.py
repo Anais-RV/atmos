@@ -1,9 +1,14 @@
+# backend/weather/views.py
+
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 
 from .prophet_service import build_prophet_forecast
+from .emblem_photos import select_emblem_photo
+from .city_photos import select_city_photo
 from .models import City, WeatherObservation
 from .serializers import CurrentWeatherSerializer
 
@@ -57,6 +62,7 @@ class CurrentWeatherView(APIView):
             "city_name": city.name,
             "temperature": latest_observation.temperature,
             "timestamp": latest_observation.timestamp,
+            "condition": "Parcialmente nublado",  # TODO: obtener del modelo cuando esté disponible
         }
         
         serializer = CurrentWeatherSerializer(data)
@@ -95,3 +101,61 @@ class ProphetForecastView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+class CurrentConditionsView(APIView):
+    """
+    Endpoint para devolver condiciones actuales + foto emblemática (clima)
+    + foto de ciudad (según ciudad elegida) para el dashboard.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        city_id_param = request.query_params.get("city_id")
+        city_name = request.query_params.get("city_name")
+
+        city_id = None
+        if city_id_param is not None:
+            try:
+                city_id = int(city_id_param)
+            except ValueError:
+                # Si no es entero, lo ignoramos y nos quedamos con city_name
+                city_id = None
+
+        # TODO: sustituir estos placeholders con datos reales
+        # Por ahora, dejamos valores fijos para probar la lógica.
+        condition = "clear"   # p.ej. "rain", "snow", "clouds", "clear"...
+        temp_c = 18.0         # temperatura actual en ºC
+        is_daytime = True     # True si es de día, False si es de noche
+
+        # Foto emblemática según clima
+        emblem = select_emblem_photo(condition, temp_c, is_daytime)
+        emblem_base_url = getattr(
+            settings,
+            "EMBLEM_PHOTO_BASE_URL",
+            "https://cdn.example.com/emblems/",
+        )
+        emblem_photo_url = emblem_base_url.rstrip("/") + "/" + emblem.code
+
+        # Foto según ciudad elegida
+        city_photo = select_city_photo(city_id=city_id, city_name=city_name)
+        city_base_url = getattr(
+            settings,
+            "CITY_PHOTO_BASE_URL",
+            "https://cdn.example.com/cities/",
+        )
+        city_photo_url = city_base_url.rstrip("/") + "/" + city_photo.code
+
+        data = {
+            "city_id": city_id,
+            "city_name": city_name,
+            "condition": condition,
+            "temp_c": temp_c,
+            "is_daytime": is_daytime,
+            "emblem_photo": emblem.code,
+            "emblem_photo_url": emblem_photo_url,
+            "city_photo": city_photo.code,
+            "city_photo_url": city_photo_url,
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
