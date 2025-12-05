@@ -151,3 +151,8 @@ EMBLEM_PHOTO_BASE_URL = config(
     "EMBLEM_PHOTO_BASE_URL",
     default="https://cdn.example.com/emblems/",
 )
+
+CITY_PHOTO_BASE_URL = config(
+    "CITY_PHOTO_BASE_URL",
+    default="https://cdn.example.com/cities/",
+)
