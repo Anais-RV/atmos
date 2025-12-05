@@ -85,3 +85,20 @@ class AdminOnlyView(APIView):
             {"message": "Solo los admins pueden ver esto."},
             status=status.HTTP_200_OK,
         )
+
+class SuperuserOnlyView(APIView):
+    """
+    Ejemplo de endpoint solo para superusuarios (is_superuser=True).
+    """
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request):
+        if not request.user.is_superuser:
+            return Response(
+                {"detail": "No tienes permiso para acceder a este recurso."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        return Response(
+            {"message": "Solo los superusuarios pueden ver esto."},
+            status=status.HTTP_200_OK,
+        )
