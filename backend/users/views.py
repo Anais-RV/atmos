@@ -21,11 +21,16 @@ class MeView(generics.RetrieveAPIView):
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):
-    serializer_class = ProfileUpdateSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.method in ["PUT", "PATCH"]:
+            return ProfileUpdateSerializer
+        return ProfileSerializer
 
     def get_object(self):
         return self.request.user
+
 
 
 class AdminOnlyView(generics.GenericAPIView):
