@@ -2,6 +2,7 @@
 
 import "./styles/styles.css";
 import "./styles/auth.css";
+import "./styles/loader.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
