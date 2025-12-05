@@ -64,7 +64,7 @@ class WeatherObservation(models.Model):
     
 
     def __str__(self):
-        return f"{self.city.name} @ {self.timestamp.strftime('%Y-%m-%d %H:%M')} -> {self.temperature}ºC | Sensación térmica: {self.wind_chill} | Punto rocío: {self.dew_point} | Índice de calor: {self.heat_index}"
+        return f"{self.city.name} @ {self.timestamp.strftime('%Y-%m-%d %H:%M')} -> {self.temperature}ºC | Sensación térmica: {self.wind_chill}ºC | Punto rocío: {self.dew_point}ºC | Índice de calor: {self.heat_index}ºC"
 
 
     def wind_chill_calculator(self):
