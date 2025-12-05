@@ -25,3 +25,24 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             password=validated_data["password"],
         )
         return user
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "username", "email", "first_name", "last_name"]
+        read_only_fields = ["id", "username"]
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ["email", "first_name", "last_name"]
+        extra_kwargs = {
+            "email": {"required": True},
+        }
+
+    def validate_email(self, value):
+        user = self.context["request"].user
+        if User.objects.exclude(pk=user.pk).filter(email=value).exists():
+            raise serializers.ValidationError("Este correo ya está en uso.")
+        return value
