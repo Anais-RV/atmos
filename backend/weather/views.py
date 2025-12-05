@@ -62,6 +62,7 @@ class CurrentWeatherView(APIView):
             "city_name": city.name,
             "temperature": latest_observation.temperature,
             "timestamp": latest_observation.timestamp,
+            "condition": "Parcialmente nublado",  # TODO: obtener del modelo cuando esté disponible
         }
         
         serializer = CurrentWeatherSerializer(data)
