@@ -1,12 +1,13 @@
 // frontend/src/pages/DashboardPage.jsx
 
+import { useState } from 'react'
 import BasePageLayout from "../components/layout/BasePageLayout";
+import WeatherInfo from "../components/weather/WeatherInfo";
 import { getTemperatureColor } from "../styles/temperatureColors";
 
 function DashboardPage() {
-  // TODO: esta temperatura vendrá del backend
-  const temperatureC = 7; // cambia este valor para probar (-5, 0, 10, 25, 35...)
-  const containerColor = getTemperatureColor(temperatureC);
+  const [temperatureC, setTemperatureC] = useState(15)
+  const containerColor = getTemperatureColor(temperatureC)
 
   return (
     <BasePageLayout
@@ -15,11 +16,7 @@ function DashboardPage() {
       containerColor={containerColor}
     >
       <section className="center-card center-card-top">
-        <h2 className="center-card-title">Main temperature card</h2>
-        <p className="center-card-text">
-          Placeholder for the main component that will show temperature,
-          feels like, city name and main weather icon.
-        </p>
+        <WeatherInfo onTemperatureChange={setTemperatureC} />
       </section>
 
       <section className="center-card center-card-bottom">
@@ -34,3 +31,5 @@ function DashboardPage() {
 }
 
 export default DashboardPage;
+
+
