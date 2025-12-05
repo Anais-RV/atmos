@@ -383,7 +383,6 @@
   align-items: center;
   justify-content: center;
 }
-
 /* Cada hueco de componente (component slot 1, 2 y 3) */
 .footer-slot {
   width: 140px;
@@ -394,8 +393,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* añadidos para que funcionen como botones/enlaces */
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.08s ease;
 }
 
+.footer-slot:hover {
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+/* Estado activo según la página */
+.footer-slot--active {
+  border-style: solid;
+  border-color: #38bdf8;
+  background: rgba(15, 23, 42, 1);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+}
+
+/* Texto visible del botón del footer */
+.footer-slot-label {
+  font-size: 0.8rem;
+  color: #e5e7eb;
+}
+
+/* Lo dejo por compatibilidad, aunque ahora usamos footer-slot-label */
 .footer-slot-placeholder {
   font-size: 0.8rem;
   color: #6b7280;

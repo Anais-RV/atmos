@@ -3,6 +3,7 @@
 import "./styles/styles.css";
 import "./styles/auth.css";
 import "./styles/loader.css";
+import "./styles/hamburger.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -16,6 +17,8 @@ import UserPanelPage from "./pages/UserPanelPage";
 import DataProtectionPage from "./pages/DataProtectionPage";
 import ForecastChartPage from "./components/charts/ForecastChartPage";
 import WeatherHistoryPage from "./components/history/WeatherHistoryPage";
+import ForecastPage from "./pages/ForecastPage";
+import ForecastExtendedPage from "./pages/ForecastExtendedPage";
 
 function App() {
   return (
@@ -31,6 +34,8 @@ function App() {
           <Route path="/data-protection" element={<DataProtectionPage />} />
           <Route path="/charts" element={<ForecastChartPage />} />
           <Route path="/history" element={<WeatherHistoryPage />} />
+          <Route path="/forecast" element={<ForecastPage />} />
+          <Route path="/forecast-extended" element={<ForecastExtendedPage />} />
         </Routes>
 
         <Footer />
