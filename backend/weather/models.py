@@ -79,12 +79,12 @@ class WeatherObservation(models.Model):
         # Wind Chill (para temp <= 10°C y viento > 4.8 km/h)
         if temp <= 10 and wind > 4.8:
             wc = 13.12 + 0.6215 * temp - 11.37 * (wind ** 0.16) + 0.3965 * temp * (wind ** 0.16)
-            return f"Sensación térmica actual: {wc:.2f}"
+            return round(wc, 2)
         
         # Índice de Calor (para temp >= 27°C)
         elif temp >= 27:
-            hi = self.calcular_indice_calor()
-            return f"Índice de calor: {hi}"
+            hi = self.heat_index_calculator()
+            return round(hi, 2)
         
         # Si no aplica ninguna fórmula, la sensación térmica es igual a la temperatura
         return temp
@@ -128,7 +128,7 @@ class WeatherObservation(models.Model):
             "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"
         ]
         indice = round(self.wind_direction / 22.5) % 16
-        return f"Dirección del viento: {direcciones[indice]}"
+        return direcciones[indice]
     
     def save(self, *args, **kwargs):
         """
