@@ -23,11 +23,11 @@ City.objects.all().delete()
 # Crear ciudades
 print("🏙️ Creando ciudades...")
 cities_data = [
-    {"name": "Madrid", "temp": 18.3, "condition": "Parcialmente nublado", "wind": 2.1, "humidity": 65},
-    {"name": "Barcelona", "temp": 22.0, "condition": "Soleado", "wind": 4.5, "humidity": 55},
-    {"name": "Valencia", "temp": 15.7, "condition": "Lluvia", "wind": 8.2, "humidity": 85},
-    {"name": "Sevilla", "temp": 24.5, "condition": "Soleado", "wind": 1.8, "humidity": 48},
-    {"name": "Bilbao", "temp": 12.1, "condition": "Nublado", "wind": 5.3, "humidity": 72},
+    {"name": "Madrid", "temp": 18.3, "condition": "Parcialmente nublado"},
+    {"name": "Barcelona", "temp": 22.0, "condition": "Soleado"},
+    {"name": "Valencia", "temp": 15.7, "condition": "Lluvia"},
+    {"name": "Sevilla", "temp": 24.5, "condition": "Soleado"},
+    {"name": "Bilbao", "temp": 12.1, "condition": "Nublado"},
 ]
 
 cities = {}
@@ -44,13 +44,6 @@ for data in cities_data:
         timestamp=now,
         temperature=data["temp"],
         condition=data["condition"],
-        wind_speed=data["wind"],
-        humidity=data["humidity"],
-        pressure=1013.25,
-        visibility=10.0,
-        feels_like_temp=data["temp"] - 1,
-        uv_index=3,
-        dew_point=10.5,
     )
     
     # Crear una observación anterior para simular histórico
@@ -59,13 +52,6 @@ for data in cities_data:
         timestamp=now - timedelta(hours=1),
         temperature=data["temp"] - 1,
         condition=data["condition"],
-        wind_speed=data["wind"] + 0.5,
-        humidity=data["humidity"] + 5,
-        pressure=1013.0,
-        visibility=9.5,
-        feels_like_temp=data["temp"] - 2,
-        uv_index=2,
-        dew_point=10.0,
     )
     
     print(f"  ✅ {city_name}: {data['temp']}°C - {data['condition']}")
