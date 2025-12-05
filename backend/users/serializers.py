@@ -46,3 +46,12 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         if User.objects.exclude(pk=user.pk).filter(email=value).exists():
             raise serializers.ValidationError("Este correo ya está en uso.")
         return value
+    
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+    
+    def to_representation(self, instance):
+        return ProfileSerializer(instance).data
