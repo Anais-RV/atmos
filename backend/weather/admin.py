@@ -8,7 +8,6 @@ class CityAdmin(admin.ModelAdmin):
     list_display = ['name', 'latitud', 'longitud', 'altitud']
     
 
-
 @admin.register(WeatherObservation)
 class WeatherObservationAdmin(admin.ModelAdmin):
     # Columans visibles

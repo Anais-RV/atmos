@@ -114,7 +114,7 @@ class WeatherObservation(models.Model):
         a = 17.27
         b = 237.7
         
-        alpha = ((a * T) / (b + T)) + math.log(H / 100.0)
+        alpha = ((a * T) / (b + T)) + math.log(H / 100.00)
         dew_point = (b * alpha) / (a - alpha)
 
         return round(dew_point, 2)
