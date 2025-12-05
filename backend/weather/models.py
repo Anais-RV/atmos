@@ -22,8 +22,8 @@ class WeatherObservation(models.Model):
 
     # Temperatura
     temperature = models.FloatField(help_text="Temperatura en grados Celsius")
-    max_temperature = models.FloatField(null=True, blank=True)
-    min_temperature = models.FloatField(null=True, blank=True)
+    max_temperature = models.FloatField(null=True, blank=True, help_text="Temperatura máxima")
+    min_temperature = models.FloatField(null=True, blank=True, help_text="Temperatura mínima")
 
     # Humedad y presión
     humidity = models.FloatField(help_text="Humedad relativa en procentaje (0-100)", default=0)
@@ -54,7 +54,7 @@ class WeatherObservation(models.Model):
     class Meta:
         # Nombres en español para el admin
         verbose_name = "Observación Meteorológica"
-        verbose_name_plural = "Datos Meteorológicos"
+        verbose_name_plural = "Observaciones Meteorológicas"
         # Orden por defecto
         ordering = ['-timestamp']
         # Índices para mejorar consultas
@@ -64,7 +64,8 @@ class WeatherObservation(models.Model):
     
 
     def __str__(self):
-        return f"{self.city.name} @ {self.timestamp.strftime('%Y-%m-%d %H:%M')} -> {self.temperature}ºC"
+        return f"{self.city.name} @ {self.timestamp.strftime('%Y-%m-%d %H:%M')} -> {self.temperature}ºC | Sensación térmica: {self.wind_chill} | Punto rocío: {self.dew_point} | Índice de calor: {self.heat_index}"
+
 
     def wind_chill_calculator(self):
         """
@@ -83,7 +84,7 @@ class WeatherObservation(models.Model):
         # Índice de Calor (para temp >= 27°C)
         elif temp >= 27:
             hi = self.calcular_indice_calor()
-            return f"Índice da calor: {hi}"
+            return f"Índice de calor: {hi}"
         
         # Si no aplica ninguna fórmula, la sensación térmica es igual a la temperatura
         return temp
@@ -101,7 +102,7 @@ class WeatherObservation(models.Model):
         hi += -0.0164248277778 * (H ** 2) + 0.002211732 * (T ** 2) * H
         hi += 0.00072546 * T * (H ** 2) + -0.000003582 * (T ** 2) * (H ** 2)
 
-        return f"Índice de calor según la fórmula de Steadman: {hi:.2f}"
+        return round(hi, 2)
 
     def dew_point_calculator(self):
         """
@@ -116,8 +117,8 @@ class WeatherObservation(models.Model):
         alpha = ((a * T) / (b + T)) + math.log(H / 100.0)
         dew_point = (b * alpha) / (a - alpha)
 
-        return f"Punto rocío según la fórmula de Magnus-Tetens: {dew_point:.2f}"
-    
+        return round(dew_point, 2)
+                        
     def wind_direction_in_text(self):
         """
         Convierte los grados de dirección del viento a texto
