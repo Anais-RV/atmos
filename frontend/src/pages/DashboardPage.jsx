@@ -14,19 +14,29 @@ function DashboardPage() {
       description=""
       containerColor={containerColor}
     >
-      <section className="center-card center-card-top" aria-labelledby="main-temp-title">
-        <h2 id="main-temp-title" className="center-card-title">Main temperature card</h2>
+      <section
+        className="center-card center-card-top"
+        aria-labelledby="main-temp-title"
+      >
+        <h2 id="main-temp-title" className="center-card-title">
+          Main temperature card
+        </h2>
         <p className="center-card-text">
-          Placeholder for the main component that will show temperature,
-          feels like, city name and main weather icon.
+          Placeholder for the main component that will show temperature, feels
+          like, city name and main weather icon.
         </p>
       </section>
 
-      <section className="center-card center-card-bottom" aria-labelledby="env-metrics-title">
-        <h2 id="env-metrics-title" className="center-card-title">Environmental metrics</h2>
+      <section
+        className="center-card center-card-bottom"
+        aria-labelledby="env-metrics-title"
+      >
+        <h2 id="env-metrics-title" className="center-card-title">
+          Environmental metrics
+        </h2>
         <p className="center-card-text">
-          Placeholder for the component that will show wind, rain,
-          pressure, lux, humidity and dew point.
+          Placeholder for the component that will show wind, rain, pressure,
+          lux, humidity and dew point.
         </p>
       </section>
     </BasePageLayout>
