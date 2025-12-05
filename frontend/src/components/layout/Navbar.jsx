@@ -1,39 +1,37 @@
 // src/components/layout/Navbar.jsx
 import { Link } from "react-router-dom";
+import HamburgerMenu from "../hamburguer_menu/HamburgerMenu"; // 👈 añadido
 
 function Navbar() {
   return (
-    <header className="navbar">
-      <nav className="navbar-inner">
+    <header className="navbar" role="banner">
+      <nav className="navbar-inner" aria-label="main navigation">
         {/* IZQUIERDA: CAMPANA NOTIFICACIONES */}
-        <div className="navbar-left">
+        <div className="navbar-left" aria-label="notifications section">
           <button
             className="navbar-icon-button"
-            aria-label="Notifications"
+            aria-label="view notifications"
             type="button"
           >
-            <span className="navbar-bell">🔔</span>
-            <span className="navbar-notification-dot" />
+            <span className="navbar-bell" aria-hidden="true">🔔</span>
+            <span className="navbar-notification-dot" aria-hidden="true" />
           </button>
         </div>
 
         {/* CENTRO: MARCA ATMOS */}
-        <div className="navbar-center">
-          <span className="navbar-brand-text">
+        <div className="navbar-center" aria-label="app branding">
+          <span 
+            className="navbar-brand-text"
+            aria-label="ATMOS - climate intelligence"  
+          >
             <span className="navbar-brand-main">ATMOS</span>
             <span className="navbar-brand-sub">climate intelligence</span>
           </span>
         </div>
 
         {/* DERECHA: MENÚ DESPLEGABLE + SIGN IN */}
-        <div className="navbar-right">
-          <button
-            className="navbar-menu-button"
-            type="button"
-            aria-label="Open menu"
-          >
-            ⋮
-          </button>
+        <div className="navbar-right" aria-label="account options">
+          <HamburgerMenu />
 
           <Link to="/login" className="navbar-cta">
             Sign in
