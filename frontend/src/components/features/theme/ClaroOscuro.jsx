@@ -15,30 +15,24 @@ const useWebColorScheme = () => {
 function ClaroOscuro() {
     const systemScheme = useWebColorScheme();
 
-    // 🛑 CAMBIO 1: Inicialización Directa 🛑
-    // Asumimos que TRUE significa Oscuro, aunque luego invertiremos la salida.
+    // 🛑 Inicialización Directa (isDarkMode = true si el sistema es oscuro) 🛑
     const [isDarkMode, setIsDarkMode] = useState(systemScheme === 'dark'); 
     
     // Función para alternar el estado
     const toggleTheme = () => setIsDarkMode(prev => !prev);
 
-    // 🛑 CAMBIO 2: Invertir la Lógica en useEffect 🛑
-    // Si isDarkMode es TRUE (esperamos modo Oscuro), aplicamos la clase 'light-mode',
-    // lo cual revierte el comportamiento anterior si estaba invertido.
+    // 🛑 Lógica Invertida en useEffect (Arregla el fondo invertido) 🛑
     useEffect(() => {
         document.body.classList.remove('light-mode', 'dark-mode'); 
         
-        // ⬅️ INVERSIÓN DE LA CLASE:
-        // Si isDarkMode es TRUE, se aplica 'light-mode' (claro)
-        // Si isDarkMode es FALSE, se aplica 'dark-mode' (oscuro)
+        // INVERSIÓN: Si isDarkMode es TRUE, se aplica 'light-mode' (claro visual)
         const modeClass = isDarkMode ? 'light-mode' : 'dark-mode'; 
         
         document.body.classList.add(modeClass);
     }, [isDarkMode]);
 
-    // 🛑 CAMBIO 3: Invertir la Lógica del Texto y Emoji 🛑
-    // Deben reflejar lo que la clase CSS REALMENTE está aplicando.
-    // Si isDarkMode es TRUE, se está aplicando 'light-mode', por lo tanto, mostramos el sol.
+    // 🛑 Inversión en el Texto y Emoji (Refleja el tema visual) 🛑
+    // Si isDarkMode es TRUE, el tema VISUAL es CLARO, por eso mostramos el Sol.
     const emoji = isDarkMode ? '🌞' : '🌙'; 
 
     return (
@@ -46,9 +40,10 @@ function ClaroOscuro() {
             className="claro-oscuro-widget" 
             style={styles.container}
         >
+            {/* Texto y emoji ahora HEREDAN el color del contenedor (CSS) */}
             <p className="emoji" style={styles.emoji}>{emoji}</p>
             <p className="text" style={styles.text}>
-                {/* Texto invertido para reflejar lo que la clase está haciendo: */}
+                {/* Texto reflejando el tema visual actual */}
                 {isDarkMode ? 'Modo Claro Activado' : 'Modo Oscuro Activado'} 
             </p>
             
@@ -56,7 +51,7 @@ function ClaroOscuro() {
                 onClick={toggleTheme}
                 className="theme-button"
                 style={styles.button}
-                // Texto del botón invertido:
+                // Texto del botón:
                 aria-label={`Cambiar a modo ${isDarkMode ? 'oscuro' : 'claro'}`}
             >
                 {isDarkMode ? 'Cambiar a Oscuro' : 'Cambiar a Claro'}
@@ -65,7 +60,7 @@ function ClaroOscuro() {
     );
 }
 
-// Estilos usando objetos JavaScript para CSS en línea (No cambian)
+// Estilos usando objetos JavaScript para CSS en línea
 const styles = {
     container: {
         display: 'flex',
@@ -74,21 +69,21 @@ const styles = {
         alignItems: 'center',
         padding: '20px',
         borderRadius: '10px', 
-        backgroundColor: 'var(--card-background)',
+        backgroundColor: 'var(--card-background)', // Fondo de la tarjeta
         border: '1px solid var(--border-color)'
     },
     emoji: {
         fontSize: '40px',
         marginBottom: '5px',
         margin: 0,
-        color: 'var(--text-color)'
+        // 🛑 CORRECCIÓN: ELIMINAR PROPIEDAD 'color' AQUÍ para que herede del CSS.
     },
     text: {
         fontSize: '16px',
         marginBottom: '10px',
         fontWeight: '600',
         margin: 0,
-        color: 'var(--text-color)'
+        // 🛑 CORRECCIÓN: ELIMINAR PROPIEDAD 'color' AQUÍ para que herede del CSS.
     },
     button: {
         // Los estilos específicos del botón se manejan en el CSS
