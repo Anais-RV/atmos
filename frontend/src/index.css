@@ -9,30 +9,17 @@ body {
 }
 
 
-/* ClaroOscuro.css */
+/* ClaroOscuro.css - COPIA ESTO */
 
-/*
-  ==========================================
-  ESTILOS GLOBALES - APLICACIÓN DEL TEMA
-  ==========================================
-*/
-
-/* --- Modo Claro por defecto (Fallback) --- */
-/* Estas variables y estilos se aplican si no hay una clase de modo específica */
-body {
-    /* Define variables CSS (custom properties) */
+/* 1. Definición del TEMA CLARO */
+body.light-mode {
     --background-color: #f2f2f2;
     --text-color: #000000;
     --card-background: #ffffff;
     --border-color: #cccccc;
-    
-    /* Aplica los estilos al body y a toda la app */
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
 }
 
-/* --- Modo Oscuro (se activa cuando el JS añade 'dark-mode' al body) --- */
+/* 2. Definición del TEMA OSCURO */
 body.dark-mode {
     --background-color: #121212;
     --text-color: #ffffff;
@@ -40,25 +27,32 @@ body.dark-mode {
     --border-color: #555555;
 }
 
-/* --- Estilos para elementos comunes que deben cambiar --- */
 
-/* Ejemplo para aplicar a todos los títulos (h1, h2, etc.) */
-h1, h2, h3, p, a, span {
+/* 3. ESTILOS BASE DE LA PÁGINA (APLICACIÓN DE LAS VARIABLES) */
+body {
+    background-color: var(--background-color);
     color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+    margin: 0;
 }
 
-/* Ejemplo para un componente de tarjeta (si existiera) */
+/* 4. Estilos para elementos comunes que deben cambiar */
+
+h1, h2, h3, p, a, span {
+    color: var(--text-color);
+    transition: color 0.3s ease; 
+}
+
 .card {
     background-color: var(--card-background);
     border: 1px solid var(--border-color);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 body.dark-mode .card {
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
 }
-
-/* Puedes dejar los estilos del componente ClaroOscuro.jsx en su lugar,
-   o adaptarlos para usar las variables CSS también. */
