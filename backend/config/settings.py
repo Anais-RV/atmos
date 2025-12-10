@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'weather'
+    'weather',
+    'rest_framework',
+    'rest_framework_simplejwt' # <-- Dependencia para los tokens (JWT)
 ]
 
 MIDDLEWARE = [
@@ -126,6 +128,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Configuración de JWT
 from datetime import timedelta
 
 REST_FRAMEWORK = {
