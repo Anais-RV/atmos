@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.validators import validate_email
 from rest_framework import serializers
+from django.contrib.auth import authenticate
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -64,3 +65,33 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return ProfileSerializer(instance).data
 
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+
+        if email and password:
+            # Buscar usuario por email
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+
+            try:
+                user = User.objects.get(email=email)
+                # Verificar contraseña
+                if not user.check_password(password):
+                    raise serializers.ValidationError('Credenciales incorrectas')
+            except User.DoesNotExist:
+                raise serializers.ValidationError('Credenciales incorrectas')
+            
+            if not user.is_active:
+                raise serializers.ValidationError('Usuario desactivado')
+            
+            data['user'] = user
+        
+        else:
+            raise serializers.ValidationError('Debe proporcionar email y contraseña')
+        
+        return data
