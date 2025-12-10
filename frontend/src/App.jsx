@@ -1,9 +1,8 @@
 // src/App.jsx
 
 import "./styles/styles.css";
-import "./styles/auth.css";
-import "./styles/loader.css";
-import "./styles/hamburger.css";
+import "./components/features/auth/auth.css";
+import "./components/ui/HamburgerMenu/HamburgerMenu.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -15,8 +14,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import UserPanelPage from "./pages/UserPanelPage";
 import DataProtectionPage from "./pages/DataProtectionPage";
-import ForecastChartPage from "./components/charts/ForecastChartPage";
-import WeatherHistoryPage from "./components/history/WeatherHistoryPage";
+import ForecastChartPage from "./pages/ForecastChartPage";
+import WeatherHistoryPage from "./pages/WeatherHistoryPage";
 import ForecastPage from "./pages/ForecastPage";
 import ForecastExtendedPage from "./pages/ForecastExtendedPage";
 

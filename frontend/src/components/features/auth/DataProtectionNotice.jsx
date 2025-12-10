@@ -1,3 +1,12 @@
+/**
+ * Componente: DataProtectionNotice
+ * Propósito: Aviso legal breve sobre protección de datos con enlace a la página completa de información legal.
+ * Uso:
+ *  - LoginPage.jsx (mostrado debajo del formulario de login)
+ * Dependencias:
+ *  - auth.css (.auth-data-notice, .auth-data-text, .auth-link)
+ */
+
 // src/auth/DataProtectionNotice.jsx
 
 function DataProtectionNotice() {

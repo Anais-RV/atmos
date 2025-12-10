@@ -1,8 +1,19 @@
+/**
+ * Página: LoginPage
+ * Propósito: Formulario de inicio de sesión con avatar de usuario.
+ * Componentes principales:
+ *  - BasePageLayout (layout general)
+ *  - LoginForm (formulario con email, password, remember me)
+ *  - DataProtectionNotice (aviso de protección de datos)
+ * Feature/dominio: auth
+ * Tipo: Página de formulario (autenticación)
+ */
+
 // src/pages/LoginPage.jsx
 
 import BasePageLayout from "../components/layout/BasePageLayout";
-import LoginForm from "../components/auth/LoginForm";
-import DataProtectionNotice from "../components/auth/DataProtectionNotice";
+import LoginForm from "../components/features/auth/LoginForm";
+import DataProtectionNotice from "../components/features/auth/DataProtectionNotice";
 import { getTemperatureColor } from "../styles/temperatureColors";
 
 function LoginPage() {
@@ -20,7 +31,6 @@ function LoginPage() {
         <div className="auth-login-inner">
           {/* Avatar del usuario */}
           <div className="auth-login-avatar">
-            {/* De momento una letra genérica; luego podrás poner la foto real */}
             <span className="auth-login-avatar-initial">U</span>
           </div>
 

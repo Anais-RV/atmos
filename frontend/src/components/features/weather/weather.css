@@ -191,7 +191,7 @@
   color: #cbd5f5;
 }
 
-.spinner {
+.weather-spinner {
   animation: spin 1s linear infinite;
   color: #38bdf8;
 }
@@ -401,12 +401,12 @@
   text-align: center;
 }
 
-.placeholder-icon {
+.weather-placeholder-icon {
   color: #334155;
   opacity: 0.5;
 }
 
-.placeholder-text {
+.weather-placeholder-text {
   font-size: 0.9rem;
   color: #64748b;
   margin: 0;

@@ -1,8 +1,17 @@
+/**
+ * Página: ForecastExtendedPage
+ * Propósito: Vista ampliada de la predicción meteorológica con más detalles y rango temporal extendido.
+ * Componentes principales:
+ *  - BasePageLayout (layout general)
+ * Feature/dominio: forecast
+ * Tipo: Página de solo lectura (visualización extendida de predicciones)
+ */
+
 // frontend/src/pages/ForecastExtendedPage.jsx
 
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
-import "../styles/forecast.css";
+import "../components/features/forecast/forecast.css";
 
 function ForecastExtendedPage() {
   const temperatureC = 7; // mismo criterio que ForecastPage

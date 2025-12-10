@@ -1,3 +1,28 @@
+/**
+ * FEATURE: Weather
+ * Componentes incluidos:
+ *  - WeatherInfo: componente principal que muestra datos meteorológicos actuales de una ciudad.
+ *  - CitySelector: selector desplegable de ciudades con búsqueda.
+ *
+ * Páginas que usan este feature:
+ *  - DashboardPage.jsx (usa WeatherInfo, que internamente usa CitySelector)
+ *
+ * Estilos:
+ *  - weather.css (468 líneas, selectores .weather-*, .city-*, .temp-*, .feels-like-*, .search-icon)
+ */
+
+/**
+ * Componente: WeatherInfo
+ * Propósito: Muestra información meteorológica actual (temperatura, sensación térmica, humedad, etc.) de la ciudad seleccionada.
+ * Uso:
+ *  - DashboardPage.jsx (único lugar donde se renderiza)
+ *  - Incluye CitySelector internamente para cambiar de ciudad
+ * Dependencias:
+ *  - weather.css (.weather-*, .city-*, .temp-*, .feels-like-*)
+ *  - apiClient (para obtener datos del backend)
+ *  - lucide-react (iconos del clima: Cloud, CloudRain, Sun, CloudSnow, AlertCircle, Loader)
+ */
+
 import { useState } from 'react'
 import {
   Cloud,
@@ -7,9 +32,9 @@ import {
   AlertCircle,
   Loader
 } from 'lucide-react'
-import { apiClient } from '../../services/apiClient'
+import { apiClient } from '../../../services/apiClient'
 import CitySelector from './CitySelector'
-import '../styles/weather.css'
+import './weather.css'
 
 /**
  * Mapeo de condiciones climáticas a iconos
@@ -158,7 +183,7 @@ function WeatherInfo({ onTemperatureChange }) {
       {/* Estado de carga o error */}
       {loading && (
         <div className="weather-loading">
-          <Loader className="spinner" />
+          <Loader className="weather-spinner" />
           <p>Cargando datos del clima...</p>
         </div>
       )}
@@ -213,8 +238,8 @@ function WeatherInfo({ onTemperatureChange }) {
       {/* Placeholder inicial */}
       {!loading && temperature === null && !error && (
         <div className="weather-placeholder">
-          <Cloud className="placeholder-icon" size={40} />
-          <p className="placeholder-text">Selecciona una ciudad para ver el clima actual</p>
+          <Cloud className="weather-placeholder-icon" size={40} />
+          <p className="weather-placeholder-text">Selecciona una ciudad para ver el clima actual</p>
         </div>
       )}
     </div>

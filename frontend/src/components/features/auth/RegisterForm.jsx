@@ -1,4 +1,13 @@
-// frontend/src/auth/RegisterForm.jsx
+/**
+ * Componente: RegisterForm
+ * Propósito: Formulario de registro de nuevos usuarios con campos de nombre, email, password, confirmación y enlace a login.
+ * Uso:
+ *  - RegisterPage.jsx (envuelto en AuthCard)
+ * Dependencias:
+ *  - auth.css (.auth-form, .auth-field, .auth-label, .auth-input, .auth-form-footer, .auth-button-primary, .auth-footer-text, .auth-link)
+ */
+
+// frontend/src/components/features/auth/RegisterForm.jsx
 
 import { Link } from "react-router-dom";
 

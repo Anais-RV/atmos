@@ -1,9 +1,19 @@
-// frontend/src/components/history/WeatherHistoryPage.jsx
+/**
+ * Página: WeatherHistoryPage
+ * Propósito: Consulta del historial meteorológico registrado por ATMOS.
+ * Componentes principales:
+ *  - BasePageLayout (layout general)
+ *  - WeatherHistory (tabla/lista con datos históricos de temperatura, humedad, etc.)
+ * Feature/dominio: history / weather
+ * Tipo: Página de solo lectura (visualización de histórico)
+ */
 
-import BasePageLayout from "../layout/BasePageLayout";
-import { getTemperatureColor } from "../../styles/temperatureColors";
-import WeatherHistory from "./WeatherHistory";
-import "../../styles/history.css";
+// frontend/src/pages/WeatherHistoryPage.jsx
+
+import BasePageLayout from "../components/layout/BasePageLayout";
+import { getTemperatureColor } from "../styles/temperatureColors";
+import WeatherHistory from "../components/features/history/WeatherHistory";
+import "../components/features/history/history.css";
 
 function WeatherHistoryPage() {
   const temperatureC = 7; // igual que Dashboard/Charts para mantener coherencia

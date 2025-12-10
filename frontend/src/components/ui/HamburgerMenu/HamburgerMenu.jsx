@@ -1,4 +1,15 @@
-// frontend/src/components/hamburguer_menu/HamburgerMenu.jsx
+/**
+ * Componente: HamburgerMenu
+ * Propósito: Menú desplegable tipo hamburguesa con navegación completa, selector de idioma y accesibilidad.
+ * Uso:
+ *  - Importado y renderizado en Navbar (esquina superior derecha)
+ *  - Presente en todas las páginas a través del Navbar
+ *  - Proporciona acceso a: Dashboard, Login, Registro, Panel de usuario, y configuraciones (idioma, accesibilidad)
+ * Tipo:
+ *  - Componente UI reutilizable (menú de navegación móvil/desktop)
+ */
+
+// frontend/src/components/ui/HamburgerMenu/HamburgerMenu.jsx
 import { useState } from "react";
 import { Link } from "react-router-dom";
 

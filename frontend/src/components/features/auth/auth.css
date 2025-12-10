@@ -158,16 +158,6 @@
   box-shadow: 0 10px 25px rgba(8, 47, 73, 0.6);
 }
 
-.auth-button-ghost {
-  border-radius: 999px;
-  padding: 0.45rem 1rem;
-  border: 1px solid transparent;
-  background: transparent;
-  color: #9ca3af;
-  font-size: 0.8rem;
-  cursor: pointer;
-}
-
 .auth-footer-text {
   font-size: 0.75rem;
   color: #9ca3af;
@@ -207,23 +197,6 @@
 .auth-user-email {
   font-size: 0.8rem;
   color: #9ca3af;
-}
-
-.auth-user-meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: 0.8rem;
-}
-
-.auth-user-meta-label {
-  display: block;
-  color: #6b7280;
-}
-
-.auth-user-meta-value {
-  display: block;
-  color: #e5e7eb;
 }
 
 .auth-user-actions {

@@ -1,4 +1,13 @@
-// frontend/src/components/charts/ForecastChart.jsx
+/**
+ * Componente: ForecastChart
+ * Propósito: Placeholder para gráficos de predicción y datos climatológicos.
+ * Uso:
+ *  - ForecastChartPage.jsx (único lugar donde se renderiza)
+ * Dependencias:
+ *  - charts.css (.chart-placeholder, .chart-placeholder-text)
+ */
+
+// frontend/src/components/features/forecast/ForecastChart.jsx
 
 function ForecastChart() {
   // Más adelante aquí irán los datos reales y la librería de gráficos

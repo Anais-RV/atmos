@@ -1,11 +1,17 @@
+/**
+ * Componente: CitySelector
+ * Propósito: Selector desplegable de ciudades con campo de búsqueda y lista filtrable.
+ * Uso:
+ *  - WeatherInfo.jsx (usado internamente para cambiar de ciudad)
+ * Dependencias:
+ *  - weather.css (.city-*, .search-icon)
+ *  - lucide-react (icono Search)
+ */
+
 import { useState, useEffect } from 'react'
 import { Search } from 'lucide-react'
-import '../styles/weather.css'
+import './weather.css'
 
-/**
- * Componente para seleccionar una ciudad
- * Puede conectarse a un endpoint que devuelva las ciudades disponibles
- */
 function CitySelector({ onCitySelect }) {
   const [cities, setCities] = useState([])
   const [searchTerm, setSearchTerm] = useState('')

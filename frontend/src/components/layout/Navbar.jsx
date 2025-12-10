@@ -1,6 +1,16 @@
+/**
+ * Componente: Navbar
+ * Propósito: Barra de navegación superior de la aplicación con notificaciones, logo y menú hamburguesa.
+ * Uso:
+ *  - Renderizado en BasePageLayout, por lo tanto presente en todas las páginas de la aplicación
+ *  - Contiene: botón de notificaciones (izquierda), logo ATMOS (centro), HamburgerMenu (derecha)
+ * Tipo:
+ *  - Componente de layout global (navegación principal)
+ */
+
 // src/components/layout/Navbar.jsx
 import { Link } from "react-router-dom";
-import HamburgerMenu from "../hamburguer_menu/HamburgerMenu"; // 👈 añadido
+import HamburgerMenu from "../ui/HamburgerMenu/HamburgerMenu";
 
 function Navbar() {
   return (

@@ -1,3 +1,14 @@
+/**
+ * Componente: FooterMenu
+ * Propósito: Menú de navegación inferior con botones para acceder a las secciones principales.
+ * Uso:
+ *  - Usado exclusivamente dentro del componente Footer
+ *  - Proporciona navegación rápida a: Historial, Gráficas, Predicciones
+ *  - Destaca visualmente la ruta activa usando useLocation
+ * Tipo:
+ *  - Componente de navegación específico del Footer (no reutilizable en otros contextos)
+ */
+
 // src/components/layout/FooterMenu.jsx
 import { Link, useLocation } from "react-router-dom";
 

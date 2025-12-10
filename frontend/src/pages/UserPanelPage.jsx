@@ -1,7 +1,17 @@
+/**
+ * Página: UserPanelPage
+ * Propósito: Panel de usuario autenticado con información del perfil y accesos rápidos.
+ * Componentes principales:
+ *  - BasePageLayout (layout general)
+ *  - UserPanelInfo (información detallada del usuario: nombre, email, acciones)
+ * Feature/dominio: auth
+ * Tipo: Página de panel (dashboard de usuario con botones de acción)
+ */
+
 // frontend/src/pages/UserPanelPage.jsx
 
 import BasePageLayout from "../components/layout/BasePageLayout";
-import UserPanelInfo from "../components/auth/UserPanelInfo";
+import UserPanelInfo from "../components/features/auth/UserPanelInfo";
 import { getTemperatureColor } from "../styles/temperatureColors";
 
 function UserPanelPage() {
@@ -20,7 +30,7 @@ function UserPanelPage() {
     >
       <section className="auth-card auth-login-card">
         <div className="auth-login-inner">
-          {/* Avatar del usuario (arriba en móvil, a la izquierda en pantallas grandes) */}
+          {/* Avatar del usuario */}
           <div className="auth-login-avatar">
             <span className="auth-login-avatar-initial">
               {userName.charAt(0).toUpperCase()}

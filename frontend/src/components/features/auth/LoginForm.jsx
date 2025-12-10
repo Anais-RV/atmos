@@ -1,4 +1,13 @@
-// frontend/src/components/auth/LoginForm.jsx
+/**
+ * Componente: LoginForm
+ * Propósito: Formulario de inicio de sesión con campos de email, password, checkbox remember me y botones de Sign in/Register.
+ * Uso:
+ *  - LoginPage.jsx (único lugar donde se renderiza)
+ * Dependencias:
+ *  - auth.css (.auth-form, .auth-field, .auth-label, .auth-input, .auth-form-footer, .auth-remember, .auth-checkbox, .auth-actions, .auth-button-primary, .auth-button-secondary)
+ */
+
+// frontend/src/components/features/auth/LoginForm.jsx
 import { Link } from "react-router-dom";
 
 function LoginForm() {
