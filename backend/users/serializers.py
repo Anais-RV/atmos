@@ -65,6 +65,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return ProfileSerializer(instance).data
 
+# Añadido serializer para login
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
@@ -80,6 +81,7 @@ class LoginSerializer(serializers.Serializer):
 
             try:
                 user = User.objects.get(email=email)
+                username = user.username
                 # Verificar contraseña
                 if not user.check_password(password):
                     raise serializers.ValidationError('Credenciales incorrectas')
@@ -89,6 +91,21 @@ class LoginSerializer(serializers.Serializer):
             if not user.is_active:
                 raise serializers.ValidationError('Usuario desactivado')
             
+            # Usar authenticate() para verificar credenciales
+            user = authenticate(username=username, password=password)
+
+            if user is None:
+                raise serializers.ValidationError(
+                    'Credenciales inválidas',
+                    code='authentication_failed'
+                )
+            
+            if not user.is_active:
+                raise serializers.ValidationError(
+                    'Esta cuenta ha sido desactivada',
+                    code='account_disabled'
+                )
+
             data['user'] = user
         
         else:
