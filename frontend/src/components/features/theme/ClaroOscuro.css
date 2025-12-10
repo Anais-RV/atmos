@@ -1,74 +1,87 @@
 /* =======================================================
-   1. DEFINICIÓN DE VARIABLES GLOBALES (THEMING)
-   ======================================================= */
-/* Las variables se definen dentro del selector del modo (.light-mode o .dark-mode)
-   para que solo se apliquen cuando el body tiene esa clase. */
+    1. DEFINICIÓN DE VARIABLES GLOBALES (THEMING)
+    ======================================================= */
 
 .light-mode {
-    /* Colores primarios del tema claro */
-    --color-bg-page: #f2f2f2;         /* Fondo principal de la página */
+    /* Todas las líneas DEBEN terminar con punto y coma (;) */
+    --color-bg-page: #f2f2f2;      /* Fondo principal de la página */
     --color-text-primary: #000000;    /* Color de texto base */
     --color-bg-secondary: #ffffff;    /* Fondo para tarjetas, modales, etc. */
-    --color-border-subtle: #cccccc;   /* Borde para separadores */
-    --color-button-primary: #007bff;  /* Color de botón (azul) */
-    --color-button-text: #ffffff;     /* Color de texto del botón */
+    --color-border-subtle: #cccccc;    /* Borde para separadores */
+    --color-button-primary: #007bff;  
+    --color-button-text: #ffffff;    
 }
 
 .dark-mode {
-    /* Colores primarios del tema oscuro */
-    --color-bg-page: #121212;         
+    /* Todas las líneas DEBEN terminar con punto y coma (;) */
+    --color-bg-page: #121212;      
     --color-text-primary: #ffffff;    
     --color-bg-secondary: #1e1e1e;    
     --color-border-subtle: #333333;   
-    --color-button-primary: #81b0ff;  /* Un azul más claro para el modo oscuro */
+    --color-button-primary: #81b0ff;   
     --color-button-text: #000000;     
 }
 
+/* ... (El resto del CSS no necesita cambios si ya está bien) ... */
+
 /* =======================================================
-   2. ESTILOS BASE Y GLOBALES
-   ======================================================= */
+    2. ESTILOS BASE Y GLOBALES
+    ======================================================= */
 
 body {
-    /* Aplicamos las variables CSS a los elementos base */
     background-color: var(--color-bg-page);
     color: var(--color-text-primary);
-    
-    /* Transición suave para todos los elementos */
     transition: background-color 0.3s ease, color 0.3s ease;
-    min-height: 100vh; /* Asegura que el body cubra toda la vista */
-    margin: 0; /* Elimina el margen por defecto del navegador */
+    min-height: 100vh; 
+    margin: 0; 
+}
+
+#root { 
+    min-height: 100vh;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
 }
 
 
 /* =======================================================
-   3. ESTILOS ESPECÍFICOS DEL COMPONENTE CLAROOBSCURO
-   ======================================================= */
+    3. ESTILOS ESPECÍFICOS DEL COMPONENTE CLAROOBSCURO (WIDGET)
+    ======================================================= */
 
-.claro-oscuro-container {
-    /* Usamos 'var()' para que los estilos sigan el tema global */
+.claro-oscuro-widget {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
     padding: 20px;
+    
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark-mode .claro-oscuro-widget {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); 
 }
 
 .emoji {
-    font-size: 64px;
-    margin-bottom: 10px;
+    font-size: 40px;
+    margin-bottom: 5px;
+    color: var(--color-text-primary);
 }
 
 .text {
-    font-size: 20px;
-    margin-bottom: 20px;
+    font-size: 16px;
+    margin-bottom: 10px;
     font-weight: 600;
+    color: var(--color-text-primary);
 }
 
 .theme-button {
-    /* Usamos las variables para los colores del botón */
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 8px 15px; 
+    font-size: 14px; 
     cursor: pointer;
     border-radius: 5px;
     border: none;
@@ -81,29 +94,5 @@ body {
 }
 
 .theme-button:hover {
-    /* Oscurecer/aclarar ligeramente el botón al pasar el mouse */
     opacity: 0.9; 
-}
-
-
-/* =======================================================
-   4. EJEMPLO PARA OTROS COMPONENTES (Para un tema completo)
-   ======================================================= */
-
-/* Si tienes una barra de navegación */
-.nav-bar {
-    background-color: var(--color-bg-secondary);
-    border-bottom: 1px solid var(--color-border-subtle);
-    padding: 15px;
-}
-
-/* Si tienes tarjetas de contenido */
-.card {
-    background-color: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin: 15px;
-    transition: background-color 0.3s ease;
 }

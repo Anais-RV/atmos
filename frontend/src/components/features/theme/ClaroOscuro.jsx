@@ -1,110 +1,97 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import './ClaroOscuro.css';
 
-// NOTA: En React DOM, ya no usamos 'View', 'Text', 'StyleSheet', 'Switch'
-// y reemplazamos 'useColorScheme' por el chequeo directo del navegador.
-
 // 1. Hook para obtener el esquema de color del sistema (Web Equivalent)
-// Es una buena práctica crear un hook para esta lógica.
 const useWebColorScheme = () => {
-    // Retorna 'dark', 'light' o null si el ambiente no lo soporta
     if (typeof window === 'undefined' || !window.matchMedia) {
         return null;
     }
+    // Retorna 'dark' o 'light'
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 
+
 function ClaroOscuro() {
-    // Lógica del tema del sistema (equivalente a useColorScheme de RN)
     const systemScheme = useWebColorScheme();
 
-    // Inicializamos el estado: si el sistema es oscuro, comienza como oscuro.
-    // Usamos 'false' como fallback si el sistemaScheme es null.
-    const [isDarkMode, setIsDarkMode] = useState(systemScheme === 'dark');
-
-    // Función para alternar el estado (al hacer clic en el botón)
+    // 🛑 CAMBIO 1: Inicialización Directa 🛑
+    // Asumimos que TRUE significa Oscuro, aunque luego invertiremos la salida.
+    const [isDarkMode, setIsDarkMode] = useState(systemScheme === 'dark'); 
+    
+    // Función para alternar el estado
     const toggleTheme = () => setIsDarkMode(prev => !prev);
 
-    // useEffect para aplicar la clase CSS al body (Práctica recomendada en Web)
-    // Esto es equivalente a cómo se manejan los temas globales en el código original del Context.
+    // 🛑 CAMBIO 2: Invertir la Lógica en useEffect 🛑
+    // Si isDarkMode es TRUE (esperamos modo Oscuro), aplicamos la clase 'light-mode',
+    // lo cual revierte el comportamiento anterior si estaba invertido.
     useEffect(() => {
-        document.body.classList.remove('light-mode', 'dark-mode'); // Limpiamos clases anteriores
-        const modeClass = isDarkMode ? 'dark-mode' : 'light-mode';
+        document.body.classList.remove('light-mode', 'dark-mode'); 
+        
+        // ⬅️ INVERSIÓN DE LA CLASE:
+        // Si isDarkMode es TRUE, se aplica 'light-mode' (claro)
+        // Si isDarkMode es FALSE, se aplica 'dark-mode' (oscuro)
+        const modeClass = isDarkMode ? 'light-mode' : 'dark-mode'; 
+        
         document.body.classList.add(modeClass);
     }, [isDarkMode]);
-    // Nota: Necesitarás definir los estilos CSS para estas clases en tu archivo global.
 
-    // Estilos dinámicos para el componente (equivalente a los estilos de React Native)
-    const backgroundColor = isDarkMode ? '#121212' : '#f2f2f2';
-    const textColor = isDarkMode ? '#ffffff' : '#000000';
-    const emoji = isDarkMode ? '🌙' : '🌞';
+    // 🛑 CAMBIO 3: Invertir la Lógica del Texto y Emoji 🛑
+    // Deben reflejar lo que la clase CSS REALMENTE está aplicando.
+    // Si isDarkMode es TRUE, se está aplicando 'light-mode', por lo tanto, mostramos el sol.
+    const emoji = isDarkMode ? '🌞' : '🌙'; 
 
-    // 2. El componente principal (usando elementos HTML en lugar de RN components)
     return (
-        // Reemplazamos <View> por <div>
         <div 
-            style={{
-                ...styles.container, // Estilos base
-                backgroundColor,     // Fondo dinámico
-            }}
+            className="claro-oscuro-widget" 
+            style={styles.container}
         >
-            {/* Reemplazamos <Text> por <p> o <span> */}
-            <p style={{ ...styles.emoji, color: textColor }}>{emoji}</p>
-            <p style={{ ...styles.text, color: textColor }}>
-                {isDarkMode ? 'Modo Oscuro Activado' : 'Modo Claro Activado'}
+            <p className="emoji" style={styles.emoji}>{emoji}</p>
+            <p className="text" style={styles.text}>
+                {/* Texto invertido para reflejar lo que la clase está haciendo: */}
+                {isDarkMode ? 'Modo Claro Activado' : 'Modo Oscuro Activado'} 
             </p>
             
-            {/* Reemplazamos <Switch> por un botón o un checkbox para simplicidad */}
             <button 
                 onClick={toggleTheme}
+                className="theme-button"
                 style={styles.button}
-                aria-label={`Cambiar a modo ${isDarkMode ? 'claro' : 'oscuro'}`}
+                // Texto del botón invertido:
+                aria-label={`Cambiar a modo ${isDarkMode ? 'oscuro' : 'claro'}`}
             >
-                {isDarkMode ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
+                {isDarkMode ? 'Cambiar a Oscuro' : 'Cambiar a Claro'}
             </button>
-
-            {/* Opcional: Usar un Checkbox para simular el Switch */}
-            {/* <input 
-                type="checkbox" 
-                checked={isDarkMode} 
-                onChange={toggleTheme} 
-            /> */}
         </div>
     );
 }
 
-// Estilos usando objetos JavaScript para CSS en línea (equivalente a StyleSheet.create)
+// Estilos usando objetos JavaScript para CSS en línea (No cambian)
 const styles = {
     container: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh', // Para que ocupe toda la altura de la vista
-        transition: 'background-color 0.3s ease', // Transición suave
         padding: '20px',
+        borderRadius: '10px', 
+        backgroundColor: 'var(--card-background)',
+        border: '1px solid var(--border-color)'
     },
     emoji: {
-        fontSize: '64px',
-        marginBottom: '10px',
-        margin: 0, // Eliminar margen por defecto de <p>
+        fontSize: '40px',
+        marginBottom: '5px',
+        margin: 0,
+        color: 'var(--text-color)'
     },
     text: {
-        fontSize: '20px',
-        marginBottom: '20px',
+        fontSize: '16px',
+        marginBottom: '10px',
         fontWeight: '600',
-        margin: 0, // Eliminar margen por defecto de <p>
+        margin: 0,
+        color: 'var(--text-color)'
     },
     button: {
-        padding: '10px 20px',
-        fontSize: '16px',
-        cursor: 'pointer',
-        borderRadius: '5px',
-        border: 'none',
-        backgroundColor: '#007bff',
-        color: '#ffffff',
-        marginTop: '10px',
+        // Los estilos específicos del botón se manejan en el CSS
     }
 };
 
