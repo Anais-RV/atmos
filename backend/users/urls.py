@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     RegisterView, MeView, ProfileView,
     AdminOnlyView, SuperuserOnlyView, PublicView,
-    LoginView
+    LoginView, ChangePasswordView
 )
 
 urlpatterns = [
@@ -13,5 +13,6 @@ urlpatterns = [
     path("admin-only/", AdminOnlyView.as_view(), name="admin-only"),
     path("superuser-only/", SuperuserOnlyView.as_view(), name="superuser-only"),
     path("public/", PublicView.as_view(), name="public"),
+    path("change-password/", ChangePasswordView.as_view(), name="change-password"),
 ]
 
