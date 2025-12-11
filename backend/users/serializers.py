@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from django.core.validators import validate_email
 from rest_framework import serializers
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
