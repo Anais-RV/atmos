@@ -146,3 +146,21 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:5173",
 ]
+
+# Cache Configuration
+# https://docs.djangoproject.com/en/5.1/topics/cache/
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+        "TIMEOUT": 3600,  # 1 hour in seconds
+        "OPTIONS": {
+            "MAX_ENTRIES": 5000
+        }
+    }
+}
+
+# Weather Cache Configuration
+WEATHER_CACHE_TIMEOUT = 3600  # 1 hour
+WEATHER_CACHE_KEY_PREFIX = "weather_"
+
