@@ -41,18 +41,20 @@ class AuthenticationTests(TestCase):
         # Crear usuario
         user = User.objects.create_user(
             username='testuser',
-            password='testpass123'
+            password='testpass123',
+            email='test@example.com'
         )
         
         # Intentar login
         data = {
-            'username': 'testuser',
+            'email': 'test@example.com',
             'password': 'testpass123'
         }
         response = self.client.post(self.login_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data)
-        self.assertIn('refresh', response.data)
+        self.assertIn('tokens', response.data)
+        self.assertIn('access', response.data['tokens'])
+        self.assertIn('refresh', response.data['tokens'])
 
     def test_me_endpoint_requires_authentication(self):
         """Test: Endpoint /me/ requiere autenticación"""
@@ -69,11 +71,11 @@ class AuthenticationTests(TestCase):
         )
         
         login_data = {
-            'username': 'testuser',
+            'email': 'test@example.com',
             'password': 'testpass123'
         }
         login_response = self.client.post(self.login_url, login_data, format='json')
-        token = login_response.data['access']
+        token = login_response.data['tokens']['access']
         
         # Usar token para acceder a /me/
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')

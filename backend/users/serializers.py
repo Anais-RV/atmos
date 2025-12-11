@@ -82,14 +82,8 @@ class LoginSerializer(serializers.Serializer):
             try:
                 user = User.objects.get(email=email)
                 username = user.username
-                # Verificar contraseña
-                if not user.check_password(password):
-                    raise serializers.ValidationError('Credenciales incorrectas')
             except User.DoesNotExist:
                 raise serializers.ValidationError('Credenciales incorrectas')
-            
-            if not user.is_active:
-                raise serializers.ValidationError('Usuario desactivado')
             
             # Usar authenticate() para verificar credenciales
             user = authenticate(username=username, password=password)
