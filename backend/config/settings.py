@@ -171,6 +171,11 @@ CITY_PHOTO_BASE_URL = config(
     default="https://cdn.example.com/cities/",
 )
 
+# Habilitar Argon2 en Django para mayor seguridad 
+# https://docs.djangoproject.com/en/5.1/topics/auth/passwords/#using-argon2-with-django
+# Comando:
+# python -m pip install django[argon2]
+# Una vez instalado, modificar PASSWORD_HASHERS para listar "Argon2PasswordHasher":
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2PasswordHasher", # Por defecto
     "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher", # El más frecuente
