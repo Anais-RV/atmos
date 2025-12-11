@@ -141,3 +141,46 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('Debe proporcionar email y contraseña')
         
         return data
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(write_only=True, required=True)
+    new_password = serializers.CharField(write_only=True, required=True)
+    new_password2 = serializers.CharField(write_only=True, required=True)
+
+    def validate_old_password(self, value):
+        """Verifica que la contraseña actual sea correcta"""
+        user = self.context["request"].user
+        if not user.check_password(value):
+            raise serializers.ValidationError('La contraseña actual es incorrecta')
+        return value
+    
+    def validate_new_password(self, value):
+        """Valida la nueva contraseña"""
+        try:
+            validate_password(value)
+        except ValidationError as e:
+            raise serializers.ValidationError(list(e.messages))
+        return value
+    
+    def validate(self, attrs):
+        """Verifica que las nuevas contraseñas coincidan"""
+        if attrs['new_password'] != attrs['new_password2']:
+            raise serializers.ValidationError({
+                "new_password2": "Las contraseñas no coinciden"
+            })
+        
+        # Verificar si la nueva contraseña sea diferente a la antigua
+        if attrs["old_password"] == attrs["new_password"]:
+            raise serializers.ValidationError({
+                "new_password": "La nueva contraseña debe ser diferente a la vieja contraseña."
+            })
+        
+        return attrs
+    
+    def save(self):
+        """Actualiza la contraseña del usuario"""
+        user = self.context["request"].user
+        # Usar set_password() para hashear la nueva contraseña
+        user.set_password(self.validated_data["new_password"])
+        user.save()
+        return user
