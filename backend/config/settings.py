@@ -170,3 +170,11 @@ CITY_PHOTO_BASE_URL = config(
     "CITY_PHOTO_BASE_URL",
     default="https://cdn.example.com/cities/",
 )
+
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher", # Por defecto
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher", # El más frecuente
+    "django.contrib.auth.hashers.Argon2PasswordHasher", # Más seguro
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher", # Opcional
+    "django.contrib.auth.hashers.ScryptPasswordHasher", # Opcional
+]

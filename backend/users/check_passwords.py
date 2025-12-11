@@ -34,6 +34,7 @@ if __name__ == "__main__":
 # En terminal ejecutar:
 # python manage.py shell < check_passwords.py
 
+# Otra manera de verificar contraseñas hasheadas
 # SQLite Consulta SQL:
 # --------------------------------------
 # SELECT *
