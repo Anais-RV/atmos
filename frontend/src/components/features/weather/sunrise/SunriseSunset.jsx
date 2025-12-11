@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Sun, AlertCircle, Loader } from 'lucide-react'
-import { apiClient } from '../../../services/apiClient'
+import { apiClient } from '../../../../services/apiClient'
 import './SunriseSunset.css'
 
 function SunriseSunset({ city }) {
