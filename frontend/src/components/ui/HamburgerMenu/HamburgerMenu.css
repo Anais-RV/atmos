@@ -23,10 +23,11 @@
   width: 260px;
   padding: 0.6rem 0.5rem;
   border-radius: 1rem;
-  border: 1px solid #1f2937;
-  background: rgba(15, 23, 42, 0.98);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-secondary);
+  box-shadow: var(--shadow-heavy);
   z-index: 40;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .hamburger-menu-list {
@@ -56,27 +57,26 @@
   flex-direction: column;
   gap: 0.1rem;
   text-decoration: none;
-  color: #e5e7eb;
+  color: var(--text-primary);
   font: inherit;
-  transition:
-    background 0.15s ease,
-    transform 0.08s ease;
+  transition: background-color 0.15s ease, transform 0.08s ease;
 }
 
 .hamburger-menu-link:hover,
 .hamburger-menu-button-row:hover {
-  background: rgba(31, 41, 55, 0.95);
+  background-color: var(--bg-tertiary);
   transform: translateY(-1px);
 }
 
 .hamburger-menu-item-title {
   font-size: 0.85rem;
   font-weight: 500;
+  color: var(--text-primary);
 }
 
 .hamburger-menu-item-sub {
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 /* Un poco más de adaptación en pantallas pequeñas */
@@ -94,7 +94,7 @@
 .hamburger-submenu {
   margin-top: 0.25rem;
   padding-left: 0.75rem;
-  border-left: 1px solid #1f2937;
+  border-left: 1px solid var(--border-light);
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
