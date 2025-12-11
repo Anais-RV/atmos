@@ -3,8 +3,10 @@
 import "./styles/styles.css";
 import "./components/features/auth/auth.css";
 import "./components/ui/HamburgerMenu/HamburgerMenu.css";
+import "./components/features/theme/ClaroOscuro.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "./context/ThemeContext";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
@@ -21,25 +23,27 @@ import ForecastExtendedPage from "./pages/ForecastExtendedPage";
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="app">
-        <Navbar />
+    <ThemeProvider>
+      <BrowserRouter>
+        <div className="app">
+          <Navbar />
 
-        <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/user-panel" element={<UserPanelPage />} />
-          <Route path="/data-protection" element={<DataProtectionPage />} />
-          <Route path="/charts" element={<ForecastChartPage />} />
-          <Route path="/history" element={<WeatherHistoryPage />} />
-          <Route path="/forecast" element={<ForecastPage />} />
-          <Route path="/forecast-extended" element={<ForecastExtendedPage />} />
-        </Routes>
+          <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/user-panel" element={<UserPanelPage />} />
+            <Route path="/data-protection" element={<DataProtectionPage />} />
+            <Route path="/charts" element={<ForecastChartPage />} />
+            <Route path="/history" element={<WeatherHistoryPage />} />
+            <Route path="/forecast" element={<ForecastPage />} />
+            <Route path="/forecast-extended" element={<ForecastExtendedPage />} />
+          </Routes>
 
-        <Footer />
-      </div>
-    </BrowserRouter>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
