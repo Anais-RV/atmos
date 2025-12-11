@@ -119,7 +119,7 @@ function SunriseSunset({ city }) {
               </div>
               <div className="sun-time-content">
                 <span className="sun-time-value">{formatDuration(sunTimes.daylight_duration)}</span>
-                <span className="sun-time-label">Horas  totalesde luz</span>
+                <span className="sun-time-label">Horas totales de luz</span>
               </div>
             </div>
           )}
@@ -128,7 +128,7 @@ function SunriseSunset({ city }) {
 
       {!loading && !error && !sunTimes && city && (
         <div className="sunrise-sunset-empty">
-          <p>Selecciona una ciudad para ver los datos de amanecer, atardecer y horasdee luz totales</p>
+          <p>Selecciona una ciudad para ver los datos de amanecer, atardecer y horas de luz totales</p>
         </div>
       )}
     </div>

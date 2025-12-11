@@ -26,7 +26,7 @@
   }
 }
 
-/* titluo  */
+/* título */
 .sunrise-sunset-title {
   font-size: 1.25rem;
   font-weight: 600;
@@ -36,7 +36,7 @@
   color: #e5e7eb;
 }
 
-/* cuadricula del layouts */
+/* cuadrícula del grid */
 .sunrise-sunset-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
