@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'weather'
+    'weather',
+    'rest_framework',
+    'rest_framework_simplejwt' # <-- Dependencia para los tokens (JWT)
 ]
 
 MIDDLEWARE = [
@@ -94,6 +96,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8, # Mínimo de 8 caracteres
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -126,20 +131,28 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Configuración de JWT
+
 from datetime import timedelta
+
+# Definir el tipo de autenticación que se va a usar
+AUTH_TYPE = 'JWT'
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication", # Para JWT
+        "rest_framework.authentication.SessionAuthentication", # Para sesiones
     ),
     "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions.AllowAny",  # Permite acceso público a weather API
     ),
 }
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 CORS_ALLOWED_ORIGINS = [
@@ -157,3 +170,67 @@ CITY_PHOTO_BASE_URL = config(
     "CITY_PHOTO_BASE_URL",
     default="https://cdn.example.com/cities/",
 )
+
+# Habilitar Argon2 en Django para mayor seguridad 
+# https://docs.djangoproject.com/en/5.1/topics/auth/passwords/#using-argon2-with-django
+# Comando:
+# python -m pip install django[argon2]
+# Una vez instalado, modificar PASSWORD_HASHERS para listar "Argon2PasswordHasher":
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher", # Por defecto
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher", # El más frecuente
+    "django.contrib.auth.hashers.Argon2PasswordHasher", # Más seguro
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher", # Opcional
+    "django.contrib.auth.hashers.ScryptPasswordHasher", # Opcional
+]
+
+# Cache Configuration
+# https://docs.djangoproject.com/en/5.1/topics/cache/
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+        "TIMEOUT": 3600,  # 1 hour in seconds
+        "OPTIONS": {
+            "MAX_ENTRIES": 5000
+        }
+    }
+}
+
+# Weather Cache Configuration
+WEATHER_CACHE_TIMEOUT = 3600  # 1 hour
+WEATHER_CACHE_KEY_PREFIX = "weather_"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "logs/cache_signals.log",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "weather.signals": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "weather.tasks": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}

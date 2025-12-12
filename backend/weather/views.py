@@ -11,6 +11,12 @@ from .emblem_photos import select_emblem_photo
 from .city_photos import select_city_photo
 from .models import City, WeatherObservation
 from .serializers import CurrentWeatherSerializer
+from .cache_service import (
+    get_cached_weather,
+    set_cached_weather,
+    get_cached_forecast,
+    set_cached_forecast,
+)
 
 
 class CurrentWeatherView(APIView):
@@ -20,6 +26,7 @@ class CurrentWeatherView(APIView):
     GET /api/weather/current/?city_id=1
     
     Devuelve la observación más reciente de esa ciudad.
+    Los datos se cachean por 1 hora para reducir consultas a la base de datos.
     """
     permission_classes = [permissions.AllowAny]
 
@@ -39,6 +46,11 @@ class CurrentWeatherView(APIView):
                 {"detail": "city_id debe ser un entero"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+        # Intentar obtener datos del caché
+        cached_data = get_cached_weather(city_id)
+        if cached_data is not None:
+            return Response(cached_data, status=status.HTTP_200_OK)
 
         # Obtener la ciudad
         city = get_object_or_404(City, id=city_id)
@@ -66,10 +78,23 @@ class CurrentWeatherView(APIView):
         }
         
         serializer = CurrentWeatherSerializer(data)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        response_data = serializer.data
+        
+        # Almacenar en caché
+        set_cached_weather(city_id, response_data)
+        
+        return Response(response_data, status=status.HTTP_200_OK)
+
 
 
 class ProphetForecastView(APIView):
+    """
+    Endpoint para obtener predicciones del clima usando Prophet.
+    
+    GET /api/weather/forecast/?city_id=1&periods=24
+    
+    Los datos de predicción se cachean por 1 hora para evitar recálculos innecesarios.
+    """
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
@@ -91,16 +116,24 @@ class ProphetForecastView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # Intentar obtener predicción del caché
+        cached_forecast = get_cached_forecast(city_id, periods)
+        if cached_forecast is not None:
+            return Response(cached_forecast, status=status.HTTP_200_OK)
+
+        # Construir predicción si no está en caché
         points = build_prophet_forecast(city_id=city_id, periods=periods)
 
-        return Response(
-            {
-                "city_id": city_id,
-                "periods": periods,
-                "points": points,
-            },
-            status=status.HTTP_200_OK,
-        )
+        response_data = {
+            "city_id": city_id,
+            "periods": periods,
+            "points": points,
+        }
+        
+        # Almacenar en caché
+        set_cached_forecast(city_id, periods, response_data)
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class CurrentConditionsView(APIView):
