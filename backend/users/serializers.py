@@ -4,6 +4,11 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from .models import PasswordResetToken
 
 # Devolvemos el modelo del usuario activo:
 User = get_user_model() 
@@ -184,3 +189,90 @@ class ChangePasswordSerializer(serializers.Serializer):
         user.set_password(self.validated_data["new_password"])
         user.save()
         return user
+    
+class PasswordResetRequestSerializer(serializers.Serializer):
+    """
+    Serializer para solicitar recuperación de contraseña.
+    """
+    email = serializers.EmailField(required=True)
+
+    def validate_email(self, value):
+        """
+        Valida que el email existe en el sistema
+        """
+        # Normalizar email (convertir a minúsculas)
+        value = value.lower().strip()
+
+        try:
+            user = User.objects.get(email=value)
+
+            # Verificar que el usuario esté activo
+            if not user.is_active:
+                raise serializers.ValidationError(
+                    "Esta cuenta ha sido desactivada"
+                )
+            
+            # Guardar el usuario para uso posterior
+            self.context["user"] = user
+
+        except User.DoesNotExist:
+            # Por seguridad, NO revelamos si el email existe
+            # Pero guardamos None para manejarlo después
+            self.context["user"] = user
+        
+        return value
+    
+    def save(self):
+        """
+        Genera el token y envía el email.
+        """
+        user = self.context.get("user")
+
+        # Si el usuario no existe, no hacemos nada
+        # (por seguridad, no revelamos que el email no existe)
+        if user is None:
+            return None
+        
+        # Invalidar tokens anteriores del usuario
+        PasswordResetToken.invalidate_user_tokens(user)
+
+        # Crear nuevo token
+        reset_token = PasswordResetToken.objects.create(user=user)
+
+        # Enviar email
+        self._send_reset_email(user, reset_token)
+
+        return reset_token
+    
+    def _send_reset_email(self, user, reset_token):
+        """
+        Envía el email de recuperación de contraseña.
+        """
+        # Construir URL de restablecimiento
+        reset_url = f"{settings.FRONTEND_URL}/password-reset/{reset_token.token}"
+        
+        # Contexto para el template
+        context = {
+            'user': user,
+            'reset_url': reset_url,
+            'expiration_hours': 24,
+        }
+        
+        # Renderizar template HTML
+        html_message = render_to_string(
+            'emails/password_reset.html',
+            context
+        )
+        
+        # Versión en texto plano
+        plain_message = strip_tags(html_message)
+        
+        # Enviar email
+        send_mail(
+            subject='Recuperación de Contraseña',
+            message=plain_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            html_message=html_message,
+            fail_silently=False,
+        )
