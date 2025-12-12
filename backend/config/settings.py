@@ -144,7 +144,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication", # Para sesiones
     ),
     "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions.AllowAny",  # Permite acceso público a weather API
     ),
 }
 
@@ -183,3 +183,54 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher", # Opcional
     "django.contrib.auth.hashers.ScryptPasswordHasher", # Opcional
 ]
+
+# Cache Configuration
+# https://docs.djangoproject.com/en/5.1/topics/cache/
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+        "TIMEOUT": 3600,  # 1 hour in seconds
+        "OPTIONS": {
+            "MAX_ENTRIES": 5000
+        }
+    }
+}
+
+# Weather Cache Configuration
+WEATHER_CACHE_TIMEOUT = 3600  # 1 hour
+WEATHER_CACHE_KEY_PREFIX = "weather_"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "logs/cache_signals.log",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "weather.signals": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "weather.tasks": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
