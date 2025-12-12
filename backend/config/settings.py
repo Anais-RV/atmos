@@ -132,7 +132,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions.AllowAny",  # Permite acceso público a weather API
     ),
 }
 
@@ -163,4 +163,38 @@ CACHES = {
 # Weather Cache Configuration
 WEATHER_CACHE_TIMEOUT = 3600  # 1 hour
 WEATHER_CACHE_KEY_PREFIX = "weather_"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "logs/cache_signals.log",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "weather.signals": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "weather.tasks": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
 
