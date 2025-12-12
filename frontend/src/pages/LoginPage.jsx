@@ -15,7 +15,6 @@ import BasePageLayout from "../components/layout/BasePageLayout";
 import LoginForm from "../components/features/auth/LoginForm";
 import DataProtectionNotice from "../components/features/auth/DataProtectionNotice";
 import { getTemperatureColor } from "../styles/temperatureColors";
-import ClaroOscuro from "../components/features/theme/ClaroOscuro";
 
 function LoginPage() {
   // MISMA temperatura que en DashboardPage
@@ -28,7 +27,6 @@ function LoginPage() {
       description=""
       containerColor={containerColor}
     >
-      <ClaroOscuro/>
       <section className="auth-card auth-login-card">
         <div className="auth-login-inner">
           {/* Avatar del usuario */}
