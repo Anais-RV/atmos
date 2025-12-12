@@ -6,14 +6,15 @@
 .history-main-viewport {
   margin-top: 0.75rem;
   border-radius: 0.9rem;
-  border: 1px solid rgba(56, 189, 248, 0.6);
-  background: rgba(37, 99, 235, 0.16); /* azul claro */
+  border: 1px solid var(--accent-primary);
+  background-color: var(--button-secondary-bg);
   padding: 1rem;
   width: 100%;
   min-height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Placeholder de la gráfica de historial */
@@ -24,7 +25,7 @@
 
 .history-placeholder-text {
   font-size: 0.85rem;
-  color: #e5e7eb;
+  color: var(--text-primary);
 }
 
 /* Grid de las 3 secciones: día / semana / mes */
@@ -47,18 +48,19 @@
 /* Tarjetas pequeñas dentro de la center-card-bottom */
 .history-summary-item {
   border-radius: 0.75rem;
-  border: 1px solid rgba(56, 189, 248, 0.6);
-  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid var(--accent-primary);
+  background-color: var(--bg-secondary);
   padding: 0.7rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .history-summary-title {
   font-size: 0.8rem;
   font-weight: 500;
-  color: #e5e7eb;
+  color: var(--text-primary);
   text-align: center;
   letter-spacing: 0.06em;
   text-transform: uppercase;

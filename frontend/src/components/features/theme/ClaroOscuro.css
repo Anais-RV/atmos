@@ -1,0 +1,58 @@
+/* ClaroOscuro.css - Theme Toggle Widget */
+
+/* Widget Container */
+.claro-oscuro-widget {
+  background-color: var(--card-background, var(--bg-secondary));
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  border-radius: 10px;
+  color: var(--text-color, var(--text-primary));
+  box-shadow: var(--shadow-light);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Text and Emoji */
+.claro-oscuro-widget .emoji,
+.claro-oscuro-widget .text {
+  color: var(--text-color, var(--text-primary));
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.claro-oscuro-widget .emoji {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.claro-oscuro-widget .text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Theme Button */
+.claro-oscuro-widget .theme-button {
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  border: none;
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  margin-top: 10px;
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
+}
+
+.claro-oscuro-widget .theme-button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.claro-oscuro-widget .theme-button:active {
+  transform: translateY(0);
+}

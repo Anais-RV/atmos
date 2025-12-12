@@ -41,11 +41,8 @@ function Navbar() {
 
         {/* DERECHA: MENÚ DESPLEGABLE + SIGN IN */}
         <div className="navbar-right" aria-label="account options">
+          <Link to="/login" className="navbar-cta">Sign in</Link>
           <HamburgerMenu />
-
-          <Link to="/login" className="navbar-cta">
-            Sign in
-          </Link>
         </div>
       </nav>
     </header>
