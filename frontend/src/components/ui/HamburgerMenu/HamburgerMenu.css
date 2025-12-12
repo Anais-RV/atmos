@@ -54,8 +54,9 @@
   text-align: left;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
   text-decoration: none;
   color: var(--text-primary);
   font: inherit;
@@ -108,7 +109,7 @@
   background: transparent;
   text-align: left;
   font-size: 0.78rem;
-  color: #d1d5db;
+  color: var(--text-secondary);
   cursor: pointer;
   transition:
     background 0.15s ease,
@@ -117,7 +118,18 @@
 }
 
 .hamburger-submenu-button:hover {
-  background: rgba(31, 41, 55, 0.95);
+  background-color: var(--bg-tertiary);
   transform: translateY(-0.5px);
-  color: #e5e7eb;
+  color: var(--text-primary);
+}
+
+/* Emoji + text layout */
+.menu-emoji {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.menu-text {
+  display: flex;
+  flex-direction: column;
 }
