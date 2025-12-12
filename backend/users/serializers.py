@@ -1,11 +1,16 @@
 from django.contrib.auth.models import User
 from django.core.validators import validate_email
 from rest_framework import serializers
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
+# Devolvemos el modelo del usuario activo:
+User = get_user_model() 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, required=True)
+    password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
@@ -19,19 +24,49 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("Este correo ya está registrado.")
         return value
+    
+    def validate_password(self, value):
+        """
+        Valida la contraseña usando los validadores de Django.
+        Eso asegura que umple con los requisitos de seguridad.
+        """
+        try:
+            validate_password(value)
+        except ValidationError as e:
+            raise serializers.ValidationError(list(e.messages))
+        return value
 
     def validate(self, attrs):
+        """Verifica si las contraseñas coinciden"""
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError("Las contraseñas no coinciden.")
         return attrs
 
     def create(self, validated_data):
+        """
+        Crea el usuario usando set_password() para hashear la contraseña.
+        """
+        # Eliminar password2 ya que ha cumplido con su función
         validated_data.pop("password2")
-        return User.objects.create_user(
+
+        # Método 1: Usando create_user 
+        # create_user usa set_password() internamente
+        # return User.objects.create_user(
+        #    username=validated_data["username"],
+        #    email=validated_data.get("email", ""),
+        #    password=validated_data["password"], # <-- Encripta la contraseña automáticamente
+        # )
+    
+        # Método 2: Manual
+        user = User(
             username=validated_data["username"],
-            email=validated_data.get("email", ""),
-            password=validated_data["password"],
+            email=validated_data.get("email", "")
         )
+        user.set_password(validated_data["password"]) # Hashea la contraseña
+        # Guardamos los cambios en user y lo retornamos
+        user.save()
+        return user
+
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -106,3 +141,46 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('Debe proporcionar email y contraseña')
         
         return data
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(write_only=True, required=True)
+    new_password = serializers.CharField(write_only=True, required=True)
+    new_password2 = serializers.CharField(write_only=True, required=True)
+
+    def validate_old_password(self, value):
+        """Verifica que la contraseña actual sea correcta"""
+        user = self.context["request"].user
+        if not user.check_password(value):
+            raise serializers.ValidationError('La contraseña actual es incorrecta')
+        return value
+    
+    def validate_new_password(self, value):
+        """Valida la nueva contraseña"""
+        try:
+            validate_password(value)
+        except ValidationError as e:
+            raise serializers.ValidationError(list(e.messages))
+        return value
+    
+    def validate(self, attrs):
+        """Verifica que las nuevas contraseñas coincidan"""
+        if attrs['new_password'] != attrs['new_password2']:
+            raise serializers.ValidationError({
+                "new_password2": "Las contraseñas no coinciden"
+            })
+        
+        # Verificar si la nueva contraseña sea diferente a la antigua
+        if attrs["old_password"] == attrs["new_password"]:
+            raise serializers.ValidationError({
+                "new_password": "La nueva contraseña debe ser diferente a la vieja contraseña."
+            })
+        
+        return attrs
+    
+    def save(self):
+        """Actualiza la contraseña del usuario"""
+        user = self.context["request"].user
+        # Usar set_password() para hashear la nueva contraseña
+        user.set_password(self.validated_data["new_password"])
+        user.save()
+        return user

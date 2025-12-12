@@ -10,6 +10,7 @@ from .serializers import (
     ProfileSerializer,
     ProfileUpdateSerializer,
     LoginSerializer,
+    ChangePasswordSerializer
 )
 from .permissions import IsSuperUser
 
@@ -144,3 +145,29 @@ class LoginView(APIView):
                 'last_name': user.last_name,
             }
         }, status=status.HTTP_200_OK)
+    
+class ChangePasswordView(APIView):
+    """
+    Endpoint para cambiar la contraseña del usuario autenticado
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(
+            data=request.data,
+            context={"request": request}
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({
+                "success": True,
+                "message": "Contraseña actualizada exitosamente"
+            }, status=status.HTTP_200_OK)
+            
+        return Response({
+            "success": False,
+            "message": "No se pudo actualizar la contraseña",
+            "detail": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
