@@ -10,7 +10,8 @@ from .serializers import (
     ProfileSerializer,
     ProfileUpdateSerializer,
     LoginSerializer,
-    ChangePasswordSerializer
+    ChangePasswordSerializer,
+    PasswordResetRequestSerializer
 )
 from .permissions import IsSuperUser
 
@@ -170,4 +171,46 @@ class ChangePasswordView(APIView):
             "success": False,
             "message": "No se pudo actualizar la contraseña",
             "detail": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+# Importar modulo logging
+import logging
+
+logger = logging.getLogger(__name__)
+
+class PasswordResetRequestView(APIView):
+    """
+    Endpoint para solicitar recuperación de contraseña.
+
+    POST /api/auth/password-reset/request/
+    Body: {"email": "usuario@ejemplo.com"}
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+
+        if serializer.is_valid():
+            try:
+                serializer.save()
+
+                # Siempre devolver el mismo mensaje (seguridad)
+                return Response({
+                    'success': True,
+                    'message': 'Si el correo existe en nuestro sistema, recibirás un enlace de recuperación.'
+                }, status=status.HTTP_200_OK)
+
+            except Exception as e:
+                logger.error(f"Error enviando email de recuperación: {str(e)}")
+
+                return Response({
+                    "success": False, 
+                    "error": "Error al enviar el email",
+                    "detail": "Hubo un problema al procesar tu solicitud. Inténtelo de nuevo."
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        return Response({
+            'success': False,
+            'error': 'Datos inválidos',
+            'detail': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
