@@ -1,0 +1,115 @@
+/* Compact styles for HamburgerMenu component */
+.hamburger-menu-wrapper {
+  position: relative;
+  display: inline-block; /* evita que el panel se estire al 100% del contenedor */
+}
+
+.hamburger-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.45);
+  z-index: 40;
+}
+
+.hamburger-menu-panel {
+  position: absolute;
+  right: 0; /* align to the wrapper's right edge */
+  top: calc(100% + 6px); /* place just below the button */
+  width: 220px;
+  max-width: 90vw;
+  background: rgba(15,23,42,0.98);
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 10px;
+  padding: 0.15rem;
+  box-shadow: 0 8px 20px rgba(2,6,23,0.55);
+  z-index: 60;
+}
+
+.hamburger-menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.08rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: stretch;
+}
+
+.hamburger-menu-item {
+  padding: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+
+.hamburger-menu-link,
+.hamburger-menu-button-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  text-decoration: none;
+  color: var(--text-color, #e5e7eb);
+  background: transparent;
+  border: none;
+  padding: 0.35rem 0.4rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.hamburger-menu-link:hover,
+.hamburger-menu-button-row:hover {
+  background: rgba(56,189,248,0.06);
+}
+
+.menu-emoji {
+  width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.menu-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  min-width: 0;
+}
+
+.hamburger-menu-item-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hamburger-menu-item-sub {
+  font-size: 0.72rem;
+  color: #9ca3af;
+  line-height: 1.1;
+  margin-top: 2px;
+}
+
+.hamburger-submenu {
+  margin-top: 0.15rem;
+  margin-left: 1.6rem;
+  list-style: none;
+  padding: 0.15rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.hamburger-submenu-button {
+  background: transparent;
+  border: none;
+  color: var(--text-color, #e5e7eb);
+  padding: 0.3rem 0.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.hamburger-submenu-button:hover {
+  background: rgba(56,189,248,0.06);
+}

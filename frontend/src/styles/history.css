@@ -24,7 +24,7 @@
 
 .history-placeholder-text {
   font-size: 0.85rem;
-  color: #e5e7eb;
+  color: var(--muted-color, #e5e7eb);
 }
 
 /* Grid de las 3 secciones: día / semana / mes */
@@ -48,7 +48,7 @@
 .history-summary-item {
   border-radius: 0.75rem;
   border: 1px solid rgba(56, 189, 248, 0.6);
-  background: rgba(15, 23, 42, 0.96);
+  background: var(--card-background, rgba(15, 23, 42, 0.96));
   padding: 0.7rem;
   display: flex;
   align-items: center;
@@ -58,7 +58,7 @@
 .history-summary-title {
   font-size: 0.8rem;
   font-weight: 500;
-  color: #e5e7eb;
+  color: var(--text-color, #e5e7eb);
   text-align: center;
   letter-spacing: 0.06em;
   text-transform: uppercase;
