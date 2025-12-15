@@ -222,28 +222,6 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         
         return value
     
-    def save(self):
-        """
-        Genera el token y envía el email.
-        """
-        user = self.context.get("user")
-
-        # Si el usuario no existe, no hacemos nada
-        # (por seguridad, no revelamos que el email no existe)
-        if user is None:
-            return None
-        
-        # Invalidar tokens anteriores del usuario
-        PasswordResetToken.invalidate_user_tokens(user)
-
-        # Crear nuevo token
-        reset_token = PasswordResetToken.objects.create(user=user)
-
-        # Enviar email
-        self._send_reset_email(user, reset_token)
-
-        return reset_token
-    
     def _send_reset_email(self, user, reset_token):
         """
         Envía el email de recuperación de contraseña.
@@ -276,3 +254,27 @@ class PasswordResetRequestSerializer(serializers.Serializer):
             html_message=html_message,
             fail_silently=False,
         )
+    
+    def save(self):
+        """
+        Genera el token y envía el email.
+        """
+        user = self.context.get("user")
+
+        # Si el usuario no existe, no hacemos nada
+        # (por seguridad, no revelamos que el email no existe)
+        if user is None:
+            return None
+        
+        # Invalidar tokens anteriores del usuario
+        PasswordResetToken.invalidate_user_tokens(user)
+
+        # Crear nuevo token
+        reset_token = PasswordResetToken.objects.create(user=user)
+
+        # Enviar email
+        self._send_reset_email(user, reset_token)
+
+        return reset_token
+    
+    

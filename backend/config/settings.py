@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'weather',
+    'users',
     'rest_framework',
     'rest_framework_simplejwt' # <-- Dependencia para los tokens (JWT)
 ]
