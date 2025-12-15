@@ -4,6 +4,7 @@ import "./styles/styles.css";
 import "./styles/auth.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "./context/ThemeContext";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
@@ -17,12 +18,14 @@ import ForecastChartPage from "./components/charts/ForecastChartPage";
 import WeatherHistoryPage from "./components/history/WeatherHistoryPage";
 import ForecastPage from "./pages/ForecastPage";
 import ForecastExtendedPage from "./pages/ForecastExtendedPage";
+import PasswordResetPage from "./pages/PasswordResetPage";
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="app">
-        <Navbar />
+    <ThemeProvider>
+      <BrowserRouter>
+        <div className="app">
+          <Navbar />
 
         <Routes>
           <Route path="/" element={<DashboardPage />} />
@@ -34,11 +37,13 @@ function App() {
           <Route path="/history" element={<WeatherHistoryPage />} />
           <Route path="/forecast" element={<ForecastPage />} />
           <Route path="/forecast-extended" element={<ForecastExtendedPage />} />
+          <Route path="/password-reset" element={<PasswordResetPage />} />
         </Routes>
 
-        <Footer />
-      </div>
-    </BrowserRouter>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
