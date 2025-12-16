@@ -30,6 +30,7 @@ from .time_series_service import (
     build_time_series,
     TimeSeriesValidationError,
 )
+from .sunrise_sunset import calculate_sunrise_sunset, format_time_24h, format_daylight_duration
 import logging
 
 logger = logging.getLogger(__name__)
@@ -84,6 +85,14 @@ class CurrentWeatherView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
+        # Calcular sunrise y sunset
+        sun_data = calculate_sunrise_sunset(
+            latitude=city.latitud,
+            longitude=city.longitud,
+            city_name=city.name,
+            observation_date=latest_observation.timestamp
+        )
+
         # Preparar datos y serializar
         data = {
             "city_id": city.id,
@@ -91,6 +100,12 @@ class CurrentWeatherView(APIView):
             "temperature": latest_observation.temperature,
             "timestamp": latest_observation.timestamp,
             "condition": "Parcialmente nublado",  # TODO: obtener del modelo cuando esté disponible
+            "sunrise": sun_data['sunrise'],
+            "sunset": sun_data['sunset'],
+            "daylight_duration": sun_data['daylight_duration'],
+            "sunrise_formatted": format_time_24h(sun_data['sunrise']),
+            "sunset_formatted": format_time_24h(sun_data['sunset']),
+            "daylight_duration_formatted": format_daylight_duration(sun_data['daylight_duration']),
         }
         
         serializer = CurrentWeatherSerializer(data)
