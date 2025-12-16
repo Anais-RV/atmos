@@ -217,3 +217,6 @@ FRONTEND_URL = "http://localhost:3000" # Para desarrollo
 # 
 # Para desarrollo con variables de entorno
 # pip install python-decouple 
+
+# Configuración de tokens de recuperación
+PASSWORD_RESET_TIMEOUT_HOURS = 24  # 24 horas por defecto

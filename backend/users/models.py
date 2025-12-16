@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from django.conf import settings
 import uuid
 from datetime import timedelta
 
@@ -38,6 +39,11 @@ class PasswordResetToken(models.Model):
     def save(self, *args, **kwargs):
         # Si no está definida, establecer expiración de 24 horas.
         if not self.expires_at:
+            timeout_hours = getattr(
+                settings,
+                'PASSWORD_RESET_TIMEOUT_HOURS',
+                24
+            )
             self.expires_at = timezone.now() + timedelta(hours=24)
         super().save(*args, **kwargs)
 
