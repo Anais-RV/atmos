@@ -11,7 +11,8 @@ from .serializers import (
     ProfileUpdateSerializer,
     LoginSerializer,
     ChangePasswordSerializer,
-    PasswordResetRequestSerializer
+    PasswordResetRequestSerializer,
+    PasswordResetConfirmSerializer
 )
 from .permissions import IsSuperUser
 
@@ -209,6 +210,80 @@ class PasswordResetRequestView(APIView):
                     "detail": "Hubo un problema al procesar tu solicitud. Inténtelo de nuevo."
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
+        return Response({
+            'success': False,
+            'error': 'Datos inválidos',
+            'detail': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+class PasswordResetVerifyView(APIView):
+    """
+    Endpoint para verificar un token de recuperación.
+    
+    GET /api/auth/password-reset/verify/{token}/
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, token):
+        serializer = PasswordResetVerifyView(
+            data={"token": token}
+        )
+
+        if serializer.is_valid():
+            reset_token = serializer.context["reset_token"]
+
+            return Response({
+                "success": True,
+                "message": "Token válido",
+                "email": reset_token.user.email,
+                "expires_at": reset_token.expires_at
+            }, status=status.HTTP_200_OK)
+        
+        return Response({
+            "success": False,
+            "error": "Token inválido",
+            "detail": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+class PasswordResetConfirmView(APIView):
+    """
+    Endpoint para confirmar el restablecimiento de contraseña.
+    
+    POST /api/password-reset/confirm/
+    Body: {
+        "token": "uuid",
+        "new_password": "NuevaContraseña123!",
+        "new_password_confirm": "NuevaContraseña123!"
+    }
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            try:
+                user = serializer.save()
+                
+                return Response({
+                    'success': True,
+                    'message': 'Contraseña restablecida exitosamente',
+                    'user': {
+                        'id': user.id,
+                        'email': user.email,
+                        'username': user.username
+                    }
+                }, status=status.HTTP_200_OK)
+                
+            except Exception as e:
+                logger.error(f"Error restableciendo contraseña: {str(e)}")
+                
+                return Response({
+                    'success': False,
+                    'error': 'Error al restablecer la contraseña',
+                    'detail': 'Hubo un problema. Inténtalo de nuevo.'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
         return Response({
             'success': False,
             'error': 'Datos inválidos',
