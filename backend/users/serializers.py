@@ -277,4 +277,116 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
         return reset_token
     
+class PasswordResetVerifySerialzer(serializers.Serializer):
+    """
+    Serializer para verificar un token de recuperación.
+    """
+    token = serializers.UUIDField(required=True)
+
+    def validate_token(self, value):
+        """
+        Valida que el token existe y es válido.
+        """
+        try:
+            reset_token = PasswordResetToken.objects.get(token=value)
+
+            if not reset_token.is_valid():
+                if reset_token.is_used:
+                    raise serializers.ValidationError(
+                        "Este enlace ya ha sido utilizado."
+                    )
+                else:
+                    raise serializers.ValidationError(
+                        "Este enlace ha expirado."
+                    )
+            
+            self.context["reset_token"] = reset_token
+        
+        except PasswordResetToken.DoesNotExist:
+            raise serializers.ValidationError(
+                "Enlace de recuperación inválido"
+            )
+        
+        return value
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    """
+    Serializer para confirmar el cambio de contraseña
+    """
+    token = serializers.UUIDField(required=True)
+    new_password = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={"input_type": "password"}
+    )
+    new_password_confirm = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={"input_type": "password"}
+    )
+
+    def validate_token(self, value):
+        """
+        Valida que el token existe y es válido
+        """
+        try:
+            reset_token = PasswordResetToken.objects.get(token=value)
+
+            if not reset_token.is_valid():
+                if reset_token.is_used:
+                    raise serializers.ValidationError(
+                        "Este enlace ya ha sido utilizado."
+                    )
+                else:
+                    raise serializers.ValidationError(
+                        "Este enlace ha expirado."
+                    )
+            
+            self.context["reset_token"] = reset_token
+
+        except PasswordResetToken.DoesNotExist:
+            raise serializers.ValidationError(
+                "Enlace de recuperación inválido"
+            )
+        
+        return value
+
+    def validate_new_password(self, value):
+        """
+        Valida la nueva contraseña usando los validadores de Django.
+        """
+        try:
+            validate_password(value)
+        except ValidationError as e:
+            raise serializers.ValidationError(list(e.messages))
+        return value
+    
+    def validate(self, data):
+        """
+        Valida que las contraseñas coincidan
+        """
+        if data["new_password"] != data["new_password_confirm"]:
+            raise serializers.ValidationError({
+                "new_password_confirm": "Las contraseñas no coinciden"
+            })
+        return data
+    
+    def save(self):
+        """
+        Cambia la contraseña del usuario y marca el token como usado
+        """
+        reset_token = self.context["reset_token"]
+        user = reset_token.user
+
+        # Cambiar la contraseña (se hashea/encripta automáticamente)
+        user.set_password(self.validated_data["new_password"])
+        user.save()
+
+        # Marcar token como usado
+        reset_token.mark_as_used()
+
+        # Invalidar otros tokens del usuario
+        PasswordResetToken.invalidate_user_tokens(user)
+
+        return user
     
