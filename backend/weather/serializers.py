@@ -26,3 +26,58 @@ class CurrentWeatherSerializer(serializers.Serializer):
     temperature = serializers.FloatField()
     timestamp = serializers.DateTimeField()
     condition = serializers.CharField(required=False)
+
+
+class TimeSeriesInputSerializer(serializers.Serializer):
+    """Serializer para la entrada del endpoint de series temporales"""
+    city_id = serializers.IntegerField(
+        required=True,
+        help_text="ID de la ciudad"
+    )
+    variable = serializers.CharField(
+        required=True,
+        max_length=50,
+        help_text="Variable meteorológica (temp, humedad, viento, presión)"
+    )
+    time_range = serializers.CharField(
+        required=True,
+        max_length=20,
+        help_text="Rango temporal (last_1h, last_24h, 7d, 30d, etc.)"
+    )
+    aggregation = serializers.CharField(
+        required=False,
+        max_length=20,
+        allow_blank=True,
+        help_text="Agregación: hourly, daily (auto si no especificado)"
+    )
+
+
+class TimeSeriesDataPointSerializer(serializers.Serializer):
+    """Punto de datos individual en una serie temporal"""
+    timestamp = serializers.DateTimeField()
+    value = serializers.FloatField()
+
+
+class TimeSeriesMetadataSerializer(serializers.Serializer):
+    """Metadatos de una serie temporal"""
+    total_points = serializers.IntegerField()
+    start_time = serializers.DateTimeField(allow_null=True)
+    end_time = serializers.DateTimeField(allow_null=True)
+    has_data = serializers.BooleanField()
+
+
+class TimeSeriesResponseSerializer(serializers.Serializer):
+    """
+    Respuesta del endpoint de series temporales.
+    
+    Devuelve datos consistentes y ordenados por timestamp.
+    """
+    city_id = serializers.IntegerField()
+    city_name = serializers.CharField()
+    variable = serializers.CharField()
+    variable_field = serializers.CharField()
+    unit = serializers.CharField()
+    time_range = serializers.CharField()
+    aggregation = serializers.CharField()
+    data = TimeSeriesDataPointSerializer(many=True)
+    metadata = TimeSeriesMetadataSerializer()

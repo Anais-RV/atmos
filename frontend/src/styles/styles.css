@@ -1,4 +1,84 @@
 /* =========================
+   CSS Variables for Theming
+   ========================= */
+
+/* Tema OSCURO (por defecto) */
+body.dark-mode {
+  --bg-primary: #020617;          /* Fondo principal muy oscuro */
+  --bg-secondary: #0f172a;        /* Fondo secundario (cards) */
+  --bg-tertiary: #1e293b;         /* Fondo terciario */
+  
+  --text-primary: #e5e7eb;        /* Texto principal */
+  --text-secondary: #9ca3af;      /* Texto secundario */
+  --text-tertiary: #cbd5f5;       /* Texto terciario */
+  
+  --border-color: #1e293b;        /* Borde principal */
+  --border-light: #374151;        /* Borde más claro */
+  
+  --accent-primary: #38bdf8;      /* Azul claro (primary accent) */
+  --accent-success: #16a34a;      /* Verde */
+  --accent-warning: #f97316;      /* Naranja */
+  
+  --shadow-light: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 16px 30px rgba(15, 23, 42, 0.9);
+  --shadow-heavy: 0 18px 40px rgba(15, 23, 42, 0.9);
+  
+  --button-primary-bg: #81b0ff;
+  --button-primary-text: #000000;
+  --button-secondary-bg: rgba(56, 189, 248, 0.12);
+  --button-secondary-text: #7dd3fc;
+}
+
+/* Tema CLARO */
+body.light-mode {
+  --bg-primary: #f8f9fa;          /* Fondo principal claro */
+  --bg-secondary: #ffffff;        /* Fondo secundario (cards) */
+  --bg-tertiary: #f2f2f7;         /* Fondo terciario */
+  
+  --text-primary: #1a202c;        /* Texto principal oscuro */
+  --text-secondary: #4a5568;      /* Texto secundario */
+  --text-tertiary: #2d3748;       /* Texto terciario */
+  
+  --border-color: #e2e8f0;        /* Borde principal */
+  --border-light: #cbd5e1;        /* Borde más claro */
+  
+  --accent-primary: #3b82f6;      /* Azul (primary accent) */
+  --accent-success: #22c55e;      /* Verde */
+  --accent-warning: #f97316;      /* Naranja */
+  
+  --shadow-light: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 16px 30px rgba(0, 0, 0, 0.08);
+  --shadow-heavy: 0 18px 40px rgba(0, 0, 0, 0.1);
+  
+  --button-primary-bg: #3b82f6;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: rgba(59, 130, 246, 0.1);
+  --button-secondary-text: #3b82f6;
+}
+
+/* =========================
+   Global Styles
+   ========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* =========================
    Global layout / App
    ========================= */
 
@@ -7,10 +87,9 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #020617; /* azul muy oscuro */
-  color: #e5e7eb;      /* gris clarito */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* Contenedor principal (entre navbar y footer) */
@@ -19,37 +98,37 @@
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  padding-top: 1.5rem;   /* espacio arriba (navbar → contenedor) */
+  padding-top: 1.5rem;
   padding-inline: 1rem;
-  padding-bottom: 0.6rem; /* espacio abajo ajustado (contenedor → footer slots) */
+  padding-bottom: 0.6rem;
 }
 
 /* =========================
    Dashboard (estructura visual)
    ========================= */
 
-/* Contenedor principal del dashboard */
 .dashboard,
 .dashboard-card {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid #1e293b;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 1.25rem;
   padding: 1rem;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+  box-shadow: var(--shadow-heavy);
   max-width: 460px;
   margin: 0 auto;
-  transition: background 0.4s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .dashboard-header h1 {
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 0.4rem;
+  color: var(--text-primary);
 }
 
 .dashboard-header p {
   font-size: 0.9rem;
-  color: #cbd5f5;
+  color: var(--text-tertiary);
 }
 
 /* Layout de dos columnas opcional */
@@ -74,10 +153,11 @@
 
 /* Panel genérico del dashboard */
 .panel {
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid #1f2937;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
   border-radius: 1rem;
   padding: 1rem 1.1rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .panel h2 {
@@ -85,14 +165,14 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #e5e7eb;
+  color: var(--text-primary);
   margin-bottom: 0.4rem;
 }
 
 /* Variaciones de panel */
 .panel-search {
   border-style: dashed;
-  border-color: #1d4ed8;
+  border-color: var(--accent-primary);
 }
 
 .panel-current {
@@ -127,24 +207,25 @@
   max-width: 420px;
   aspect-ratio: 1 / 1;
   border-radius: 1.25rem;
-  border: 1px solid #1f2937;
-  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-secondary);
   padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.9);
+  box-shadow: var(--shadow-medium);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .center-card-top {
-  background: radial-gradient(circle at top, rgba(56, 189, 248, 0.18), #020617);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), transparent);
   margin-top: 1.5rem;
 }
 
 .center-card-bottom {
-  background: radial-gradient(circle at bottom, rgba(22, 163, 74, 0.18), #020617);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), transparent);
   margin-bottom: 1.5rem;
 }
 
@@ -154,12 +235,12 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 0.4rem;
-  color: #e5e7eb;
+  color: var(--text-primary);
 }
 
 .center-card-text {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
   max-width: 320px;
 }
 
@@ -180,10 +261,11 @@
 }
 
 .dashboard-box {
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid #1f2937;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
   border-radius: 1rem;
   padding: 1rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .dashboard-box h2 {
@@ -191,13 +273,13 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #e5e7eb;
+  color: var(--text-primary);
   margin-bottom: 0.4rem;
 }
 
 .dashboard-box p {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 /* =========================
@@ -206,9 +288,10 @@
 
 .navbar {
   width: 100%;
-  border-bottom: 1px solid #1e293b;
-  background: rgba(2, 6, 23, 0.95);
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
   backdrop-filter: blur(12px);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .navbar-inner {
@@ -233,21 +316,18 @@
   width: 2.1rem;
   height: 2.1rem;
   border-radius: 999px;
-  border: 1px solid #1e293b;
-  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease,
-    transform 0.1s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
 }
 
 .navbar-icon-button:hover {
-  border-color: #38bdf8;
-  background: rgba(15, 23, 42, 1);
+  border-color: var(--accent-primary);
+  background-color: var(--bg-tertiary);
   transform: translateY(-1px);
 }
 
@@ -280,6 +360,7 @@
   flex-direction: column;
   line-height: 1.1;
   text-align: center;
+  color: var(--text-primary);
 }
 
 .navbar-brand-main {
@@ -291,7 +372,7 @@
 
 .navbar-brand-sub {
   font-size: 0.7rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 /* Derecha: menú + Sign in */
@@ -306,23 +387,20 @@
   width: 2.1rem;
   height: 2.1rem;
   border-radius: 999px;
-  border: 1px solid #1e293b;
-  background: rgba(15, 23, 42, 0.95);
-  color: #e5e7eb;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   font-size: 1.1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease,
-    transform 0.1s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
 }
 
 .navbar-menu-button:hover {
-  border-color: #38bdf8;
-  background: rgba(15, 23, 42, 1);
+  border-color: var(--accent-primary);
+  background-color: var(--bg-tertiary);
   transform: translateY(-1px);
 }
 
@@ -355,9 +433,10 @@
 
 .footer {
   width: 100%;
-  border-top: 1px solid #1e293b;
-  background: rgba(2, 6, 23, 0.95);
-  margin-top: 0; /* el espaciado lo controla app-main */
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  margin-top: 0;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .footer-inner {
@@ -375,52 +454,48 @@
   gap: 1rem;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
 }
+
 /* Cada hueco de componente (component slot 1, 2 y 3) */
 .footer-slot {
   width: 140px;
   height: 44px;
   border-radius: 999px;
-  border: 1px dashed #374151;
-  background: rgba(15, 23, 42, 0.95);
+  border: 1px dashed var(--border-light);
+  background-color: var(--bg-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-
-  /* añadidos para que funcionen como botones/enlaces */
   text-decoration: none;
   color: inherit;
   cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.08s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
 }
 
 .footer-slot:hover {
-  border-color: #38bdf8;
+  border-color: var(--accent-primary);
   transform: translateY(-1px);
 }
 
 /* Estado activo según la página */
 .footer-slot--active {
   border-style: solid;
-  border-color: #38bdf8;
-  background: rgba(15, 23, 42, 1);
+  border-color: var(--accent-primary);
+  background-color: var(--bg-tertiary);
   box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
 }
 
 /* Texto visible del botón del footer */
 .footer-slot-label {
   font-size: 0.8rem;
-  color: #e5e7eb;
+  color: var(--text-primary);
 }
 
 /* Lo dejo por compatibilidad, aunque ahora usamos footer-slot-label */
 .footer-slot-placeholder {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .footer-links {
@@ -428,13 +503,13 @@
 }
 
 .footer-link {
-  color: #9ca3af;
+  color: var(--text-secondary);
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .footer-link:hover {
-  color: #38bdf8;
+  color: var(--accent-primary);
 }
 
 /* Estilos para Accesibilidad (Aria label para los componentes) */
@@ -450,16 +525,15 @@
 }
 
 /* =========================
-   Breakpoints / Responsive
+   Responsive
    ========================= */
 
 @media (min-width: 768px) {
-  /* Tablet / portátil: ajustamos espacio para igualar visualmente arriba y abajo */
   .app-main {
     max-width: 960px;
-    padding-top: 2rem;      /* navbar → contenedor */
+    padding-top: 2rem;
     padding-inline: 1.5rem;
-    padding-bottom: 1.1rem; /* contenedor → footer slots (1.1 + 0.9 ≈ 2) */
+    padding-bottom: 1.1rem;
   }
 
   .dashboard,
@@ -490,3 +564,5 @@
     margin-bottom: 0.5rem;
   }
 }
+
+

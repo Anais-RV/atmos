@@ -10,8 +10,9 @@
  */
 
 // frontend/src/components/ui/HamburgerMenu/HamburgerMenu.jsx
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +20,9 @@ function HamburgerMenu() {
   const [isAccOpen, setIsAccOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
+
+  // Obtener tema global
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   const closeMenu = () => {
     setIsOpen(false);
@@ -69,6 +73,8 @@ function HamburgerMenu() {
           {/* Panel principal */}
           <div className="hamburger-menu-panel">
             <ul className="hamburger-menu-list">
+              {/* (Sign in was here but restored to Navbar) */}
+
               {/* Menu de usuario */}
               <li className="hamburger-menu-item">
                 <Link
@@ -76,12 +82,11 @@ function HamburgerMenu() {
                   className="hamburger-menu-link"
                   onClick={closeMenu}
                 >
-                  <span className="hamburger-menu-item-title">
-                    Menu de usuario
-                  </span>
-                  <span className="hamburger-menu-item-sub">
-                    Ver tu panel y preferencias
-                  </span>
+                  <span className="menu-emoji" aria-hidden="true">👤</span>
+                  <div className="menu-text">
+                    <span className="hamburger-menu-item-title">Menu de usuario</span>
+                    <span className="hamburger-menu-item-sub">Ver tu panel y preferencias</span>
+                  </div>
                 </Link>
               </li>
 
@@ -90,15 +95,18 @@ function HamburgerMenu() {
                 <button
                   type="button"
                   className="hamburger-menu-button-row"
+                  aria-label={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
                   onClick={() => {
-                    console.log("Toggle Modo Oscuro");
+                    // Alternar tema global y cerrar menú
+                    toggleTheme();
                     closeMenu();
                   }}
                 >
-                  <span className="hamburger-menu-item-title">Modo Oscuro</span>
-                  <span className="hamburger-menu-item-sub">
-                    Ajustar tema de la interfaz
-                  </span>
+                  <span className="menu-emoji" aria-hidden="true">{isDarkMode ? '🌙' : '🌞'}</span>
+                  <div className="menu-text">
+                    <span className="hamburger-menu-item-title">{isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}</span>
+                    <span className="hamburger-menu-item-sub">Ajustar tema de la interfaz</span>
+                  </div>
                 </button>
               </li>
 
@@ -110,10 +118,11 @@ function HamburgerMenu() {
                   onClick={toggleLanguages}
                   aria-expanded={isLangOpen}
                 >
-                  <span className="hamburger-menu-item-title">Idiomas</span>
-                  <span className="hamburger-menu-item-sub">
-                    Cambiar el idioma de la app
-                  </span>
+                  <span className="menu-emoji" aria-hidden="true">🌐</span>
+                  <div className="menu-text">
+                    <span className="hamburger-menu-item-title">Idiomas</span>
+                    <span className="hamburger-menu-item-sub">Cambiar el idioma de la app</span>
+                  </div>
                 </button>
 
                 {isLangOpen && (
@@ -124,7 +133,7 @@ function HamburgerMenu() {
                         className="hamburger-submenu-button"
                         onClick={() => handleLanguageSelect("Español")}
                       >
-                        Español
+                        🇪🇸 Español
                       </button>
                     </li>
                     <li>
@@ -133,7 +142,7 @@ function HamburgerMenu() {
                         className="hamburger-submenu-button"
                         onClick={() => handleLanguageSelect("Inglés")}
                       >
-                        Inglés
+                        🇺🇸 Inglés
                       </button>
                     </li>
                     <li>
@@ -142,7 +151,7 @@ function HamburgerMenu() {
                         className="hamburger-submenu-button"
                         onClick={() => handleLanguageSelect("Ruso")}
                       >
-                        Ruso
+                        🇷🇺 Ruso
                       </button>
                     </li>
                     <li>
@@ -151,7 +160,7 @@ function HamburgerMenu() {
                         className="hamburger-submenu-button"
                         onClick={() => handleLanguageSelect("Brasileño")}
                       >
-                        Brasileño
+                        🇧🇷 Brasileño
                       </button>
                     </li>
                   </ul>
@@ -166,12 +175,11 @@ function HamburgerMenu() {
                   onClick={toggleAccessibility}
                   aria-expanded={isAccOpen}
                 >
-                  <span className="hamburger-menu-item-title">
-                    Accesibilidad
-                  </span>
-                  <span className="hamburger-menu-item-sub">
-                    Ajustes según discapacidad
-                  </span>
+                  <span className="menu-emoji" aria-hidden="true">♿</span>
+                  <div className="menu-text">
+                    <span className="hamburger-menu-item-title">Accesibilidad</span>
+                    <span className="hamburger-menu-item-sub">Ajustes según discapacidad</span>
+                  </div>
                 </button>
 
                 {isAccOpen && (
@@ -182,7 +190,7 @@ function HamburgerMenu() {
                         className="hamburger-submenu-button"
                         onClick={() => handleAccessibilitySelect("Discapacidad Visual")}
                       >
-                        Discapacidad visual
+                        👁️‍🗨️ Discapacidad visual
                       </button>
                     </li>
                     <li>
@@ -191,7 +199,7 @@ function HamburgerMenu() {
                         className="hamburger-submenu-button"
                         onClick={() => handleAccessibilitySelect("Sordos")}
                       >
-                        Subtitulado ST
+                        🦻 Subtitulado ST
                       </button>
                     </li>
                     <li>
@@ -200,7 +208,7 @@ function HamburgerMenu() {
                         className="hamburger-submenu-button"
                         onClick={() => handleAccessibilitySelect("Sordo-ciego")}
                       >
-                        Accesibilidad sordoceguera
+                        🧑‍🦯 Accesibilidad sordoceguera
                       </button>
                     </li>
                   </ul>
