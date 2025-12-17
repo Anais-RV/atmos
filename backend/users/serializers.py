@@ -9,6 +9,8 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from .models import PasswordResetToken
+from .errors import PasswordResetError
+from django.utils import timezone
 
 # Devolvemos el modelo del usuario activo:
 User = get_user_model() 
@@ -332,22 +334,26 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         try:
             reset_token = PasswordResetToken.objects.get(token=value)
 
-            if not reset_token.is_valid():
-                if reset_token.is_used:
-                    raise serializers.ValidationError(
-                        "Este enlace ya ha sido utilizado."
-                    )
-                else:
-                    raise serializers.ValidationError(
-                        "Este enlace ha expirado."
-                    )
+            
+            if reset_token.is_used:
+                raise serializers.ValidationError({
+                    "code": PasswordResetError.TOKEN_USED,
+                    "message": "Este enlace ya ha sido utilizado."
+                })
+            
+            if timezone.now() > reset_token.expires_at:
+                raise serializers.ValidationError({
+                    "code": PasswordResetError.TOKEN_EXPIRED,
+                    "message": "Este enlace ha expirado."
+                })
             
             self.context["reset_token"] = reset_token
 
         except PasswordResetToken.DoesNotExist:
-            raise serializers.ValidationError(
-                "Enlace de recuperación inválido"
-            )
+            raise serializers.ValidationError({
+                "code": PasswordResetError.TOKEN_INVALID,
+                "message": "Enlace de recuperación inválido."
+            })
         
         return value
 
