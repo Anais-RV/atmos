@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function PasswordResetForm() {
 	const [email, setEmail] = useState("");
@@ -43,12 +43,10 @@ function PasswordResetForm() {
 
 		setLoading(true);
 		try {
-			const res = await fetch("/api/auth/password-reset/confirm/", {
+				const res = await fetch("/api/password-reset/confirm/", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					uid,
-					token,
 					new_password: newPassword,
 					confirm_password: confirmPassword,
 				}),
@@ -80,19 +78,6 @@ function PasswordResetForm() {
 			setLoading(false);
 		}
 	};
-
-	// read uid and token from querystring
-	const location = useLocation();
-	const [uid, setUid] = useState("");
-	const [token, setToken] = useState("");
-
-	useEffect(() => {
-		const params = new URLSearchParams(location.search);
-		const u = params.get('uid') || '';
-		const t = params.get('token') || '';
-		setUid(u);
-		setToken(t);
-	}, [location.search]);
 
 	return (
 		<form className="auth-form" onSubmit={handleSubmit} aria-labelledby="password-reset-form-title">

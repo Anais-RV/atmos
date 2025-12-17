@@ -35,7 +35,7 @@ function PasswordResetRequest() {
 
         setLoading(true);
         try {
-            const res = await fetch(`/api/auth/password-reset/`, {
+            const res = await fetch(`/api/password-reset/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: trimmed }),
