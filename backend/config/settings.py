@@ -189,29 +189,29 @@ PASSWORD_HASHERS = [
 # --- CONFIGURACION DE EMAIL --- 
 # Método 1
 # Configuración de Email para Gmail (Desarrollo)
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "vampileo28@gmail.com"
-EMAIL_HOST_PASSWORD = "mi_contrasena" # NO usar contraseña normal
-DEFAULT_FROM_EMAIL = "vampileo28@gmail.com" 
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = "vampileo28@gmail.com"
+# EMAIL_HOST_PASSWORD = "mi_contrasena" # NO usar contraseña normal
+# DEFAULT_FROM_EMAIL = "vampileo28@gmail.com" 
 
 # URL base de la aplicación
-FRONTEND_URL = "http://localhost:3000" # Para desarrollo
+# FRONTEND_URL = "http://localhost:3000" # Para desarrollo
 # FRONTEND_URL = "https://tudominio.com" # Para producion
 
 # Método 2
 # SendGrid (Produccion)
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = "smtp.sendgrid.net"
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = "apikey"
-# EMAIL_HOST_PASSWORD = "tu_sendgrid_api_key" 
-# DEFAULT_FROM_EMAIL = "noreply@atmos.com"
-# 
-# FRONTEND_URL = "https://atmos.com" 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.sendgrid.net"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "apikey"
+EMAIL_HOST_PASSWORD = "tu_sendgrid_api_key" 
+DEFAULT_FROM_EMAIL = "noreply@atmos.com"
+
+FRONTEND_URL = "https://atmos.com" 
 #
 # Si se usa SendGrid, utilizamos este comando:
 # pip install sendgrid
