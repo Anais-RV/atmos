@@ -3,9 +3,11 @@ from .models import City, WeatherObservation
 
 
 class CitySerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = City
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'latitud', 'longitud', 'altitud', 'comunidad_autonoma']
+        read_only_fields = ['id', 'name', 'latitud', 'longitud', 'altitud', 'comunidad_autonoma']
 
 
 class WeatherObservationSerializer(serializers.ModelSerializer):

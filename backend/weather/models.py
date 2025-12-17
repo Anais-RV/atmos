@@ -8,6 +8,12 @@ class City(models.Model):
     latitud = models.FloatField(help_text="Latitud de la ciudad", default=0)
     longitud = models.FloatField(help_text="Longitud de la ciudad", default=0)
     altitud = models.FloatField(null=True, blank=True, help_text="Metros sobre el nivel del mar")
+    comunidad_autonoma = models.CharField(max_length=50, blank=True, help_text="Comunidad autónoma de España")
+
+    class Meta:
+        verbose_name = "Ciudad"
+        verbose_name_plural = "Ciudades"
+        ordering = ['name']
 
     def __str__(self):
         return self.name
