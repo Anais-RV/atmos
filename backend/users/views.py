@@ -252,8 +252,8 @@ class PasswordResetConfirmView(APIView):
     POST /api/password-reset/confirm/
     Body: {
         "token": "uuid",
-        "new_password": "NuevaContraseña123!",
-        "new_password_confirm": "NuevaContraseña123!"
+        "new_password": "Contraseña123",
+        "new_password_confirm": "Contraseña123"
     }
     """
     permission_classes = [permissions.AllowAny]
