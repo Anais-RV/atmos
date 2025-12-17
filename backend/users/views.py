@@ -45,6 +45,7 @@ class MeView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
+
 class AdminOnlyView(APIView):
     """
     Ejemplo de endpoint solo para admins (is_staff=True).
