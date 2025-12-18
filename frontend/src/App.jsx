@@ -20,6 +20,7 @@ import ForecastChartPage from "./pages/ForecastChartPage";
 import WeatherHistoryPage from "./pages/WeatherHistoryPage";
 import ForecastPage from "./pages/ForecastPage";
 import ForecastExtendedPage from "./pages/ForecastExtendedPage";
+import PasswordResetPage from "./pages/PasswordResetPage";
 
 function App() {
   return (
@@ -38,6 +39,8 @@ function App() {
             <Route path="/history" element={<WeatherHistoryPage />} />
             <Route path="/forecast" element={<ForecastPage />} />
             <Route path="/forecast-extended" element={<ForecastExtendedPage />} />
+            <Route path="/password-reset" element={<PasswordResetPage />} />
+            <Route path="/password-reset/:token" element={<PasswordResetPage />} />
           </Routes>
 
           <Footer />

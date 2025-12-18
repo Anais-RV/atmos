@@ -1,18 +1,7 @@
-/**
- * Componente: HamburgerMenu
- * Propósito: Menú desplegable tipo hamburguesa con navegación completa, selector de idioma y accesibilidad.
- * Uso:
- *  - Importado y renderizado en Navbar (esquina superior derecha)
- *  - Presente en todas las páginas a través del Navbar
- *  - Proporciona acceso a: Dashboard, Login, Registro, Panel de usuario, y configuraciones (idioma, accesibilidad)
- * Tipo:
- *  - Componente UI reutilizable (menú de navegación móvil/desktop)
- */
-
 // frontend/src/components/ui/HamburgerMenu/HamburgerMenu.jsx
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { ThemeContext } from "../../../context/ThemeContext";
+import './HamburgerMenu.css';import { ThemeContext } from "../../../context/ThemeContext";
 
 function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,14 +19,8 @@ function HamburgerMenu() {
     setIsAccOpen(false);
   };
 
-  const toggleLanguages = () => {
-    setIsLangOpen((prev) => !prev);
-  };
-
-  const toggleAccessibility = () => {
-    setIsAccOpen((prev) => !prev);
-  };
-
+  const toggleLanguages = () => setIsLangOpen((prev) => !prev);
+  const toggleAccessibility = () => setIsAccOpen((prev) => !prev);
   const handleLanguageSelect = (lang) => {
     console.log("Idioma seleccionado:", lang);
     closeMenu();
@@ -63,18 +46,14 @@ function HamburgerMenu() {
 
       {isOpen && (
         <>
-          {/* Clic fuera para cerrar */}
           <div
             className="hamburger-menu-backdrop"
             onClick={closeMenu}
             aria-hidden="true"
           />
 
-          {/* Panel principal */}
           <div className="hamburger-menu-panel">
             <ul className="hamburger-menu-list">
-              {/* (Sign in was here but restored to Navbar) */}
-
               {/* Menu de usuario */}
               <li className="hamburger-menu-item">
                 <Link

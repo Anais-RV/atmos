@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
     'weather',
     'users',
     'rest_framework',
-    'rest_framework_simplejwt' # <-- Dependencia para los tokens (JWT)
+    'rest_framework_simplejwt', # <-- Dependencia para los tokens (JWT)
+    'corsheaders',
 ]
 
 MIDDLEWARE = [

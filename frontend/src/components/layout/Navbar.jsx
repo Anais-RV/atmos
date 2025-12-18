@@ -10,9 +10,15 @@
 
 // src/components/layout/Navbar.jsx
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import HamburgerMenu from "../ui/HamburgerMenu/HamburgerMenu";
 
 function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => setMenuOpen((v) => !v);
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <header className="navbar" role="banner">
       <nav className="navbar-inner" aria-label="main navigation">
@@ -41,7 +47,9 @@ function Navbar() {
 
         {/* DERECHA: MENÚ DESPLEGABLE + SIGN IN */}
         <div className="navbar-right" aria-label="account options">
-          <Link to="/login" className="navbar-cta">Sign in</Link>
+          <Link to="/login" className="navbar-cta">
+            Sign in
+          </Link>
           <HamburgerMenu />
         </div>
       </nav>

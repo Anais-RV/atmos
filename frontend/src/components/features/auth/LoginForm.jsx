@@ -44,6 +44,12 @@ function LoginForm() {
         />
       </div>
 
+      <div className="auth-forgot">
+        <Link to="/password-reset" className="auth-link">
+          ¿Olvidaste tu contraseña?
+        </Link>
+      </div>
+
       <div className="auth-form-footer">
         <div className="auth-remember">
           <input id="remember-me" type="checkbox" className="auth-checkbox" />
