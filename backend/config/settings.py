@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'weather',
-    'users',
     'rest_framework',
     'rest_framework_simplejwt', # <-- Dependencia para los tokens (JWT)
     'corsheaders',
