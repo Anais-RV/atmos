@@ -17,7 +17,7 @@ from .serializers import (
     UserPreferencesSerializer,
     UserPreferencesUpdateSerializer,
 )
-from .permissions import IsSuperUser
+from .permissions import IsSuperUser, IsOwnerOrReadOnly, IsAuthenticatedAndOwner
 
 # Solo importar FWT si está disponible
 try:
@@ -302,7 +302,7 @@ class UserPreferencesView(generics.RetrieveUpdateAPIView):
     PUT /api/auth/preferences/ - Actualiza todas las preferencias.
     PATCH /api/auth/preferences/ - Actualiza preferencias parcialmente
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsAuthenticatedAndOwner]
     serializer_class = UserPreferencesSerializer
 
     def get_object(self):
@@ -373,7 +373,7 @@ class UserPreferencesAPIView(APIView):
     """
     Vista alternativa con más control sobre cada método HTTP.
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsAuthenticatedAndOwner]
 
     def get(self, request):
         """
