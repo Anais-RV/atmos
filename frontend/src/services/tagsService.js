@@ -11,15 +11,23 @@ export const tagsService = {
    */
   async getTags() {
     try {
+      const token = localStorage.getItem('access_token')
+      if (!token) {
+        throw new Error('No hay token de autenticación')
+      }
+
       const response = await fetch(`${API_BASE}/tags/`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       })
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.')
+        }
         throw new Error(`Error al obtener etiquetas: ${response.status}`)
       }
 
@@ -35,16 +43,24 @@ export const tagsService = {
    */
   async createTag(name, color) {
     try {
+      const token = localStorage.getItem('access_token')
+      if (!token) {
+        throw new Error('No hay token de autenticación')
+      }
+
       const response = await fetch(`${API_BASE}/tags/`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ name, color }),
       })
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.')
+        }
         const data = await response.json()
         throw new Error(data.name?.[0] || `Error al crear etiqueta: ${response.status}`)
       }

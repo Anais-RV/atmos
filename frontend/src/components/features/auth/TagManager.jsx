@@ -37,7 +37,13 @@ function TagManager() {
 
   // Cargar etiquetas al montar
   useEffect(() => {
-    loadTags()
+    // Solo cargar si hay token
+    const token = localStorage.getItem('access_token')
+    if (token) {
+      loadTags()
+    } else {
+      setError('No estás autenticado. Por favor, inicia sesión.')
+    }
   }, [])
 
   /**
