@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from .models import PasswordResetToken
+from .models import PasswordResetToken, UserPreferences
 from .errors import PasswordResetError
 from django.utils import timezone
 
@@ -395,6 +395,128 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         PasswordResetToken.invalidate_user_tokens(user)
 
         return user
+
+
+class UserPreferencesSerializer(serializers.ModelSerializer):
+    """
+    Serializer para las preferencias de usuario.
+    Incluye validación de choices y campos personalizados.
+    """
+
+    # Campos de solo lectura
+    user = serializers.StringRelatedField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M:%S')
+    updated_at = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M:%S')
+    
+    class Meta:
+        model = UserPreferences
+        fields = [
+            'id',
+            'user',
+            'theme',
+            'language',
+            'favorite_weather_station',
+            'created_at',
+            'updated_at'
+        ]
+        read_only_fields = ['id', 'user', 'created_at', 'updated_at']
+
+    def validate_theme(self, value):
+        """
+        Valida que el tema sea uno de los permitidos.
+        """
+        allowed_themes = ['light', 'dark']
+        
+        if value not in allowed_themes:
+            raise serializers.ValidationError(
+                f'Tema inválido. Valores permitidos: {", ".join(allowed_themes)}'
+            )
+        
+        return value
+    
+    def validate_language(self, value):
+        """
+        Valida que el idioma sea uno de los permitidos.
+        """
+        allowed_languages = ['es', 'en', 'fr']
+        
+        if value not in allowed_languages:
+            raise serializers.ValidationError(
+                f'Idioma inválido. Valores permitidos: {", ".join(allowed_languages)}'
+            )
+        
+        return value
+    
+    def validate_favorite_weather_station(self, value):
+        """
+        Valida la estación meteorológica favorita.
+        """
+        if value is not None and len(value) > 100:
+            raise serializers.ValidationError(
+                'El nombre de la estación no puede exceder 100 caracteres'
+            )
+        
+        return value
+    
+    def validate(self, data):
+        """
+        Validación adicional a nivel de objeto.
+        """
+        # Aquí puedes añadir validaciones que involucren múltiples campos
+        return data
+    
+    def to_representation(self, instance):
+        """
+        Personaliza la representación de salida.
+        """
+        representation = super().to_representation(instance)
+        
+        # Añadir nombres legibles para los choices
+        representation['theme_display'] = instance.get_theme_display()
+        representation['language_display'] = instance.get_language_display()
+        
+        return representation
+    
+class UserPreferencesUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer específico para actualizaciones parciales (PATCH).
+    Todos los campos son opcionales.
+    """
+    
+    class Meta:
+        model = UserPreferences
+        fields = ['theme', 'language', 'favorite_weather_station']
+        extra_kwargs = {
+            'theme': {'required': False},
+            'language': {'required': False},
+            'favorite_weather_station': {'required': False},
+        }
+
+    def validate_theme(self, value):
+        """Validación de tema"""
+        allowed_themes = ['light', 'dark']
+        if value not in allowed_themes:
+            raise serializers.ValidationError(
+                f'Tema inválido. Valores permitidos: {", ".join(allowed_themes)}'
+            )
+        return value
+    
+    def validate_language(self, value):
+        """Validación de idioma"""
+        allowed_languages = ['es', 'en', 'fr']
+        if value not in allowed_languages:
+            raise serializers.ValidationError(
+                f'Idioma inválido. Valores permitidos: {", ".join(allowed_languages)}'
+            )
+        return value
+    
+    def validate_favorite_weather_station(self, value):
+        """Validación de estación meteorológica"""
+        if value is not None and len(value) > 100:
+            raise serializers.ValidationError(
+                'El nombre de la estación no puede exceder 100 caracteres'
+            )
+        return value
 
 
 class TagSerializer(serializers.ModelSerializer):

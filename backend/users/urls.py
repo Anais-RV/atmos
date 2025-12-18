@@ -4,6 +4,7 @@ from .views import (
     RegisterView, MeView, ProfileView,
     AdminOnlyView, SuperuserOnlyView, PublicView,
     LoginView, ChangePasswordView, PasswordResetRequestView,
+    UserPreferencesView, UserPreferencesAPIView,
     TagViewSet
 )
 
@@ -20,6 +21,10 @@ urlpatterns = [
     path("public/", PublicView.as_view(), name="public"),
     path("change-password/", ChangePasswordView.as_view(), name="change-password"),
     path("password-reset/request/", PasswordResetRequestView.as_view(), name="password-reset"),
+    # URL Preferencias del usuario: Método 1 Usando RetrieveUpdateAPIView
+    path("preferences/", UserPreferencesView.as_view(), name="user-preferences"),
+    # URL Preferencias del usuario: Método 2 Usando APIView personalizado
+    #path("preferences/", UserPreferencesAPIView.as_view(), name="user-preferences-api"),
     path("", include(router.urls)),
 ]
 

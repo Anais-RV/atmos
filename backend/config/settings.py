@@ -150,6 +150,13 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.AllowAny",  # Permite acceso público a weather API
     ),
+    "DEFAULT_THROTTLE_CLASSES": [
+        "users.throttles.PreferencesRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "user": "100/hour",
+        "anon": "20/hour",
+    }
 }
 
 SIMPLE_JWT = {
