@@ -36,18 +36,7 @@ function LoginForm() {
     setLoading(true);
 
     try {
-      console.log('[LoginForm] Iniciando login...');
       await authService.login(formData.email, formData.password);
-      console.log('[LoginForm] Login completado');
-      
-      const token = localStorage.getItem('access_token');
-      console.log('[LoginForm] Token después del login:', token ? `${token.substring(0, 20)}...` : 'NULL');
-      
-      // Pequeño delay para asegurar que el token se guardó en localStorage
-      console.log('[LoginForm] Esperando 100ms...');
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      console.log('[LoginForm] Navegando a /user-panel');
       navigate('/user-panel');
     } catch (err) {
       setError(err.message || 'Error al iniciar sesión');
