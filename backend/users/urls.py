@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (
     RegisterView, MeView, ProfileView,
     AdminOnlyView, SuperuserOnlyView, PublicView,
-    LoginView, ChangePasswordView, PasswordResetRequestView
+    LoginView, ChangePasswordView, PasswordResetRequestView,
+    UserPreferencesView, UserPreferencesAPIView,
 )
 
 urlpatterns = [
@@ -14,6 +15,8 @@ urlpatterns = [
     path("superuser-only/", SuperuserOnlyView.as_view(), name="superuser-only"),
     path("public/", PublicView.as_view(), name="public"),
     path("change-password/", ChangePasswordView.as_view(), name="change-password"),
-    path("password-reset/request/", PasswordResetRequestView.as_view(), name="password-reset")
+    path("password-reset/request/", PasswordResetRequestView.as_view(), name="password-reset"),
+    path("preferences/", UserPreferencesView.as_view(), name="user-preferences"),
+    path("preferences/api/", UserPreferencesAPIView.as_view(), name="user-preferences-api"),
 ]
 
