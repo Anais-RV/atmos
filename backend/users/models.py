@@ -70,3 +70,51 @@ class PasswordResetToken(models.Model):
         Invalida todos los tokens activos de un usuario
         """
         cls.objects.filter(user=user, is_used=False).update(is_used=True)
+
+
+class UserPreferences(models.Model):
+    """
+    modelo para almacenar preferencias del usuario (idioma, tema, estacion favorita).
+    """
+    LANGUAGE_CHOICES = [
+        ('es', 'Español'),
+        ('en', 'English'),
+        ('fr', 'Français'),
+        ('de', 'Deutsch'),
+    ]
+
+    THEME_CHOICES = [
+        ('light', 'Claro'),
+        ('dark', 'Oscuro'),
+        ('auto', 'Automatico'),
+    ]
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="preferences"
+    )
+    language = models.CharField(
+        max_length=5,
+        choices=LANGUAGE_CHOICES,
+        default='es'
+    )
+    theme = models.CharField(
+        max_length=10,
+        choices=THEME_CHOICES,
+        default='light'
+    )
+    favorite_station = models.IntegerField(
+        null=True,
+        blank=True,
+        help_text="ID de la estacion meteorologica favorita"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Preferencia de Usuario"
+        verbose_name_plural = "Preferencias de Usuario"
+
+    def __str__(self):
+        return f"Preferencias de {self.user.username}"

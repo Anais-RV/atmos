@@ -1,0 +1,350 @@
+/* contendeor*/
+
+.settings-page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  min-height: calc(100vh - 200px);
+}
+
+.settings-container {
+  width: 100%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* bheader */
+
+.settings-header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.settings-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.settings-subtitle {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/*  form */
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* secccciones */
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-section:last-of-type {
+  border-bottom: none;
+}
+
+.settings-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+/* campos del forms */
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.settings-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #374151;
+  margin: 0;
+}
+
+.settings-input,
+.settings-select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #ffffff;
+  color: #1f2937;
+  transition: all 0.2s ease;
+}
+
+.settings-input:focus,
+.settings-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background-color: #f9fafb;
+}
+
+.settings-input:hover,
+.settings-select:hover {
+  border-color: #9ca3af;
+}
+
+.settings-select {
+  cursor: pointer;
+}
+
+.settings-select option {
+  background-color: #ffffff;
+  color: #1f2937;
+  padding: 0.5rem;
+}
+
+/* texto de ayuda par los usuarios */
+
+.settings-help-text {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* mensajes del sistema */
+
+.settings-message {
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  animation: slideDown 0.3s ease-out;
+}
+
+.settings-message-success {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #86efac;
+}
+
+.settings-message-error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* botones pra interactuar */
+
+.settings-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.settings-button {
+  padding: 0.875rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.settings-button-primary {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.settings-button-primary:hover:not(:disabled) {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.settings-button-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.settings-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* estado de carga */
+
+.settings-loading {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.settings-loading-container {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+/* errores y alertas */
+
+.settings-error {
+  padding: 1rem;
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  margin-bottom: 1rem;
+}
+
+/* responsive pa moviles */
+
+@media (max-width: 768px) {
+  .settings-container {
+    padding: 1.5rem;
+  }
+
+  .settings-title {
+    font-size: 1.75rem;
+  }
+
+  .settings-subtitle {
+    font-size: 0.9375rem;
+  }
+
+  .settings-section {
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+  }
+
+  .settings-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .settings-page {
+    padding: 1rem;
+  }
+
+  .settings-container {
+    padding: 1.25rem;
+    border-radius: 8px;
+  }
+
+  .settings-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .settings-title {
+    font-size: 1.5rem;
+  }
+
+  .settings-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .settings-form {
+    gap: 1.5rem;
+  }
+
+  .settings-section-title {
+    font-size: 1rem;
+  }
+
+  .settings-label {
+    font-size: 0.875rem;
+  }
+
+  .settings-input,
+  .settings-select {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .settings-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+  }
+
+  .settings-actions {
+    flex-direction: column;
+  }
+}
+
+/* modoo scuro*/
+
+@media (prefers-color-scheme: dark) {
+  .settings-container {
+    background: rgba(31, 41, 55, 0.95);
+  }
+
+  .settings-title,
+  .settings-section-title {
+    color: #f3f4f6;
+  }
+
+  .settings-subtitle,
+  .settings-help-text {
+    color: #9ca3af;
+  }
+
+  .settings-label {
+    color: #e5e7eb;
+  }
+
+  .settings-input,
+  .settings-select {
+    background-color: #374151;
+    color: #f3f4f6;
+    border-color: #4b5563;
+  }
+
+  .settings-input:focus,
+  .settings-select:focus {
+    border-color: #60a5fa;
+    background-color: #1f2937;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  }
+
+  .settings-input:hover,
+  .settings-select:hover {
+    border-color: #6b7280;
+  }
+
+  .settings-select option {
+    background-color: #374151;
+    color: #f3f4f6;
+  }
+}

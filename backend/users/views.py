@@ -12,8 +12,10 @@ from .serializers import (
     LoginSerializer,
     ChangePasswordSerializer,
     PasswordResetRequestSerializer,
-    PasswordResetConfirmSerializer
+    PasswordResetConfirmSerializer,
+    UserPreferencesSerializer
 )
+from .models import UserPreferences
 from .permissions import IsSuperUser
 
 # Solo importar FWT si está disponible
@@ -289,3 +291,52 @@ class PasswordResetConfirmView(APIView):
             'error': 'Datos inválidos',
             'detail': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserPreferencesView(APIView):
+    """
+    vista para obtener y actualizar las preferencias del usuario autenticado.
+    GET: recupera las preferencias
+    PUT: actualiza las preferencias
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        """
+        recupera las preferencias del usuario.
+        """
+        try:
+            preferences = UserPreferences.objects.get(user=request.user)
+        except UserPreferences.DoesNotExist:
+            # crear preferencias por defecto si no existen
+            preferences = UserPreferences.objects.create(user=request.user)
+        
+        serializer = UserPreferencesSerializer(preferences)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        """
+        actualiza las preferencias del usuario.
+        """
+        try:
+            preferences = UserPreferences.objects.get(user=request.user)
+        except UserPreferences.DoesNotExist:
+            preferences = UserPreferences.objects.create(user=request.user)
+        
+        serializer = UserPreferencesSerializer(
+            preferences,
+            data=request.data,
+            partial=True
+        )
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
+        
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )

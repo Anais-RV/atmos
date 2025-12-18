@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from .models import PasswordResetToken
+from .models import PasswordResetToken, UserPreferences
 from .errors import PasswordResetError
 from django.utils import timezone
 
@@ -395,4 +395,52 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         PasswordResetToken.invalidate_user_tokens(user)
 
         return user
+
+
+class UserPreferencesSerializer(serializers.Serializer):
+    """
+    serializer para las preferencias del usuario (idioma, tema, estacion favorita).
+    """
+    language = serializers.ChoiceField(
+        choices=['es', 'en', 'fr', 'de'],
+        required=False,
+        default='es'
+    )
+    theme = serializers.ChoiceField(
+        choices=['light', 'dark', 'auto'],
+        required=False,
+        default='light'
+    )
+    favorite_station = serializers.IntegerField(
+        required=False,
+        allow_null=True
+    )
+
+    def validate_favorite_station(self, value):
+        """
+        valida que la estacion favorita sea valida si se proporciona.
+        """
+        if value is not None and value <= 0:
+            raise serializers.ValidationError("El ID de la estación debe ser positivo.")
+        return value
+
+    def update(self, instance, validated_data):
+        """
+        actualiza las preferencias del usuario.
+        """
+        instance.language = validated_data.get('language', instance.language)
+        instance.theme = validated_data.get('theme', instance.theme)
+        instance.favorite_station = validated_data.get('favorite_station', instance.favorite_station)
+        instance.save()
+        return instance
+
+    def to_representation(self, instance):
+        """
+        serializa la instancia de preferencias para la respuesta.
+        """
+        return {
+            'language': instance.language,
+            'theme': instance.theme,
+            'favorite_station': instance.favorite_station,
+        }
     
