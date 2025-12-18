@@ -11,7 +11,7 @@ export const preferencesService = {
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch(`${API_BASE}/preferences/`, {
+    const response = await fetch(`${API_BASE}/auth/preferences/`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -37,7 +37,7 @@ export const preferencesService = {
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch(`${API_BASE}/preferences/`, {
+    const response = await fetch(`${API_BASE}/auth/preferences/`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,

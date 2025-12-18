@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { usePreferences } from '../../context/usePreferences';
+import { usePreferences } from '../../../context/usePreferences';
 import PropTypes from 'prop-types';
 
 function SettingsForm({ cities = [] }) {

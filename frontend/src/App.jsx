@@ -4,6 +4,7 @@ import "./styles/styles.css";
 import "./components/features/auth/auth.css";
 import "./components/ui/HamburgerMenu/HamburgerMenu.css";
 import "./components/features/theme/ClaroOscuro.css";
+import "./components/features/settings/settings.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -21,6 +22,7 @@ import WeatherHistoryPage from "./pages/WeatherHistoryPage";
 import ForecastPage from "./pages/ForecastPage";
 import ForecastExtendedPage from "./pages/ForecastExtendedPage";
 import PasswordResetPage from "./pages/PasswordResetPage";
+import SettingsPage from "./pages/SettingsPage";
 
 function App() {
   return (
@@ -41,6 +43,7 @@ function App() {
             <Route path="/forecast-extended" element={<ForecastExtendedPage />} />
             <Route path="/password-reset" element={<PasswordResetPage />} />
             <Route path="/password-reset/:token" element={<PasswordResetPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
           </Routes>
 
           <Footer />
