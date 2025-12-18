@@ -209,7 +209,6 @@ class CurrentConditionsView(APIView):
 
         return Response(data, status=status.HTTP_200_OK)
 
-<<<<<<< HEAD
 
 class TimeSeriesView(APIView):
     """
@@ -352,7 +351,8 @@ class TimeSeriesView(APIView):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-=======
+
+
 # ============================================================================
 # API DE CIUDADES - SOLO LECTURA
 # ============================================================================
@@ -391,5 +391,3 @@ class CityDetailView(generics.RetrieveAPIView):
     
     queryset = City.objects.all()
     serializer_class = CitySerializer
-    permission_classes = [permissions.AllowAny]
->>>>>>> 8961c63 (feat/backend_ciudades_pre-cargadas completado)
