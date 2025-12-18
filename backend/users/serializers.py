@@ -395,7 +395,8 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         PasswordResetToken.invalidate_user_tokens(user)
 
         return user
-    
+
+
 class UserPreferencesSerializer(serializers.ModelSerializer):
     """
     Serializer para las preferencias de usuario.
@@ -515,5 +516,30 @@ class UserPreferencesUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'El nombre de la estación no puede exceder 100 caracteres'
             )
+        return value
+
+
+class TagSerializer(serializers.ModelSerializer):
+    """
+    Serializer para etiquetas de usuario.
+    """
+    class Meta:
+        model = __import__('users.models', fromlist=['Tag']).Tag
+        fields = ['id', 'name', 'color', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+    def validate_name(self, value):
+        """Validar que el nombre no esté vacío y tenga longitud adecuada"""
+        if not value or not value.strip():
+            raise serializers.ValidationError("El nombre no puede estar vacío")
+        if len(value) > 50:
+            raise serializers.ValidationError("El nombre no puede exceder 50 caracteres")
+        return value.strip()
+
+    def validate_color(self, value):
+        """Validar formato de color hexadecimal"""
+        import re
+        if not re.match(r'^#[0-9A-Fa-f]{6}$', value):
+            raise serializers.ValidationError("El color debe ser un código hex válido (ej: #3b82f6)")
         return value
     

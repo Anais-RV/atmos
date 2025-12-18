@@ -73,6 +73,7 @@ class PasswordResetToken(models.Model):
         """
         cls.objects.filter(user=user, is_used=False).update(is_used=True)
 
+
 class UserPreferences(models.Model):
     """
     Modelo para almacenar las preferencias de usuario.
@@ -155,6 +156,30 @@ class UserPreferences(models.Model):
             }
         )
         return preferences
+
+
+class Tag(models.Model):
+    """
+    Modelo para etiquetas personalizadas del usuario.
+    """
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="tags"
+    )
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=7, default='#3b82f6')  # hex color
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Etiqueta"
+        verbose_name_plural = "Etiquetas"
+        unique_together = ['user', 'name']
+
+    def __str__(self):
+        return f"{self.name} ({self.user.username})"
+
 
 # Signals para crear automáticamente las preferencias al crear un usuario
 @receiver(post_save, sender=User)

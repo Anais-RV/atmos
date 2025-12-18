@@ -1,10 +1,15 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import (
     RegisterView, MeView, ProfileView,
     AdminOnlyView, SuperuserOnlyView, PublicView,
     LoginView, ChangePasswordView, PasswordResetRequestView,
     UserPreferencesView, UserPreferencesAPIView,
+    TagViewSet
 )
+
+router = DefaultRouter()
+router.register(r'tags', TagViewSet, basename='tag')
 
 urlpatterns = [
     path("register/", RegisterView.as_view(), name="register"),
@@ -20,5 +25,6 @@ urlpatterns = [
     path("preferences/", UserPreferencesView.as_view(), name="user-preferences"),
     # URL Preferencias del usuario: Método 2 Usando APIView personalizado
     #path("preferences/", UserPreferencesAPIView.as_view(), name="user-preferences-api"),
+    path("", include(router.urls)),
 ]
 

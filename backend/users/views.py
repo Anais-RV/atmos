@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
 from django.contrib.auth import login
 from django.conf import settings
@@ -293,7 +293,8 @@ class PasswordResetConfirmView(APIView):
             'error': 'Datos inválidos',
             'detail': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class UserPreferencesView(generics.RetrieveUpdateAPIView):
     """
     Endpoint para obtener y actualizar las preferencias del usuario autenticado.
@@ -505,5 +506,20 @@ class UserPreferencesAPIView(APIView):
                 'error': 'Error al actualizar preferencias',
                 'detail': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-    
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para gestionar etiquetas del usuario (CRUD completo).
+    """
+    serializer_class = __import__('users.serializers', fromlist=['TagSerializer']).TagSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        """Solo devuelve etiquetas del usuario autenticado"""
+        Tag = __import__('users.models', fromlist=['Tag']).Tag
+        return Tag.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        """Asigna el usuario autenticado al crear etiqueta"""
+        serializer.save(user=self.request.user)
