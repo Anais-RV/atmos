@@ -94,7 +94,8 @@ function calculateFeelsLike(temp, windSpeed = 0, humidity = 50) {
   return temp
 }
 
-function WeatherInfo({ onTemperatureChange }) {
+function WeatherInfo({ onTemperatureChange, onCityChange }) {
+  const [cityId, setCityId] = useState(null)
   const [cityName, setCityName] = useState('')
   const [temperature, setTemperature] = useState(null)
   const [feelsLike, setFeelsLike] = useState(null)
@@ -128,6 +129,7 @@ function WeatherInfo({ onTemperatureChange }) {
         return
       }
       
+      setCityId(id)
       setCityName(response.city_name)
       setTemperature(response.temperature)
       setCondition(response.condition || 'Parcialmente nublado')
@@ -135,6 +137,11 @@ function WeatherInfo({ onTemperatureChange }) {
       // Notificar cambio de temperatura al padre para actualizar color de fondo
       if (onTemperatureChange) {
         onTemperatureChange(response.temperature)
+      }
+      
+      // Notificar cambio de ciudad al padre (para SunriseSunset)
+      if (onCityChange) {
+        onCityChange({ id, name: response.city_name })
       }
       
       // Calcular sensación térmica

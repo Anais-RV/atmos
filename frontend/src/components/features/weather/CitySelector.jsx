@@ -10,6 +10,7 @@
 
 import { useState, useEffect } from 'react'
 import { Search } from 'lucide-react'
+import apiClient from '../../../services/apiClient'
 import './weather.css'
 
 function CitySelector({ onCitySelect }) {
@@ -18,22 +19,26 @@ function CitySelector({ onCitySelect }) {
   const [selectedCity, setSelectedCity] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-
-  // Ciudades de demostración (reemplazar con datos de la API)
-  const demoCities = [
-    { id: 1, name: 'Madrid' },
-    { id: 2, name: 'Barcelona' },
-    { id: 3, name: 'Valencia' },
-    { id: 4, name: 'Sevilla' },
-    { id: 5, name: 'Bilbao' },
-    { id: 6, name: 'Málaga' },
-    { id: 7, name: 'Alicante' },
-    { id: 8, name: 'Zaragoza' },
-  ]
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    // TODO: Reemplazar con llamada a API para obtener ciudades
-    setCities(demoCities)
+    const fetchCities = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const data = await apiClient('/api/weather/cities/')
+        // La API devuelve un array de todas las ciudades
+        setCities(Array.isArray(data) ? data : [])
+      } catch (err) {
+        console.error('Error al cargar ciudades:', err)
+        setError('Error al cargar ciudades')
+        setCities([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchCities()
   }, [])
 
   /**

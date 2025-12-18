@@ -3,9 +3,11 @@ from .models import City, WeatherObservation
 
 
 class CitySerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = City
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'latitud', 'longitud', 'altitud', 'comunidad_autonoma']
+        read_only_fields = ['id', 'name', 'latitud', 'longitud', 'altitud', 'comunidad_autonoma']
 
 
 class WeatherObservationSerializer(serializers.ModelSerializer):
@@ -26,6 +28,12 @@ class CurrentWeatherSerializer(serializers.Serializer):
     temperature = serializers.FloatField()
     timestamp = serializers.DateTimeField()
     condition = serializers.CharField(required=False)
+    sunrise = serializers.DateTimeField(required=False)
+    sunset = serializers.DateTimeField(required=False)
+    daylight_duration = serializers.FloatField(required=False)
+    sunrise_formatted = serializers.CharField(required=False)
+    sunset_formatted = serializers.CharField(required=False)
+    daylight_duration_formatted = serializers.CharField(required=False)
 
 
 class TimeSeriesInputSerializer(serializers.Serializer):

@@ -1,0 +1,520 @@
+[
+  {
+    "nombre": "Madrid",
+    "latitud": 40.4168,
+    "longitud": -3.7038,
+    "comunidad_autonoma": "Madrid",
+    "altitud": 640
+  },
+  {
+    "nombre": "Barcelona",
+    "latitud": 41.3851,
+    "longitud": 2.1734,
+    "comunidad_autonoma": "Cataluña",
+    "altitud": 12
+  },
+  {
+    "nombre": "Valencia",
+    "latitud": 39.4699,
+    "longitud": -0.3763,
+    "comunidad_autonoma": "Comunidad Valenciana",
+    "altitud": 0
+  },
+  {
+    "nombre": "Sevilla",
+    "latitud": 37.3886,
+    "longitud": -5.9823,
+    "comunidad_autonoma": "Andalucía",
+    "altitud": 7
+  },
+  {
+    "nombre": "Bilbao",
+    "latitud": 43.2630,
+    "longitud": -2.9350,
+    "comunidad_autonoma": "País Vasco",
+    "altitud": 27
+  },
+  {
+    "nombre": "Málaga",
+    "latitud": 36.7213,
+    "longitud": -3.7385,
+    "comunidad_autonoma": "Andalucía",
+    "altitud": 8
+  },
+  {
+    "nombre": "Murcia",
+    "latitud": 37.9922,
+    "longitud": -1.1307,
+    "comunidad_autonoma": "Murcia",
+    "altitud": 42
+  },
+  {
+    "nombre": "Palma de Mallorca",
+    "latitud": 39.5696,
+    "longitud": 2.6502,
+    "comunidad_autonoma": "Islas Baleares",
+    "altitud": 0
+  },
+  {
+    "nombre": "Las Palmas de Gran Canaria",
+    "latitud": 28.1307,
+    "longitud": -15.4375,
+    "comunidad_autonoma": "Canarias",
+    "altitud": 0
+  },
+  {
+    "nombre": "Córdoba",
+    "latitud": 37.8882,
+    "longitud": -4.7794,
+    "comunidad_autonoma": "Andalucía",
+    "altitud": 123
+  },
+  {
+    "nombre": "Alicante",
+    "latitud": 38.3452,
+    "longitud": -0.4810,
+    "comunidad_autonoma": "Comunidad Valenciana",
+    "altitud": 0
+  },
+  {
+    "nombre": "Valladolid",
+    "latitud": 41.6523,
+    "longitud": -4.7245,
+    "comunidad_autonoma": "Castilla y León",
+    "altitud": 696
+  },
+  {
+    "nombre": "Vigo",
+    "latitud": 42.2406,
+    "longitud": -8.7207,
+    "comunidad_autonoma": "Galicia",
+    "altitud": 0
+  },
+  {
+    "nombre": "Gijón",
+    "latitud": 43.5319,
+    "longitud": -5.6612,
+    "comunidad_autonoma": "Asturias",
+    "altitud": 0
+  },
+  {
+    "nombre": "A Coruña",
+    "latitud": 43.3623,
+    "longitud": -8.3886,
+    "comunidad_autonoma": "Galicia",
+    "altitud": 0
+  },
+  {
+    "nombre": "Toledo",
+    "latitud": 39.8562,
+    "longitud": -4.0231,
+    "comunidad_autonoma": "Castilla-La Mancha",
+    "altitud": 515
+  },
+  {
+    "nombre": "Cuenca",
+    "latitud": 40.0730,
+    "longitud": -2.1290,
+    "comunidad_autonoma": "Castilla-La Mancha",
+    "altitud": 946
+  },
+  {
+    "nombre": "Teruel",
+    "latitud": 40.3458,
+    "longitud": -1.1061,
+    "comunidad_autonoma": "Aragón",
+    "altitud": 915
+  },
+  {
+    "nombre": "Zaragoza",
+    "latitud": 41.6561,
+    "longitud": -0.8773,
+    "comunidad_autonoma": "Aragón",
+    "altitud": 208
+  },
+  {
+    "nombre": "Huesca",
+    "latitud": 42.1416,
+    "longitud": -0.4076,
+    "comunidad_autonoma": "Aragón",
+    "altitud": 488
+  },
+  {
+    "nombre": "Lleida",
+    "latitud": 41.6149,
+    "longitud": 0.6362,
+    "comunidad_autonoma": "Cataluña",
+    "altitud": 149
+  },
+  {
+    "nombre": "Gerona",
+    "latitud": 41.9868,
+    "longitud": 2.8236,
+    "comunidad_autonoma": "Cataluña",
+    "altitud": 70
+  },
+  {
+    "nombre": "Manresa",
+    "latitud": 41.7330,
+    "longitud": 1.8326,
+    "comunidad_autonoma": "Cataluña",
+    "altitud": 238
+  },
+  {
+    "nombre": "Terrassa",
+    "latitud": 41.5635,
+    "longitud": 1.9957,
+    "comunidad_autonoma": "Cataluña",
+    "altitud": 296
+  },
+  {
+    "nombre": "Sabadell",
+    "latitud": 41.5447,
+    "longitud": 2.1086,
+    "comunidad_autonoma": "Cataluña",
+    "altitud": 189
+  },
+  {
+    "nombre": "Sant Cugat del Vallés",
+    "latitud": 41.4992,
+    "longitud": 2.0492,
+    "comunidad_autonoma": "Cataluña",
+    "altitud": 137
+  },
+  {
+    "nombre": "Mataró",
+    "latitud": 41.5381,
+    "longitud": 2.4433,
+    "comunidad_autonoma": "Cataluña",
+    "altitud": 0
+  },
+  {
+    "nombre": "Castellón",
+    "latitud": 39.9862,
+    "longitud": -0.0402,
+    "comunidad_autonoma": "Comunidad Valenciana",
+    "altitud": 33
+  },
+  {
+    "nombre": "Alcoy",
+    "latitud": 38.7071,
+    "longitud": -0.4848,
+    "comunidad_autonoma": "Comunidad Valenciana",
+    "altitud": 562
+  },
+  {
+    "nombre": "Benidorm",
+    "latitud": 38.5305,
+    "longitud": -0.1247,
+    "comunidad_autonoma": "Comunidad Valenciana",
+    "altitud": 0
+  },
+  {
+    "nombre": "Torrevieja",
+    "latitud": 37.9826,
+    "longitud": -0.6874,
+    "comunidad_autonoma": "Comunidad Valenciana",
+    "altitud": 0
+  },
+  {
+    "nombre": "Elche",
+    "latitud": 38.2656,
+    "longitud": -0.6919,
+    "comunidad_autonoma": "Comunidad Valenciana",
+    "altitud": 61
+  },
+  {
+    "nombre": "Almería",
+    "latitud": 36.8399,
+    "longitud": -2.3667,
+    "comunidad_autonoma": "Andalucía",
+    "altitud": 7
+  },
+  {
+    "nombre": "Jaén",
+    "latitud": 37.7808,
+    "longitud": -3.7853,
+    "comunidad_autonoma": "Andalucía",
+    "altitud": 574
+  },
+  {
+    "nombre": "Antequera",
+    "latitud": 37.0238,
+    "longitud": -4.5740,
+    "comunidad_autonoma": "Andalucía",
+    "altitud": 575
+  },
+  {
+    "nombre": "Marbella",
+    "latitud": 36.3092,
+    "longitud": -4.8890,
+    "comunidad_autonoma": "Andalucía",
+    "altitud": 0
+  },
+  {
+    "nombre": "Jerez",
+    "latitud": 36.6813,
+    "longitud": -6.1371,
+    "comunidad_autonoma": "Andalucía",
+    "altitud": 58
+  },
+  {
+    "nombre": "Cádiz",
+    "latitud": 36.5267,
+    "longitud": -6.2944,
+    "comunidad_autonoma": "Andalucía",
+    "altitud": 0
+  },
+  {
+    "nombre": "Granada",
+    "latitud": 37.1760,
+    "longitud": -3.5881,
+    "comunidad_autonoma": "Andalucía",
+    "altitud": 738
+  },
+  {
+    "nombre": "Huelva",
+    "latitud": 37.2609,
+    "longitud": -6.9447,
+    "comunidad_autonoma": "Andalucía",
+    "altitud": 0
+  },
+  {
+    "nombre": "Badajoz",
+    "latitud": 38.8792,
+    "longitud": -6.9707,
+    "comunidad_autonoma": "Extremadura",
+    "altitud": 183
+  },
+  {
+    "nombre": "Cáceres",
+    "latitud": 39.4709,
+    "longitud": -6.3725,
+    "comunidad_autonoma": "Extremadura",
+    "altitud": 459
+  },
+  {
+    "nombre": "Plasencia",
+    "latitud": 40.0769,
+    "longitud": -6.0964,
+    "comunidad_autonoma": "Extremadura",
+    "altitud": 355
+  },
+  {
+    "nombre": "Burgos",
+    "latitud": 42.3604,
+    "longitud": -3.6743,
+    "comunidad_autonoma": "Castilla y León",
+    "altitud": 856
+  },
+  {
+    "nombre": "Palencia",
+    "latitud": 41.9976,
+    "longitud": -4.5318,
+    "comunidad_autonoma": "Castilla y León",
+    "altitud": 742
+  },
+  {
+    "nombre": "Segovia",
+    "latitud": 40.9429,
+    "longitud": -4.1087,
+    "comunidad_autonoma": "Castilla y León",
+    "altitud": 805
+  },
+  {
+    "nombre": "Ávila",
+    "latitud": 40.6766,
+    "longitud": -4.7041,
+    "comunidad_autonoma": "Castilla y León",
+    "altitud": 1131
+  },
+  {
+    "nombre": "Salamanca",
+    "latitud": 40.9734,
+    "longitud": -5.6637,
+    "comunidad_autonoma": "Castilla y León",
+    "altitud": 802
+  },
+  {
+    "nombre": "León",
+    "latitud": 42.5987,
+    "longitud": -5.5792,
+    "comunidad_autonoma": "Castilla y León",
+    "altitud": 822
+  },
+  {
+    "nombre": "Soria",
+    "latitud": 41.7646,
+    "longitud": -2.4637,
+    "comunidad_autonoma": "Castilla y León",
+    "altitud": 1063
+  },
+  {
+    "nombre": "Zamora",
+    "latitud": 41.5031,
+    "longitud": -5.7445,
+    "comunidad_autonoma": "Castilla y León",
+    "altitud": 652
+  },
+  {
+    "nombre": "Oviedo",
+    "latitud": 43.3619,
+    "longitud": -5.8291,
+    "comunidad_autonoma": "Asturias",
+    "altitud": 236
+  },
+  {
+    "nombre": "Avilés",
+    "latitud": 43.5500,
+    "longitud": -5.9235,
+    "comunidad_autonoma": "Asturias",
+    "altitud": 0
+  },
+  {
+    "nombre": "Santander",
+    "latitud": 43.4627,
+    "longitud": -3.8050,
+    "comunidad_autonoma": "Cantabria",
+    "altitud": 0
+  },
+  {
+    "nombre": "Torrelavega",
+    "latitud": 43.3642,
+    "longitud": -3.7868,
+    "comunidad_autonoma": "Cantabria",
+    "altitud": 105
+  },
+  {
+    "nombre": "Pamplona",
+    "latitud": 42.8125,
+    "longitud": -1.6458,
+    "comunidad_autonoma": "Navarra",
+    "altitud": 427
+  },
+  {
+    "nombre": "Tudela",
+    "latitud": 42.0703,
+    "longitud": -1.6056,
+    "comunidad_autonoma": "Navarra",
+    "altitud": 282
+  },
+  {
+    "nombre": "Vitoria",
+    "latitud": 42.8452,
+    "longitud": -2.6721,
+    "comunidad_autonoma": "País Vasco",
+    "altitud": 525
+  },
+  {
+    "nombre": "Getxo",
+    "latitud": 43.3227,
+    "longitud": -3.0385,
+    "comunidad_autonoma": "País Vasco",
+    "altitud": 0
+  },
+  {
+    "nombre": "Baracaldo",
+    "latitud": 43.2996,
+    "longitud": -2.9757,
+    "comunidad_autonoma": "País Vasco",
+    "altitud": 26
+  },
+  {
+    "nombre": "Donostia",
+    "latitud": 43.3183,
+    "longitud": -1.9829,
+    "comunidad_autonoma": "País Vasco",
+    "altitud": 0
+  },
+  {
+    "nombre": "Irún",
+    "latitud": 43.3445,
+    "longitud": -1.7995,
+    "comunidad_autonoma": "País Vasco",
+    "altitud": 0
+  },
+  {
+    "nombre": "Santiago de Compostela",
+    "latitud": 42.8782,
+    "longitud": -8.5445,
+    "comunidad_autonoma": "Galicia",
+    "altitud": 260
+  },
+  {
+    "nombre": "Lugo",
+    "latitud": 42.6127,
+    "longitud": -8.6342,
+    "comunidad_autonoma": "Galicia",
+    "altitud": 456
+  },
+  {
+    "nombre": "Ourense",
+    "latitud": 42.3392,
+    "longitud": -7.8644,
+    "comunidad_autonoma": "Galicia",
+    "altitud": 136
+  },
+  {
+    "nombre": "Pontevedra",
+    "latitud": 42.4312,
+    "longitud": -8.6434,
+    "comunidad_autonoma": "Galicia",
+    "altitud": 36
+  },
+  {
+    "nombre": "Ferrol",
+    "latitud": 43.4741,
+    "longitud": -8.2505,
+    "comunidad_autonoma": "Galicia",
+    "altitud": 0
+  },
+  {
+    "nombre": "Ibiza",
+    "latitud": 38.9067,
+    "longitud": 1.4300,
+    "comunidad_autonoma": "Islas Baleares",
+    "altitud": 0
+  },
+  {
+    "nombre": "Mahón",
+    "latitud": 39.8936,
+    "longitud": 4.2681,
+    "comunidad_autonoma": "Islas Baleares",
+    "altitud": 0
+  },
+  {
+    "nombre": "Santa Cruz de Tenerife",
+    "latitud": 28.2715,
+    "longitud": -16.2556,
+    "comunidad_autonoma": "Canarias",
+    "altitud": 0
+  },
+  {
+    "nombre": "La Laguna",
+    "latitud": 28.4869,
+    "longitud": -16.3163,
+    "comunidad_autonoma": "Canarias",
+    "altitud": 574
+  },
+  {
+    "nombre": "Arrecife",
+    "latitud": 28.9623,
+    "longitud": -13.5443,
+    "comunidad_autonoma": "Canarias",
+    "altitud": 0
+  },
+  {
+    "nombre": "Puerto del Rosario",
+    "latitud": 28.5116,
+    "longitud": -14.0175,
+    "comunidad_autonoma": "Canarias",
+    "altitud": 0
+  },
+  {
+    "nombre": "La Laguna",
+    "latitud": 28.4869,
+    "longitud": -16.3163,
+    "comunidad_autonoma": "Canarias",
+    "altitud": 574
+  }
+]

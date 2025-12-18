@@ -10,3 +10,5 @@ pytest-django>=4.9.0
 prophet>=1.1
 pandas>=2.0
 numpy>=1.24
+astral>=3.2
+requests>=2.32.0

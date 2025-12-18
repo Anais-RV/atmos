@@ -161,6 +161,16 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
 ]
 
+# ========== CONFIGURACIÓN DE APIS EXTERNAS ==========
+
+# AEMET OpenData API - Agencia Estatal de Meteorología
+# Registro gratuito: https://opendata.aemet.es/centrodedescargas/inicio
+# Documentación: https://opendata.aemet.es/dist/index.html
+# TODO: Obtener API key y configurar en .env o aquí
+AEMET_API_KEY = config('AEMET_API_KEY', default=None)
+
+# ====================================================
+
 EMBLEM_PHOTO_BASE_URL = config(
     "EMBLEM_PHOTO_BASE_URL",
     default="https://cdn.example.com/emblems/",
