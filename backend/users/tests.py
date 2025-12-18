@@ -183,4 +183,7 @@ class PasswordAuthenticationTestCase(TestCase):
         """Verifica que check_password() rechaza contraseña incorrecta"""
         es_correcta = self.user.check_password('PasswordIncorrecta')
         self.assertFalse(es_correcta)
+
+
+
  

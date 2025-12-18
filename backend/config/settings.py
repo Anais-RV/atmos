@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'weather',
+    'users',
     'rest_framework',
     'rest_framework_simplejwt' # <-- Dependencia para los tokens (JWT)
 ]
@@ -53,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'users.middleware.PasswordResetRateLimitMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -196,6 +199,45 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.ScryptPasswordHasher", # Opcional
 ]
 
+# --- CONFIGURACION DE EMAIL --- 
+# Método 1
+# Configuración de Email para Gmail (Desarrollo)
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD") 
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL") 
+
+# URL base de la aplicación
+FRONTEND_URL = os.environ.get("FRONTEND_URL","http://localhost:3000") # Para desarrollo
+# FRONTEND_URL = os.environ.get("FRONTEND_URL","https://tudominio.com") # Para produccion
+
+# Método 2
+# SendGrid (Produccion)
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.sendgrid.net"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = "apikey"
+# EMAIL_HOST_PASSWORD = "tu_sendgrid_api_key" 
+# DEFAULT_FROM_EMAIL = "noreply@atmos.com"
+
+# FRONTEND_URL = "https://atmos.com" 
+#
+# Si se usa SendGrid, utilizamos este comando:
+# pip install sendgrid
+# 
+# Para desarrollo con variables de entorno
+# pip install python-decouple 
+
+# Configuración de tokens de recuperación
+PASSWORD_RESET_TIMEOUT_HOURS = 24  # 24 horas por defecto
+
+# Requiere django-ratelimit con el siguiente comando:
+# pip install django-ratelimit
+
 # Cache Configuration
 # https://docs.djangoproject.com/en/5.1/topics/cache/
 CACHES = {
@@ -213,6 +255,7 @@ CACHES = {
 WEATHER_CACHE_TIMEOUT = 3600  # 1 hour
 WEATHER_CACHE_KEY_PREFIX = "weather_"
 
+"""
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -246,3 +289,4 @@ LOGGING = {
         },
     },
 }
+"""
