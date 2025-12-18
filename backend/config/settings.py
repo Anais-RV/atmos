@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
     'weather',
     'rest_framework',
-    'rest_framework_simplejwt' # <-- Dependencia para los tokens (JWT)
+    'rest_framework_simplejwt', # <-- Dependencia para los tokens (JWT)
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -157,11 +159,11 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "http://localhost:5174",  # Vite usa este puerto alternativo
     "http://localhost:3000",
     "http://127.0.0.1:5173",
+    "http://127.0.0.1:5174",
 ]
-<<<<<<< HEAD
-=======
 
 # ========== CONFIGURACIÓN DE APIS EXTERNAS ==========
 
@@ -246,4 +248,3 @@ LOGGING = {
         },
     },
 }
->>>>>>> origin/dev

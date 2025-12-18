@@ -82,36 +82,15 @@ body {
    Global layout / App
    ========================= */
 
-/* Theme variables for quick toggling */
-body.light-mode {
-  --bg: #f8fafc;
-  --text-color: #0f172a;
-  --card-background: #ffffff;
-  --border-color: #e6edf3;
-  --muted-color: #475569;
-  --button-primary: #0369a1;
-  --button-text: #ffffff;
-}
-
-body.dark-mode {
-  --bg: #020617;
-  --text-color: #e5e7eb;
-  --card-background: rgba(15,23,42,0.95);
-  --border-color: #1f2937;
-  --muted-color: #9ca3af;
-  --button-primary: #06b6d4;
-  --button-text: #042027;
-}
-
 /* Layout general de la app */
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--bg, #020617);
-  color: var(--text-color, #e5e7eb);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;}
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
 
 /* Contenedor principal (entre navbar y footer) */
 .app-main {
@@ -130,8 +109,9 @@ body.dark-mode {
 
 .dashboard,
 .dashboard-card {
-  background: var(--card-background, rgba(15, 23, 42, 0.9));
-  border: 1px solid var(--border-color, #1e293b);  border-radius: 1.25rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 1.25rem;
   padding: 1rem;
   box-shadow: var(--shadow-heavy);
   max-width: 460px;
@@ -148,7 +128,8 @@ body.dark-mode {
 
 .dashboard-header p {
   font-size: 0.9rem;
-  color: var(--muted-color, #cbd5f5);}
+  color: var(--text-tertiary);
+}
 
 /* Layout de dos columnas opcional */
 .dashboard-layout {
@@ -172,8 +153,9 @@ body.dark-mode {
 
 /* Panel genérico del dashboard */
 .panel {
-  background: var(--card-background, rgba(15, 23, 42, 0.95));
-  border: 1px solid var(--border-color, #1f2937);  border-radius: 1rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
   padding: 1rem 1.1rem;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
@@ -183,7 +165,8 @@ body.dark-mode {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-color, #e5e7eb);  margin-bottom: 0.4rem;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
 }
 
 /* Variaciones de panel */
@@ -206,12 +189,26 @@ body.dark-mode {
   min-height: 100px;
 }
 
-/* Texto de placeholder */
-.placeholder-text {
-  font-size: 0.8rem;
-  color: var(--muted-color, #6b7280);
-  font-style: italic;
+/* =========================
+   Dashboard - Sección central vertical
+   ========================= */
+
+.dashboard-center {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;
 }
+
+/* Tarjetas centrales */
+.center-card {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1 / 1;
+  border-radius: 1.25rem;
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-secondary);
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -223,11 +220,13 @@ body.dark-mode {
 }
 
 .center-card-top {
-  background: radial-gradient(circle at top, rgba(56, 189, 248, 0.18), var(--bg, #020617));  margin-top: 1.5rem;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), transparent);
+  margin-top: 1.5rem;
 }
 
 .center-card-bottom {
-  background: radial-gradient(circle at bottom, rgba(22, 163, 74, 0.18), var(--bg, #020617));  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), transparent);
+  margin-bottom: 1.5rem;
 }
 
 .center-card-title {
@@ -236,11 +235,13 @@ body.dark-mode {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 0.4rem;
-  color: var(--text-color, #e5e7eb);}
+  color: var(--text-primary);
+}
 
 .center-card-text {
   font-size: 0.8rem;
-  color: var(--muted-color, #9ca3af);  max-width: 320px;
+  color: var(--text-secondary);
+  max-width: 320px;
 }
 
 /* =========================
@@ -260,8 +261,9 @@ body.dark-mode {
 }
 
 .dashboard-box {
-  background: var(--card-background, rgba(15, 23, 42, 0.95));
-  border: 1px solid var(--border-color, #1f2937);  border-radius: 1rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
   padding: 1rem;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
@@ -271,12 +273,14 @@ body.dark-mode {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-color, #e5e7eb);  margin-bottom: 0.4rem;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
 }
 
 .dashboard-box p {
   font-size: 0.8rem;
-  color: var(--muted-color, #9ca3af);}
+  color: var(--text-secondary);
+}
 
 /* =========================
    Navbar
@@ -284,8 +288,9 @@ body.dark-mode {
 
 .navbar {
   width: 100%;
-  border-bottom: 1px solid var(--border-color, #1e293b);
-  background: rgba(2, 6, 23, 0.6);  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  backdrop-filter: blur(12px);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -311,8 +316,9 @@ body.dark-mode {
   width: 2.1rem;
   height: 2.1rem;
   border-radius: 999px;
-  border: 1px solid var(--border-color, #1e293b);
-  background: var(--card-background, rgba(15, 23, 42, 0.95));  display: flex;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -366,7 +372,8 @@ body.dark-mode {
 
 .navbar-brand-sub {
   font-size: 0.7rem;
-  color: var(--muted-color, #9ca3af);}
+  color: var(--text-secondary);
+}
 
 /* Derecha: menú + Sign in */
 
@@ -380,9 +387,10 @@ body.dark-mode {
   width: 2.1rem;
   height: 2.1rem;
   border-radius: 999px;
-  border: 1px solid var(--border-color, #1e293b);
-  background: var(--card-background, rgba(15, 23, 42, 0.95));
-  color: var(--text-color, #e5e7eb);  font-size: 1.1rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 1.1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -401,7 +409,7 @@ body.dark-mode {
   padding: 0.4rem 0.9rem;
   border-radius: 999px;
   border: 1px solid rgba(56, 189, 248, 0.6);
-  color: var(--button-primary, #7dd3fc);
+  color: #7dd3fc;
   background: transparent;
   cursor: pointer;
   transition:
@@ -454,8 +462,9 @@ body.dark-mode {
   width: 140px;
   height: 44px;
   border-radius: 999px;
-  border: 1px dashed var(--border-color, #374151);
-  background: var(--card-background, rgba(15, 23, 42, 0.95));  display: flex;
+  border: 1px dashed var(--border-light);
+  background-color: var(--bg-secondary);
+  display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
@@ -486,14 +495,16 @@ body.dark-mode {
 /* Lo dejo por compatibilidad, aunque ahora usamos footer-slot-label */
 .footer-slot-placeholder {
   font-size: 0.8rem;
-  color: var(--muted-color, #6b7280);}
+  color: var(--text-secondary);
+}
 
 .footer-links {
   display: none;
 }
 
 .footer-link {
-  color: var(--muted-color, #9ca3af);  text-decoration: none;
+  color: var(--text-secondary);
+  text-decoration: none;
   transition: color 0.15s ease;
 }
 
