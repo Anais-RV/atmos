@@ -33,6 +33,7 @@ jobs:
         run: |
           cd backend
           pip install -r requirements.txt
+      - name: Instalar dependencias de Python
         working-directory: ./backend
         run: pip install -r requirements.txt
       
@@ -72,6 +73,7 @@ jobs:
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Cache de dependencias de pnpm
         uses: actions/cache@v4
@@ -85,6 +87,7 @@ jobs:
         run: |
           cd frontend
           pnpm install --frozen-lockfile
+      - name: Instalar dependencias de Node
         working-directory: ./frontend
         run: pnpm install --frozen-lockfile
       
@@ -92,5 +95,10 @@ jobs:
         run: |
           cd frontend
           pnpm build
+      - name: Ejecutar Linter de ESLint
+        working-directory: ./frontend
+        run: pnpm lint
+
+      - name: Verificar compilación (build)
         working-directory: ./frontend
         run: pnpm build
