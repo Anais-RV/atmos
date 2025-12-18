@@ -28,12 +28,16 @@ export const authService = {
       }
 
       const data = await response.json();
+      console.log('[authService.login] Respuesta recibida:', data.access ? 'Con access token' : 'Sin access token');
       
       // Guardar tokens en localStorage
       if (data.access) {
+        console.log('[authService.login] Guardando access_token:', data.access.substring(0, 20) + '...');
         localStorage.setItem('access_token', data.access);
+        console.log('[authService.login] Token guardado, verificando:', localStorage.getItem('access_token') ? 'OK' : 'FALLO');
       }
       if (data.refresh) {
+        console.log('[authService.login] Guardando refresh_token');
         localStorage.setItem('refresh_token', data.refresh);
       }
 

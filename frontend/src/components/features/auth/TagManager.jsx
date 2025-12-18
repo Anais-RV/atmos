@@ -37,23 +37,34 @@ function TagManager() {
 
   // Cargar etiquetas al montar
   useEffect(() => {
+    console.log('[TagManager] useEffect ejecutado')
+    
     // Dar un pequeño delay para asegurar que el token se guardó
     const checkTokenAndLoad = () => {
       const token = localStorage.getItem('access_token')
+      console.log('[TagManager] checkTokenAndLoad - Token:', token ? `${token.substring(0, 20)}...` : 'NULL')
+      
       if (token) {
+        console.log('[TagManager] Token encontrado, llamando loadTags()')
         loadTags()
       } else {
+        console.error('[TagManager] No hay token, mostrando error')
         setError('No estás autenticado. Por favor, inicia sesión.')
       }
     }
 
     // Intentar inmediatamente
+    console.log('[TagManager] Intento inmediato')
     checkTokenAndLoad()
 
     // Si no hay token, reintentar después de 100ms (por si acaba de hacer login)
     const token = localStorage.getItem('access_token')
     if (!token) {
-      const timeout = setTimeout(checkTokenAndLoad, 100)
+      console.log('[TagManager] Programando reintento en 100ms')
+      const timeout = setTimeout(() => {
+        console.log('[TagManager] Ejecutando reintento después de 100ms')
+        checkTokenAndLoad()
+      }, 100)
       return () => clearTimeout(timeout)
     }
   }, [])

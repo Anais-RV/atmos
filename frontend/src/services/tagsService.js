@@ -12,10 +12,14 @@ export const tagsService = {
   async getTags() {
     try {
       const token = localStorage.getItem('access_token')
+      console.log('[tagsService.getTags] Token obtenido:', token ? `${token.substring(0, 20)}...` : 'NULL')
+      
       if (!token) {
+        console.error('[tagsService.getTags] ERROR: No hay token')
         throw new Error('No hay token de autenticación')
       }
 
+      console.log('[tagsService.getTags] Haciendo fetch a:', `${API_BASE}/tags/`)
       const response = await fetch(`${API_BASE}/tags/`, {
         method: 'GET',
         headers: {
@@ -24,6 +28,8 @@ export const tagsService = {
         },
       })
 
+      console.log('[tagsService.getTags] Response status:', response.status)
+      
       if (!response.ok) {
         if (response.status === 401) {
           throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.')
