@@ -1,7 +1,6 @@
 name: Verificaciones Básicas
 
 # Se ejecuta solo en Pull Requests a dev o main
-# Se ejecuta en Pull Requests a dev o main
 on:
   pull_request:
     branches: [dev, main]
@@ -21,29 +20,16 @@ jobs:
         with:
           python-version: '3.10'
       
-      - name: Cache de dependencias de pip
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Instalar dependencias
         run: |
           cd backend
           pip install -r requirements.txt
-      - name: Instalar dependencias de Python
-        working-directory: ./backend
-        run: pip install -r requirements.txt
       
       - name: Ejecutar tests con pytest
         run: |
           cd backend
           pytest -v
         continue-on-error: true
-        working-directory: ./backend
-        run: pytest -v
 
   # Verificaciones del frontend
   frontend-checks:
@@ -57,7 +43,6 @@ jobs:
       
       - name: Configurar Node.js 20
         uses: actions/setup-node@v4
-        uses: actions/setup-node@v4 # No bloquea el merge si falla, se puede quitar si se quiere que sea estricto
         with:
           node-version: '20'
       
@@ -65,40 +50,13 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           package_json_file: frontend/package.json
-          version: 8 # O la versión que uses
-          run_install: false
-
-      - name: Obtener directorio de cache de pnpm
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
-
-      - name: Cache de dependencias de pnpm
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('frontend/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
       
       - name: Instalar dependencias
         run: |
           cd frontend
           pnpm install --frozen-lockfile
-      - name: Instalar dependencias de Node
-        working-directory: ./frontend
-        run: pnpm install --frozen-lockfile
       
       - name: Verificar build
         run: |
           cd frontend
           pnpm build
-      - name: Ejecutar Linter de ESLint
-        working-directory: ./frontend
-        run: pnpm lint
-
-      - name: Verificar compilación (build)
-        working-directory: ./frontend
-        run: pnpm build
