@@ -1,0 +1,266 @@
+/* =========================
+   Sunrise/Sunset Component
+   ========================= */
+
+.sunrise-sunset-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem;
+  border-radius: 1.25rem;
+  border: 1px solid #1f2937;
+  background: rgba(15, 23, 42, 0.98);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.9);
+}
+
+@media (min-width: 768px) {
+  .sunrise-sunset-container {
+    max-width: 630px;
+    padding: 1.8rem 1.6rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sunrise-sunset-container {
+    max-width: 780px;
+  }
+}
+
+/* título */
+.sunrise-sunset-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  color: #e5e7eb;
+}
+
+/* cuadrícula del grid */
+.sunrise-sunset-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+  .sunrise-sunset-grid {
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sunrise-sunset-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+/*tarjeta amanecer */
+.sun-time-card {
+  padding: 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid #374151;
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.5) 0%, rgba(17, 24, 39, 0.7) 100%);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sun-time-card:hover {
+  border-color: #4b5563;
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.7) 0%, rgba(17, 24, 39, 0.9) 100%);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.5);
+}
+
+.sunrise-card {
+  border-left: 4px solid #fbbf24;
+}
+
+.sunrise-card .sunrise-icon {
+  color: #fbbf24;
+}
+
+.sunset-card {
+  border-left: 4px solid #f97316;
+}
+
+.sunset-card .sunset-icon {
+  color: #f97316;
+}
+
+/* dayligh tarjeta */
+.daylight-card {
+  border-left: 4px solid #fbbf24;
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1024px) {
+  .daylight-card {
+    grid-column: auto;
+  }
+}
+
+.daylight-card .daylight-icon {
+  color: #fbbf24;
+}
+
+.sun-time-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.sun-time-header h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #d1d5db;
+  margin: 0;
+}
+
+.sun-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+.sun-time-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sun-time-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.05em;
+}
+
+.sun-time-label {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.sunrise-sunset-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  gap: 1rem;
+  color: #9ca3af;
+}
+
+.sunrise-sunset-loading .spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #fbbf24;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sunrise-sunset-loading p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.sunrise-sunset-error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fecaca;
+}
+
+.sunrise-sunset-error .error-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  color: #ef4444;
+}
+
+.sunrise-sunset-error p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.sunrise-sunset-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #9ca3af;
+}
+
+.sunrise-sunset-empty p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ajustes responsivle puntos de quiebre */
+@media (max-width: 640px) {
+  .sunrise-sunset-container {
+    max-width: 100%;
+    border-radius: 1rem;
+    padding: 1.25rem;
+  }
+
+  .sunrise-sunset-title {
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .sun-time-card {
+    padding: 1rem;
+  }
+
+  .sun-time-value {
+    font-size: 1.5rem;
+  }
+
+  .sun-time-header h3 {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sunrise-sunset-container {
+    padding: 1rem;
+  }
+
+  .sunrise-sunset-grid {
+    gap: 0.75rem;
+  }
+
+  .sun-time-card {
+    padding: 0.875rem;
+  }
+
+  .sun-time-value {
+    font-size: 1.375rem;
+  }
+
+  .sun-time-label {
+    font-size: 0.8rem;
+  }
+
+  .sun-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
