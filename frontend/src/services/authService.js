@@ -28,17 +28,23 @@ export const authService = {
       }
 
       const data = await response.json();
-      console.log('[authService.login] Respuesta recibida:', data.access ? 'Con access token' : 'Sin access token');
+      console.log('[authService.login] Respuesta completa:', data);
+      
+      // El backend devuelve los tokens dentro de data.tokens
+      const accessToken = data.tokens?.access || data.access;
+      const refreshToken = data.tokens?.refresh || data.refresh;
+      
+      console.log('[authService.login] Access token encontrado:', accessToken ? 'SÍ' : 'NO');
       
       // Guardar tokens en localStorage
-      if (data.access) {
-        console.log('[authService.login] Guardando access_token:', data.access.substring(0, 20) + '...');
-        localStorage.setItem('access_token', data.access);
+      if (accessToken) {
+        console.log('[authService.login] Guardando access_token:', accessToken.substring(0, 20) + '...');
+        localStorage.setItem('access_token', accessToken);
         console.log('[authService.login] Token guardado, verificando:', localStorage.getItem('access_token') ? 'OK' : 'FALLO');
       }
-      if (data.refresh) {
+      if (refreshToken) {
         console.log('[authService.login] Guardando refresh_token');
-        localStorage.setItem('refresh_token', data.refresh);
+        localStorage.setItem('refresh_token', refreshToken);
       }
 
       return data;
