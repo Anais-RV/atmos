@@ -1,25 +1,7 @@
-<<<<<<< HEAD
 // frontend/src/components/ui/HamburgerMenu/HamburgerMenu.jsx
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import './HamburgerMenu.css';
-=======
-/**
- * Componente: HamburgerMenu
- * Propósito: Menú desplegable tipo hamburguesa con navegación completa, selector de idioma y accesibilidad.
- * Uso:
- *  - Importado y renderizado en Navbar (esquina superior derecha)
- *  - Presente en todas las páginas a través del Navbar
- *  - Proporciona acceso a: Dashboard, Login, Registro, Panel de usuario, y configuraciones (idioma, accesibilidad)
- * Tipo:
- *  - Componente UI reutilizable (menú de navegación móvil/desktop)
- */
-
-// frontend/src/components/ui/HamburgerMenu/HamburgerMenu.jsx
-import { useState, useContext } from "react";
-import { Link } from "react-router-dom";
->>>>>>> origin/dev
-import { ThemeContext } from "../../../context/ThemeContext";
+import './HamburgerMenu.css';import { ThemeContext } from "../../../context/ThemeContext";
 
 function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,19 +19,8 @@ function HamburgerMenu() {
     setIsAccOpen(false);
   };
 
-<<<<<<< HEAD
   const toggleLanguages = () => setIsLangOpen((prev) => !prev);
   const toggleAccessibility = () => setIsAccOpen((prev) => !prev);
-=======
-  const toggleLanguages = () => {
-    setIsLangOpen((prev) => !prev);
-  };
-
-  const toggleAccessibility = () => {
-    setIsAccOpen((prev) => !prev);
-  };
->>>>>>> origin/dev
-
   const handleLanguageSelect = (lang) => {
     console.log("Idioma seleccionado:", lang);
     closeMenu();
@@ -62,10 +33,7 @@ function HamburgerMenu() {
 
   return (
     <div className="hamburger-menu-wrapper">
-<<<<<<< HEAD
-=======
       {/* Botón del menú */}
->>>>>>> origin/dev
       <button
         type="button"
         className="navbar-menu-button"
@@ -78,26 +46,14 @@ function HamburgerMenu() {
 
       {isOpen && (
         <>
-<<<<<<< HEAD
-=======
-          {/* Clic fuera para cerrar */}
->>>>>>> origin/dev
           <div
             className="hamburger-menu-backdrop"
             onClick={closeMenu}
             aria-hidden="true"
           />
 
-<<<<<<< HEAD
           <div className="hamburger-menu-panel">
             <ul className="hamburger-menu-list">
-=======
-          {/* Panel principal */}
-          <div className="hamburger-menu-panel">
-            <ul className="hamburger-menu-list">
-              {/* (Sign in was here but restored to Navbar) */}
-
->>>>>>> origin/dev
               {/* Menu de usuario */}
               <li className="hamburger-menu-item">
                 <Link
@@ -120,10 +76,7 @@ function HamburgerMenu() {
                   className="hamburger-menu-button-row"
                   aria-label={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
                   onClick={() => {
-<<<<<<< HEAD
-=======
                     // Alternar tema global y cerrar menú
->>>>>>> origin/dev
                     toggleTheme();
                     closeMenu();
                   }}

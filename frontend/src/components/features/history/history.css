@@ -25,12 +25,7 @@
 
 .history-placeholder-text {
   font-size: 0.85rem;
-<<<<<<< HEAD:frontend/src/styles/history.css
-  color: var(--muted-color, #e5e7eb);
-=======
-  color: var(--text-primary);
->>>>>>> origin/dev:frontend/src/components/features/history/history.css
-}
+  color: var(--muted-color, #e5e7eb);}
 
 /* Grid de las 3 secciones: día / semana / mes */
 .history-summary-grid {
@@ -52,14 +47,8 @@
 /* Tarjetas pequeñas dentro de la center-card-bottom */
 .history-summary-item {
   border-radius: 0.75rem;
-<<<<<<< HEAD:frontend/src/styles/history.css
   border: 1px solid rgba(56, 189, 248, 0.6);
-  background: var(--card-background, rgba(15, 23, 42, 0.96));
-=======
-  border: 1px solid var(--accent-primary);
-  background-color: var(--bg-secondary);
->>>>>>> origin/dev:frontend/src/components/features/history/history.css
-  padding: 0.7rem;
+  background: var(--card-background, rgba(15, 23, 42, 0.96));  padding: 0.7rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,12 +58,7 @@
 .history-summary-title {
   font-size: 0.8rem;
   font-weight: 500;
-<<<<<<< HEAD:frontend/src/styles/history.css
-  color: var(--text-color, #e5e7eb);
-=======
-  color: var(--text-primary);
->>>>>>> origin/dev:frontend/src/components/features/history/history.css
-  text-align: center;
+  color: var(--text-color, #e5e7eb);  text-align: center;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }

@@ -10,10 +10,7 @@
 
 // src/components/layout/Navbar.jsx
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
 import { useState } from "react";
-=======
->>>>>>> origin/dev
 import HamburgerMenu from "../ui/HamburgerMenu/HamburgerMenu";
 
 function Navbar() {
@@ -50,14 +47,9 @@ function Navbar() {
 
         {/* DERECHA: MENÚ DESPLEGABLE + SIGN IN */}
         <div className="navbar-right" aria-label="account options">
-<<<<<<< HEAD
           <Link to="/login" className="navbar-cta">
             Sign in
           </Link>
-
-=======
-          <Link to="/login" className="navbar-cta">Sign in</Link>
->>>>>>> origin/dev
           <HamburgerMenu />
         </div>
       </nav>
