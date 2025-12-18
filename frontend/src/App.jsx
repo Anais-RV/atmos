@@ -43,19 +43,6 @@ function App() {
           <Route path="/password-reset" element={<PasswordResetPage />} />
           <Route path="/password-reset/:token" element={<PasswordResetPage />} />
         </Routes>
-=======
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/user-panel" element={<UserPanelPage />} />
-            <Route path="/data-protection" element={<DataProtectionPage />} />
-            <Route path="/charts" element={<ForecastChartPage />} />
-            <Route path="/history" element={<WeatherHistoryPage />} />
-            <Route path="/forecast" element={<ForecastPage />} />
-            <Route path="/forecast-extended" element={<ForecastExtendedPage />} />
-          </Routes>
->>>>>>> origin/dev
 
           <Footer />
         </div>
