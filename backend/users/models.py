@@ -72,49 +72,24 @@ class PasswordResetToken(models.Model):
         cls.objects.filter(user=user, is_used=False).update(is_used=True)
 
 
-class UserPreferences(models.Model):
+class Tag(models.Model):
     """
-    modelo para almacenar preferencias del usuario (idioma, tema, estacion favorita).
+    Modelo para etiquetas personalizadas del usuario.
     """
-    LANGUAGE_CHOICES = [
-        ('es', 'Español'),
-        ('en', 'English'),
-        ('fr', 'Français'),
-        ('de', 'Deutsch'),
-    ]
-
-    THEME_CHOICES = [
-        ('light', 'Claro'),
-        ('dark', 'Oscuro'),
-        ('auto', 'Automatico'),
-    ]
-
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="preferences"
+        related_name="tags"
     )
-    language = models.CharField(
-        max_length=5,
-        choices=LANGUAGE_CHOICES,
-        default='es'
-    )
-    theme = models.CharField(
-        max_length=10,
-        choices=THEME_CHOICES,
-        default='light'
-    )
-    favorite_station = models.IntegerField(
-        null=True,
-        blank=True,
-        help_text="ID de la estacion meteorologica favorita"
-    )
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=7, default='#3b82f6')  # hex color
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Preferencia de Usuario"
-        verbose_name_plural = "Preferencias de Usuario"
+        ordering = ["-created_at"]
+        verbose_name = "Etiqueta"
+        verbose_name_plural = "Etiquetas"
+        unique_together = ['user', 'name']
 
     def __str__(self):
-        return f"Preferencias de {self.user.username}"
+        return f"{self.name} ({self.user.username})"

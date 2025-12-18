@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
 from django.contrib.auth import login
 from django.conf import settings
@@ -12,10 +12,8 @@ from .serializers import (
     LoginSerializer,
     ChangePasswordSerializer,
     PasswordResetRequestSerializer,
-    PasswordResetConfirmSerializer,
-    UserPreferencesSerializer
+    PasswordResetConfirmSerializer
 )
-from .models import UserPreferences
 from .permissions import IsSuperUser
 
 # Solo importar FWT si está disponible
@@ -293,50 +291,18 @@ class PasswordResetConfirmView(APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserPreferencesView(APIView):
+class TagViewSet(viewsets.ModelViewSet):
     """
-    vista para obtener y actualizar las preferencias del usuario autenticado.
-    GET: recupera las preferencias
-    PUT: actualiza las preferencias
+    ViewSet para gestionar etiquetas del usuario (CRUD completo).
     """
+    serializer_class = __import__('users.serializers', fromlist=['TagSerializer']).TagSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        """
-        recupera las preferencias del usuario.
-        """
-        try:
-            preferences = UserPreferences.objects.get(user=request.user)
-        except UserPreferences.DoesNotExist:
-            # crear preferencias por defecto si no existen
-            preferences = UserPreferences.objects.create(user=request.user)
-        
-        serializer = UserPreferencesSerializer(preferences)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        """Solo devuelve etiquetas del usuario autenticado"""
+        Tag = __import__('users.models', fromlist=['Tag']).Tag
+        return Tag.objects.filter(user=self.request.user)
 
-    def put(self, request):
-        """
-        actualiza las preferencias del usuario.
-        """
-        try:
-            preferences = UserPreferences.objects.get(user=request.user)
-        except UserPreferences.DoesNotExist:
-            preferences = UserPreferences.objects.create(user=request.user)
-        
-        serializer = UserPreferencesSerializer(
-            preferences,
-            data=request.data,
-            partial=True
-        )
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
-                serializer.data,
-                status=status.HTTP_200_OK
-            )
-        
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
+    def perform_create(self, serializer):
+        """Asigna el usuario autenticado al crear etiqueta"""
+        serializer.save(user=self.request.user)

@@ -1,88 +1,64 @@
+/**
+ * Componente: LoginForm
+ * Propósito: Formulario de inicio de sesión con campos de email, password, checkbox remember me y botones de Sign in/Register.
+ * Uso:
+ *  - LoginPage.jsx (único lugar donde se renderiza)
+ * Dependencias:
+ *  - auth.css (.auth-form, .auth-field, .auth-label, .auth-input, .auth-form-footer, .auth-remember, .auth-checkbox, .auth-actions, .auth-button-primary, .auth-button-secondary)
+ */
+
 // frontend/src/components/features/auth/LoginForm.jsx
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { Link, useNavigate } from "react-router-dom";
+import authService from "../../../services/authService";
 
 function LoginForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     remember: false,
   });
-
-  const [errors, setErrors] = useState({});
-
-  const validateField = (name, value) => {
-    let error = "";
-
-    switch (name) {
-      case "email":
-        if (!value.trim()) {
-          error = "El email es obligatorio";
-        } else if (!EMAIL_REGEX.test(value)) {
-          error = "El formato del email no es válido";
-        }
-        break;
-
-      case "password":
-        if (!value) {
-          error = "La contraseña es obligatoria";
-        } else if (value.length < 8) {
-          error = "La contraseña debe tener al menos 8 caracteres";
-        }
-        break;
-
-      default:
-        break;
-    }
-
-    return error;
-  };
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
-
-    const fieldValue = type === "checkbox" ? checked : value;
-
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: fieldValue,
+      [name]: type === 'checkbox' ? checked : value
     }));
+  };
 
-    if (name !== "remember") {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: validateField(name, fieldValue),
-      }));
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      await authService.login(formData.email, formData.password);
+      navigate('/user-panel');
+    } catch (err) {
+      setError(err.message || 'Error al iniciar sesión');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const isFormValid =
-    formData.email.trim() !== "" &&
-    formData.password.trim() !== "" &&
-    !errors.email &&
-    !errors.password;
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const newErrors = {
-      email: validateField("email", formData.email),
-      password: validateField("password", formData.password),
-    };
-
-    setErrors(newErrors);
-
-    if (newErrors.email || newErrors.password) return;
-
-    // TODO: enviar datos al backend
-    console.log("Login válido:", formData);
-  };
-
   return (
-    <form className="auth-form" onSubmit={handleSubmit} noValidate>
+    <form className="auth-form" onSubmit={handleSubmit}>
+      {error && (
+        <div className="auth-error" style={{
+          backgroundColor: '#fee', 
+          color: '#c33', 
+          padding: '10px', 
+          borderRadius: '4px', 
+          marginBottom: '15px'
+        }}>
+          {error}
+        </div>
+      )}
+
       <div className="auth-field">
         <label className="auth-label" htmlFor="login-email">
           Email
@@ -92,11 +68,11 @@ function LoginForm() {
           name="email"
           type="email"
           className="auth-input"
-          placeholder="usuario@email.com"
+          placeholder="SomosLaHostia@SuperKode.com"
           value={formData.email}
           onChange={handleChange}
+          required
         />
-        {errors.email && <p className="auth-error">{errors.email}</p>}
       </div>
 
       <div className="auth-field">
@@ -111,10 +87,8 @@ function LoginForm() {
           placeholder="••••••••"
           value={formData.password}
           onChange={handleChange}
+          required
         />
-        {errors.password && (
-          <p className="auth-error">{errors.password}</p>
-        )}
       </div>
 
       <div className="auth-forgot">
@@ -125,10 +99,10 @@ function LoginForm() {
 
       <div className="auth-form-footer">
         <div className="auth-remember">
-          <input
-            id="remember-me"
+          <input 
+            id="remember-me" 
             name="remember"
-            type="checkbox"
+            type="checkbox" 
             className="auth-checkbox"
             checked={formData.remember}
             onChange={handleChange}
@@ -138,13 +112,14 @@ function LoginForm() {
           </label>
         </div>
 
+        {/* Botones Sign in + Register en la misma fila */}
         <div className="auth-actions">
-          <button
-            type="submit"
+          <button 
+            type="submit" 
             className="auth-button-primary"
-            disabled={!isFormValid}
+            disabled={loading}
           >
-            Sign in
+            {loading ? 'Iniciando...' : 'Sign in'}
           </button>
 
           <Link to="/register" className="auth-button-secondary">

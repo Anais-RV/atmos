@@ -1,10 +1,14 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import (
     RegisterView, MeView, ProfileView,
     AdminOnlyView, SuperuserOnlyView, PublicView,
     LoginView, ChangePasswordView, PasswordResetRequestView,
-    UserPreferencesView
+    TagViewSet
 )
+
+router = DefaultRouter()
+router.register(r'tags', TagViewSet, basename='tag')
 
 urlpatterns = [
     path("register/", RegisterView.as_view(), name="register"),
@@ -16,6 +20,6 @@ urlpatterns = [
     path("public/", PublicView.as_view(), name="public"),
     path("change-password/", ChangePasswordView.as_view(), name="change-password"),
     path("password-reset/request/", PasswordResetRequestView.as_view(), name="password-reset"),
-    path("preferences/", UserPreferencesView.as_view(), name="preferences"),
+    path("", include(router.urls)),
 ]
 
