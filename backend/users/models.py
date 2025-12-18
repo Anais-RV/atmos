@@ -70,3 +70,26 @@ class PasswordResetToken(models.Model):
         Invalida todos los tokens activos de un usuario
         """
         cls.objects.filter(user=user, is_used=False).update(is_used=True)
+
+
+class Tag(models.Model):
+    """
+    Modelo para etiquetas personalizadas del usuario.
+    """
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="tags"
+    )
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=7, default='#3b82f6')  # hex color
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Etiqueta"
+        verbose_name_plural = "Etiquetas"
+        unique_together = ['user', 'name']
+
+    def __str__(self):
+        return f"{self.name} ({self.user.username})"
