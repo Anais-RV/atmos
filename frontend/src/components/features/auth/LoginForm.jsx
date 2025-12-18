@@ -8,25 +8,70 @@
  */
 
 // frontend/src/components/features/auth/LoginForm.jsx
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import authService from "../../../services/authService";
 
 function LoginForm() {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    remember: false,
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, type, value, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // TODO: send login data to backend
+    setError("");
+    setLoading(true);
+
+    try {
+      await authService.login(formData.email, formData.password);
+      // Redirigir a user panel tras login exitoso
+      navigate('/user-panel');
+    } catch (err) {
+      setError(err.message || 'Error al iniciar sesión');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <form className="auth-form" onSubmit={handleSubmit}>
+      {error && (
+        <div className="auth-error" style={{
+          backgroundColor: '#fee', 
+          color: '#c33', 
+          padding: '10px', 
+          borderRadius: '4px', 
+          marginBottom: '15px'
+        }}>
+          {error}
+        </div>
+      )}
+
       <div className="auth-field">
         <label className="auth-label" htmlFor="login-email">
           Email
         </label>
         <input
           id="login-email"
+          name="email"
           type="email"
           className="auth-input"
           placeholder="SomosLaHostia@SuperKode.com"
+          value={formData.email}
+          onChange={handleChange}
           required
         />
       </div>
@@ -37,9 +82,12 @@ function LoginForm() {
         </label>
         <input
           id="login-password"
+          name="password"
           type="password"
           className="auth-input"
           placeholder="••••••••"
+          value={formData.password}
+          onChange={handleChange}
           required
         />
       </div>
@@ -52,7 +100,14 @@ function LoginForm() {
 
       <div className="auth-form-footer">
         <div className="auth-remember">
-          <input id="remember-me" type="checkbox" className="auth-checkbox" />
+          <input 
+            id="remember-me" 
+            name="remember"
+            type="checkbox" 
+            className="auth-checkbox"
+            checked={formData.remember}
+            onChange={handleChange}
+          />
           <label htmlFor="remember-me" className="auth-remember-label">
             Remember me
           </label>
@@ -60,8 +115,12 @@ function LoginForm() {
 
         {/* Botones Sign in + Register en la misma fila */}
         <div className="auth-actions">
-          <button type="submit" className="auth-button-primary">
-            Sign in
+          <button 
+            type="submit" 
+            className="auth-button-primary"
+            disabled={loading}
+          >
+            {loading ? 'Iniciando...' : 'Sign in'}
           </button>
 
           <Link to="/register" className="auth-button-secondary">
