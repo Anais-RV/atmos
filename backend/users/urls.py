@@ -16,7 +16,9 @@ urlpatterns = [
     path("public/", PublicView.as_view(), name="public"),
     path("change-password/", ChangePasswordView.as_view(), name="change-password"),
     path("password-reset/request/", PasswordResetRequestView.as_view(), name="password-reset"),
+    # URL Preferencias del usuario: Método 1 Usando RetrieveUpdateAPIView
     path("preferences/", UserPreferencesView.as_view(), name="user-preferences"),
-    path("preferences/api/", UserPreferencesAPIView.as_view(), name="user-preferences-api"),
+    # URL Preferencias del usuario: Método 2 Usando APIView personalizado
+    #path("preferences/", UserPreferencesAPIView.as_view(), name="user-preferences-api"),
 ]
 
