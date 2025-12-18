@@ -37,6 +37,10 @@ function LoginForm() {
 
     try {
       await authService.login(formData.email, formData.password);
+      
+      // Pequeño delay para asegurar que el token se guardó en localStorage
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       // Redirigir a user panel tras login exitoso
       navigate('/user-panel');
     } catch (err) {
