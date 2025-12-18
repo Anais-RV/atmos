@@ -4,7 +4,9 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, permissions
+from rest_framework import status, permissions, generics
+from rest_framework.pagination import PageNumberPagination
+from django.db.models import Q
 
 from .prophet_service import build_prophet_forecast
 from .emblem_photos import select_emblem_photo
@@ -14,6 +16,7 @@ from .serializers import (
     CurrentWeatherSerializer,
     TimeSeriesInputSerializer,
     TimeSeriesResponseSerializer,
+    CitySerializer,
 )
 from .cache_service import (
     get_cached_weather,
@@ -348,3 +351,43 @@ class TimeSeriesView(APIView):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+
+# ============================================================================
+# API DE CIUDADES - SOLO LECTURA
+# ============================================================================
+
+class CityPagination(PageNumberPagination):
+    """Paginación para listado de ciudades"""
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
+class CityListView(generics.ListAPIView):
+    
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+    pagination_class = CityPagination
+    permission_classes = [permissions.AllowAny]
+    
+    def get_queryset(self):
+        queryset = City.objects.all()
+        
+        # Búsqueda por nombre
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = queryset.filter(Q(name__icontains=search))
+        
+        # Filtro por comunidad autónoma
+        comunidad = self.request.query_params.get('comunidad_autonoma', None)
+        if comunidad:
+            queryset = queryset.filter(comunidad_autonoma__iexact=comunidad)
+        
+        return queryset.order_by('name')
+
+
+class CityDetailView(generics.RetrieveAPIView):
+    
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
