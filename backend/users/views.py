@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.contrib.auth import login
 from django.conf import settings
 
+from .models import UserPreferences
 from .serializers import (
     UserRegisterSerializer,
     ProfileSerializer,
@@ -12,7 +13,9 @@ from .serializers import (
     LoginSerializer,
     ChangePasswordSerializer,
     PasswordResetRequestSerializer,
-    PasswordResetConfirmSerializer
+    PasswordResetConfirmSerializer,
+    UserPreferencesSerializer,
+    UserPreferencesUpdateSerializer,
 )
 from .permissions import IsSuperUser
 
@@ -174,6 +177,7 @@ class ChangePasswordView(APIView):
             "detail": serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
+# --------------------------------------------------------
 # Importar modulo logging
 import logging
 
@@ -289,3 +293,217 @@ class PasswordResetConfirmView(APIView):
             'error': 'Datos inválidos',
             'detail': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+    
+class UserPreferencesView(generics.RetrieveUpdateAPIView):
+    """
+    Endpoint para obtener y actualizar las preferencias del usuario autenticado.
+    
+    GET /api/auth/preferences/ - Obtiene las preferencias del usuario.
+    PUT /api/auth/preferences/ - Actualiza todas las preferencias.
+    PATCH /api/auth/preferences/ - Actualiza preferencias parcialmente
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserPreferencesSerializer
+
+    def get_object(self):
+        """
+        Obtiene o crea las preferencias del usuario autenticado.
+        """
+        preferences, created = UserPreferences.objects.get_or_create(
+            user=self.request.user
+        )
+        
+        if created:
+            logger.info(f"Preferencias creadas para usuario: {self.request.user.username}")
+        
+        return preferences
+    
+    def get_serializer_class(self):
+        """
+        Usa diferentes serializers según el método HTTP.
+        """
+        if self.request.method == 'PATCH':
+            return UserPreferencesUpdateSerializer
+        return UserPreferencesSerializer
+    
+    def update(self, request, *args, **kwargs):
+        """
+        Personaliza la respuesta de actualización.
+        """
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        
+        if serializer.is_valid():
+            self.perform_update(serializer)
+            
+            logger.info(
+                f"Preferencias actualizadas para usuario: {request.user.username}"
+            )
+
+            # Usar el serializer completo para la respuesta
+            response_serializer = UserPreferencesSerializer(instance)
+            
+            return Response({
+                'success': True,
+                'message': 'Preferencias actualizadas exitosamente',
+                'data': response_serializer.data
+            }, status=status.HTTP_200_OK)
+        
+        return Response({
+            'success': False,
+            'error': 'Error al actualizar preferencias',
+            'detail': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    def retrieve(self, request, *args, **kwargs):
+        """
+        Personaliza la respuesta de obtención.
+        """
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        
+        return Response({
+            'success': True,
+            'data': serializer.data
+        }, status=status.HTTP_200_OK)
+    
+# Vista alternativa usando APIView (más control)
+class UserPreferencesAPIView(APIView):
+    """
+    Vista alternativa con más control sobre cada método HTTP.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        """
+        GET /api/auth/preferences/
+        Obtiene las preferencias del usuario autenticado.
+        """
+        try:
+            # Obtener o crear preferencias
+            preferences, created = UserPreferences.objects.get_or_create(
+                user=request.user
+            )
+            
+            serializer = UserPreferencesSerializer(preferences)
+            
+            return Response({
+                'success': True,
+                'data': serializer.data,
+                'created': created
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Error obteniendo preferencias: {str(e)}")
+            
+            return Response({
+                'success': False,
+                'error': 'Error al obtener preferencias',
+                'detail': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    def put(self, request):
+        """
+        PUT /api/auth/preferences/
+        Actualiza todas las preferencias del usuario.
+        """
+        try:
+            preferences = UserPreferences.objects.get(user=request.user)
+            serializer = UserPreferencesSerializer(
+                preferences,
+                data=request.data,
+                partial=False
+            )
+            
+            if serializer.is_valid():
+                serializer.save()
+                
+                logger.info(f"Preferencias actualizadas (PUT): {request.user.username}")
+                
+                return Response({
+                    'success': True,
+                    'message': 'Preferencias actualizadas exitosamente',
+                    'data': serializer.data
+                }, status=status.HTTP_200_OK)
+            
+            return Response({
+                'success': False,
+                'error': 'Datos inválidos',
+                'detail': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+            
+        except UserPreferences.DoesNotExist:
+            # Si no existen preferencias, crearlas
+            serializer = UserPreferencesSerializer(data=request.data)
+            
+            if serializer.is_valid():
+                serializer.save(user=request.user)
+                
+                return Response({
+                    'success': True,
+                    'message': 'Preferencias creadas exitosamente',
+                    'data': serializer.data
+                }, status=status.HTTP_201_CREATED)
+            
+            return Response({
+                'success': False,
+                'error': 'Datos inválidos',
+                'detail': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            logger.error(f"Error actualizando preferencias: {str(e)}")
+            
+            return Response({
+                'success': False,
+                'error': 'Error al actualizar preferencias',
+                'detail': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    def patch(self, request):
+        """
+        PATCH /api/auth/preferences/
+        Actualiza parcialmente las preferencias del usuario.
+        """
+        try:
+            preferences, created = UserPreferences.objects.get_or_create(
+                user=request.user
+            )
+            
+            serializer = UserPreferencesUpdateSerializer(
+                preferences,
+                data=request.data,
+                partial=True
+            )
+
+            if serializer.is_valid():
+                serializer.save()
+                
+                logger.info(f"Preferencias actualizadas (PATCH): {request.user.username}")
+                
+                # Devolver datos completos
+                response_serializer = UserPreferencesSerializer(preferences)
+                
+                return Response({
+                    'success': True,
+                    'message': 'Preferencias actualizadas exitosamente',
+                    'data': response_serializer.data
+                }, status=status.HTTP_200_OK)
+            
+            return Response({
+                'success': False,
+                'error': 'Datos inválidos',
+                'detail': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            logger.error(f"Error actualizando preferencias: {str(e)}")
+            
+            return Response({
+                'success': False,
+                'error': 'Error al actualizar preferencias',
+                'detail': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    
