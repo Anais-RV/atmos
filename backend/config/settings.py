@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -193,13 +194,13 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "usuario@gmail.com"
-EMAIL_HOST_PASSWORD = "mi_contrasena" # NO usar contraseña normal
-DEFAULT_FROM_EMAIL = "usuario@gmail.com" 
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD") 
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL") 
 
 # URL base de la aplicación
-FRONTEND_URL = "http://localhost:3000" # Para desarrollo
-# FRONTEND_URL = "https://tudominio.com" # Para producion
+FRONTEND_URL = os.environ.get("FRONTEND_URL","http://localhost:3000") # Para desarrollo
+# FRONTEND_URL = os.environ.get("FRONTEND_URL","https://tudominio.com") # Para produccion
 
 # Método 2
 # SendGrid (Produccion)
@@ -222,6 +223,9 @@ FRONTEND_URL = "http://localhost:3000" # Para desarrollo
 # Configuración de tokens de recuperación
 PASSWORD_RESET_TIMEOUT_HOURS = 24  # 24 horas por defecto
 
+# Requiere django-ratelimit con el siguiente comando:
+# pip install django-ratelimit
+
 # Cache Configuration
 # https://docs.djangoproject.com/en/5.1/topics/cache/
 CACHES = {
@@ -239,6 +243,7 @@ CACHES = {
 WEATHER_CACHE_TIMEOUT = 3600  # 1 hour
 WEATHER_CACHE_KEY_PREFIX = "weather_"
 
+"""
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -272,3 +277,4 @@ LOGGING = {
         },
     },
 }
+"""

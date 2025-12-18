@@ -1,6 +1,6 @@
 def send_email():
     try:
-        mailServer =smtplib.SMTP("smtp.gmail.com")
+        print("xx")
     except Exception as e:
         print(e)
     
