@@ -31,6 +31,7 @@ from .time_series_service import (
     TimeSeriesValidationError,
 )
 from .sunrise_sunset import calculate_sunrise_sunset, format_time_24h, format_daylight_duration
+from .aemet_service import fetch_current_weather
 import logging
 
 logger = logging.getLogger(__name__)
@@ -72,10 +73,15 @@ class CurrentWeatherView(APIView):
         # Obtener la ciudad
         city = get_object_or_404(City, id=city_id)
         
-        # Obtener la observación más reciente
-        latest_observation = city.observations.order_by("-timestamp").first()
+        # Intentar obtener datos de AEMET (o mock data)
+        weather_data = fetch_current_weather(
+            city_name=city.name,
+            latitude=city.latitud,
+            longitude=city.longitud
+        )
         
-        if latest_observation is None:
+        # Si no hay datos meteorológicos disponibles
+        if not weather_data:
             return Response(
                 {
                     "detail": f"No hay datos meteorológicos para la ciudad '{city.name}'",
@@ -90,16 +96,16 @@ class CurrentWeatherView(APIView):
             latitude=city.latitud,
             longitude=city.longitud,
             city_name=city.name,
-            observation_date=latest_observation.timestamp
+            observation_date=weather_data['timestamp']
         )
 
         # Preparar datos y serializar
         data = {
             "city_id": city.id,
             "city_name": city.name,
-            "temperature": latest_observation.temperature,
-            "timestamp": latest_observation.timestamp,
-            "condition": "Parcialmente nublado",  # TODO: obtener del modelo cuando esté disponible
+            "temperature": weather_data['temperature'],
+            "timestamp": weather_data['timestamp'],
+            "condition": weather_data.get('condition', 'Parcialmente nublado'),
             "sunrise": sun_data['sunrise'],
             "sunset": sun_data['sunset'],
             "daylight_duration": sun_data['daylight_duration'],
@@ -383,7 +389,7 @@ class CityListView(generics.ListAPIView):
     
     queryset = City.objects.all()
     serializer_class = CitySerializer
-    pagination_class = CityPagination
+    pagination_class = None  # Sin paginación - devolver todas las ciudades
     permission_classes = [permissions.AllowAny]
     
     def get_queryset(self):
@@ -406,3 +412,62 @@ class CityDetailView(generics.RetrieveAPIView):
     
     queryset = City.objects.all()
     serializer_class = CitySerializer
+
+
+class SunriseSunsetView(APIView):
+    """
+    Endpoint para obtener datos de amanecer/atardecer de una ciudad.
+    No requiere observaciones meteorológicas, solo coordenadas de la ciudad.
+    
+    GET /api/weather/sunrise-sunset/?city_id=1
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        from datetime import datetime
+        import pytz
+        
+        city_id = request.query_params.get("city_id")
+
+        if city_id is None:
+            return Response(
+                {"detail": "city_id es obligatorio"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            city_id = int(city_id)
+        except ValueError:
+            return Response(
+                {"detail": "city_id debe ser un entero"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Obtener la ciudad
+        city = get_object_or_404(City, id=city_id)
+        
+        # Usar fecha actual
+        observation_date = datetime.now(pytz.UTC)
+
+        # Calcular sunrise y sunset
+        sun_data = calculate_sunrise_sunset(
+            latitude=city.latitud,
+            longitude=city.longitud,
+            city_name=city.name,
+            observation_date=observation_date
+        )
+
+        # Preparar datos de respuesta
+        response_data = {
+            "city_id": city.id,
+            "city_name": city.name,
+            "date": observation_date.date().isoformat(),
+            "sunrise": sun_data['sunrise'],
+            "sunset": sun_data['sunset'],
+            "daylight_duration": sun_data['daylight_duration'],
+            "sunrise_formatted": format_time_24h(sun_data['sunrise']),
+            "sunset_formatted": format_time_24h(sun_data['sunset']),
+            "daylight_duration_formatted": format_daylight_duration(sun_data['daylight_duration']),
+        }
+        
+        return Response(response_data, status=status.HTTP_200_OK)

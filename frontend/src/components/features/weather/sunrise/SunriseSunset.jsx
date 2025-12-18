@@ -23,13 +23,13 @@ function SunriseSunset({ city }) {
         setLoading(true)
         setError(null)
 
-        const response = await apiClient.get(`/weather/current/${city.id}/`)
+        const data = await apiClient(`/api/weather/sunrise-sunset/?city_id=${city.id}`)
 
-        if (response.data && response.data.sunrise && response.data.sunset) {
+        if (data && data.sunrise_formatted && data.sunset_formatted) {
           setSunTimes({
-            sunrise: response.data.sunrise,
-            sunset: response.data.sunset,
-            daylight_duration: response.data.daylight_duration || null
+            sunrise: data.sunrise_formatted,
+            sunset: data.sunset_formatted,
+            daylight_duration: data.daylight_duration_formatted || null
           })
         } else {
           setError('No hay datos de amanecer/atardecer disponibles')
@@ -47,18 +47,13 @@ function SunriseSunset({ city }) {
 
   const formatTime = (timeString) => {
     if (!timeString) return '--:--'
-    try {
-      if (timeString.includes(':')) {
-        return timeString.substring(0, 5)
-      }
-      return timeString
-    } catch {
-      return '--:--'
-    }
+    // Ya viene formateado desde el backend
+    return timeString
   }
 
   const formatDuration = (durationString) => {
     if (!durationString) return '--:--'
+    // Ya viene formateado desde el backend
     return durationString
   }
 
