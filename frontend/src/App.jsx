@@ -8,6 +8,7 @@ import "./components/features/settings/settings.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
+import { PreferencesProvider } from "./context/PreferencesContext";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
@@ -27,9 +28,10 @@ import SettingsPage from "./pages/SettingsPage";
 function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <div className="app">
-          <Navbar />
+      <PreferencesProvider>
+        <BrowserRouter>
+          <div className="app">
+            <Navbar />
 
           <Routes>
             <Route path="/" element={<DashboardPage />} />
@@ -47,8 +49,9 @@ function App() {
           </Routes>
 
           <Footer />
-        </div>
-      </BrowserRouter>
+          </div>
+        </BrowserRouter>
+      </PreferencesProvider>
     </ThemeProvider>
   );
 }
