@@ -8,9 +8,16 @@
   margin: 1.5rem auto;
   padding: 1.5rem 1.25rem;
   border-radius: 1.25rem;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   border: 1px solid var(--border-color, #1f2937);
   background: var(--card-background, rgba(15, 23, 42, 0.98));
   box-shadow: 0 16px 30px rgba(15, 23, 42, 0.9);
+=======
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-secondary);
+  box-shadow: var(--shadow-medium);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 @media (min-width: 768px) {
@@ -36,11 +43,16 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 0.25rem;
+  color: var(--text-primary);
 }
 
 .auth-card-subtitle {
   font-size: 0.85rem;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   color: var(--muted-color, #9ca3af);
+=======
+  color: var(--text-secondary);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 .auth-card-body {
@@ -65,11 +77,16 @@
 
 .auth-label {
   font-size: 0.8rem;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   color: var(--text-color, #e5e7eb);
+=======
+  color: var(--text-primary);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 .auth-input {
   border-radius: 0.75rem;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   border: 1px solid var(--border-color, #374151);
   background: var(--card-background, rgba(15, 23, 42, 0.95));
   padding: 0.55rem 0.7rem;
@@ -79,12 +96,24 @@
 
 .auth-input::placeholder {
   color: var(--muted-color, #6b7280);
+=======
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-secondary);
+  padding: 0.55rem 0.7rem;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-input::placeholder {
+  color: var(--text-secondary);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 .auth-input:focus {
   outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--button-secondary-bg);
 }
 
 /* Buttons and footer */
@@ -123,11 +152,13 @@
   width: 0.9rem;
   height: 0.9rem;
   border-radius: 0.25rem;
+  cursor: pointer;
+  accent-color: var(--accent-primary);
 }
 
 .auth-remember-label {
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 /* MISMO estilo para Sign in y Register */
@@ -135,17 +166,20 @@
 .auth-button-secondary {
   border-radius: 999px;
   padding: 0.5rem 1rem;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   border: 1px solid rgba(56, 189, 248, 0.8);
   background: rgba(56, 189, 248, 0.18);
   color: var(--button-text, #e0f2fe);
+=======
+  border: 1px solid var(--accent-primary);
+  background-color: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  transition:
-    background 0.15s ease,
-    transform 0.1s ease,
-    box-shadow 0.15s ease;
-  text-decoration: none;       /* para el <Link> */
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -153,8 +187,10 @@
 
 .auth-button-primary:hover,
 .auth-button-secondary:hover {
-  background: rgba(56, 189, 248, 0.26);
+  background-color: var(--accent-primary);
+  color: white;
   transform: translateY(-1px);
+<<<<<<< HEAD:frontend/src/styles/auth.css
   box-shadow: 0 10px 25px rgba(8, 47, 73, 0.6);
 }
 
@@ -166,11 +202,18 @@
   color: var(--muted-color, #9ca3af);
   font-size: 0.8rem;
   cursor: pointer;
+=======
+  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.3);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 .auth-footer-text {
   font-size: 0.75rem;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   color: var(--muted-color, #9ca3af);
+=======
+  color: var(--text-secondary);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 /* User panel */
@@ -191,21 +234,27 @@
   width: 2.4rem;
   height: 2.4rem;
   border-radius: 999px;
-  background: radial-gradient(circle at top, #38bdf8, #0f172a);
+  background: linear-gradient(135deg, var(--accent-primary), var(--bg-secondary));
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   color: var(--text-color, #e5e7eb);
+=======
+  color: var(--button-primary-text);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 .auth-user-name {
   font-size: 1rem;
   font-weight: 500;
+  color: var(--text-primary);
 }
 
 .auth-user-email {
   font-size: 0.8rem;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   color: var(--muted-color, #9ca3af);
 }
 
@@ -224,6 +273,9 @@
 .auth-user-meta-value {
   display: block;
   color: var(--text-color, #e5e7eb);
+=======
+  color: var(--text-secondary);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 .auth-user-actions {
@@ -237,20 +289,30 @@
 .auth-data-notice {
   margin-top: 0.8rem;
   padding-top: 0.6rem;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   border-top: 1px dashed var(--border-color, #374151);
+=======
+  border-top: 1px dashed var(--border-light);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 .auth-data-text {
   font-size: 0.75rem;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   color: var(--muted-color, #9ca3af);
+=======
+  color: var(--text-secondary);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 .auth-link {
-  color: #7dd3fc;
+  color: var(--accent-primary);
   text-decoration: none;
+  transition: opacity 0.2s ease;
 }
 
 .auth-link:hover {
+  opacity: 0.8;
   text-decoration: underline;
 }
 
@@ -259,7 +321,11 @@
   flex-direction: column;
   gap: 0.75rem;
   font-size: 0.8rem;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   color: var(--muted-color, #d1d5db);
+=======
+  color: var(--text-secondary);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 .auth-list {
@@ -293,8 +359,8 @@
   width: 5.5rem;
   height: 5.5rem;
   border-radius: 999px;
-  border: 2px solid #38bdf8;
-  background: radial-gradient(circle at top, #38bdf8, #0f172a);
+  border: 2px solid var(--accent-primary);
+  background: linear-gradient(135deg, var(--accent-primary), var(--bg-secondary));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -304,7 +370,11 @@
 .auth-login-avatar-initial {
   font-size: 1.8rem;
   font-weight: 600;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   color: var(--text-color, #e5e7eb);
+=======
+  color: white;
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
 }
 
 /* En tablet y superior: layout horizontal */
@@ -340,13 +410,18 @@
   margin-bottom: 1rem;
   padding: 0.9rem 0.85rem;
   border-radius: 0.9rem;
-  border: 1px solid rgba(56, 189, 248, 0.5);
-  background: rgba(37, 99, 235, 0.16); /* azul suave */
+  border: 1px solid var(--accent-primary);
+  background-color: var(--button-secondary-bg);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .user-panel-actions-text {
   font-size: 0.8rem;
+<<<<<<< HEAD:frontend/src/styles/auth.css
   color: var(--text-color, #e5e7eb);
+=======
+  color: var(--text-primary);
+>>>>>>> origin/dev:frontend/src/components/features/auth/auth.css
   margin-bottom: 0.75rem;
 }
 

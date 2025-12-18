@@ -1,9 +1,19 @@
+/**
+ * Página: ForecastPage
+ * Propósito: Vista de predicción meteorológica generada por el modelo Prophet.
+ * Componentes principales:
+ *  - BasePageLayout (layout general)
+ *  - Forecast (tabla/lista con predicción de temperatura, humedad, etc.)
+ * Feature/dominio: forecast
+ * Tipo: Página de solo lectura (visualización de predicciones)
+ */
+
 // frontend/src/pages/ForecastPage.jsx
 
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
-import Forecast from "../components/forecast/Forecast";
-import "../styles/forecast.css";
+import Forecast from "../components/features/forecast/Forecast";
+import "../components/features/forecast/forecast.css";
 
 function ForecastPage() {
   const temperatureC = 7; // igual que Dashboard/Charts para mantener coherencia

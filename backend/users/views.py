@@ -1,22 +1,88 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework import status, permissions
+from django.contrib.auth import login
+from django.conf import settings
 
-from .serializers import UserRegisterSerializer
+from .serializers import (
+    UserRegisterSerializer,
+    ProfileSerializer,
+    ProfileUpdateSerializer,
+    LoginSerializer,
+    ChangePasswordSerializer
+)
+from .permissions import IsSuperUser
+
+# Solo importar FWT si está disponible
+try:
+    from rest_framework_simplejwt.tokens import RefreshToken
+    JWT_AVAILABLE = True
+except ImportError:
+    JWT_AVAILABLE = False
 
 
-class RegisterView(APIView):
-    """
-    Registro de usuarios (público).
-    """
+class RegisterView(generics.CreateAPIView):
+    serializer_class = UserRegisterSerializer
     permission_classes = [permissions.AllowAny]
 
+
+class MeView(generics.RetrieveAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+class ProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_class(self):
+        """Usar un serializer distinto para GET vs PUT/PATCH."""
+        if self.request.method in ["PUT", "PATCH"]:
+            return ProfileUpdateSerializer
+        return ProfileSerializer
+
+    def get_object(self):
+        return self.request.user
+
+
+class AdminOnlyView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request):
+        return Response({"message": "Solo los admins pueden ver esto."})
+
+
+class SuperuserOnlyView(generics.GenericAPIView):
+    permission_classes = [IsSuperUser]
+
+    def get(self, request):
+        return Response({"message": "Solo los superusuarios pueden ver esto."})
+
+
+class PublicView(generics.GenericAPIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        return Response({"message": "Este es un endpoint público."})
+
+class LoginView(APIView):
+    """
+    Endpoint de autenticación de usuarios.
+    Soporta tanto JWT como sesiones tradicionales de Django.
+    """
+    permission_classes = [permissions.AllowAny]
+    serializer_class = LoginSerializer
+
     def post(self, request):
-        serializer = UserRegisterSerializer(data=request.data)
+        """
+        Autentica un usuario con email y contraseña.
+        El tipo de autenticación se determina por la configuración AUTH_TYPE.
+        """
+        serializer = LoginSerializer(data=request.data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(
@@ -45,15 +111,28 @@ class MeView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-
 class AdminOnlyView(APIView):
     """
-    Ejemplo de endpoint solo para admins (is_staff=True).
+    Endpoint para cambiar la contraseña del usuario autenticado
     """
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        return Response(
-            {"message": "Solo los admins pueden ver esto."},
-            status=status.HTTP_200_OK,
+    def post(self, request):
+        serializer = ChangePasswordSerializer(
+            data=request.data,
+            context={"request": request}
         )
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({
+                "success": True,
+                "message": "Contraseña actualizada exitosamente"
+            }, status=status.HTTP_200_OK)
+            
+        return Response({
+            "success": False,
+            "message": "No se pudo actualizar la contraseña",
+            "detail": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)

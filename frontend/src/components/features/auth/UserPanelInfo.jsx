@@ -1,3 +1,12 @@
+/**
+ * Componente: UserPanelInfo
+ * Propósito: Muestra la información del usuario autenticado (avatar, nombre, email) y botón de Sign out.
+ * Uso:
+ *  - UserPanelPage.jsx (único lugar donde se renderiza)
+ * Dependencias:
+ *  - auth.css (.auth-user-panel, .auth-user-header, .auth-user-avatar, .auth-user-name, .auth-user-email, .auth-user-actions, .auth-button-secondary)
+ */
+
 // frontend/src/components/auth/UserPanelInfo.jsx
 
 function UserPanelInfo() {

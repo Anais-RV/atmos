@@ -1,3 +1,13 @@
+/**
+ * Componente: BasePageLayout
+ * Propósito: Layout base que envuelve todas las páginas de la aplicación con contenedor responsivo y color dinámico.
+ * Uso:
+ *  - Usado en TODAS las páginas (Dashboard, Login, Register, UserPanel, DataProtection, Forecast, ForecastExtended, ForecastChart, WeatherHistory)
+ *  - Proporciona estructura común: título, descripción, contenedor con color de fondo basado en temperatura
+ * Tipo:
+ *  - Componente de layout global (wrapper de páginas)
+ */
+
 // frontend/src/components/layout/BasePageLayout.jsx
 import PropTypes from 'prop-types';
 import styled from "styled-components";

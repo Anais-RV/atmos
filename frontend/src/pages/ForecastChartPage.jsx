@@ -1,9 +1,19 @@
-// frontend/src/components/charts/ForecastChartPage.jsx
+/**
+ * Página: ForecastChartPage
+ * Propósito: Visualización gráfica de predicciones y series temporales meteorológicas.
+ * Componentes principales:
+ *  - BasePageLayout (layout general)
+ *  - ForecastChart (gráficos de temperatura, humedad, presión, etc.)
+ * Feature/dominio: forecast
+ * Tipo: Página de solo lectura (visualización de gráficos)
+ */
 
-import BasePageLayout from "../layout/BasePageLayout";
-import { getTemperatureColor } from "../../styles/temperatureColors";
-import ForecastChart from "./ForecastChart";
-import "../../styles/charts.css";
+// frontend/src/pages/ForecastChartPage.jsx
+
+import BasePageLayout from "../components/layout/BasePageLayout";
+import { getTemperatureColor } from "../styles/temperatureColors";
+import ForecastChart from "../components/features/forecast/ForecastChart";
+import "../components/features/forecast/charts.css";
 
 function ForecastChartPage() {
   const temperatureC = 7;

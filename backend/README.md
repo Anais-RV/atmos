@@ -128,6 +128,29 @@ INSTALLED_APPS = [
 
 ---
 
+## ⚡ Sistema de Caché
+
+El backend implementa un sistema de caché para optimizar el rendimiento:
+
+- **Caché de datos meteorológicos**: Almacena datos actuales por 1 hora
+- **Caché de predicciones**: Evita recálculos innecesarios de Prophet
+- **Invalidación automática**: Se invalida automáticamente cuando hay cambios
+
+### Gestionar Caché
+
+```bash
+# Limpiar todo el caché
+python manage.py clear_weather_cache
+
+# Limpiar caché de una ciudad específica
+python manage.py clear_weather_cache --city-id=1
+
+# Limpiar solo predicciones
+python manage.py clear_weather_cache --forecast
+```
+
+---
+
 ## 🔧 Comandos Útiles
 
 ```bash
@@ -146,8 +169,14 @@ python manage.py shell
 # Ejecutar tests
 python manage.py test
 
+# Ejecutar tests de caché con pytest
+pytest weather/tests/test_cache.py -v
+
 # Crear app nueva
 python manage.py startapp nombre_app
+
+# Limpiar caché de datos meteorológicos
+python manage.py clear_weather_cache
 ```
 
 ---
