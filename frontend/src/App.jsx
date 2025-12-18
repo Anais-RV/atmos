@@ -38,6 +38,7 @@ function App() {
           <Route path="/forecast" element={<ForecastPage />} />
           <Route path="/forecast-extended" element={<ForecastExtendedPage />} />
           <Route path="/password-reset" element={<PasswordResetPage />} />
+          <Route path="/password-reset/:token" element={<PasswordResetPage />} />
         </Routes>
 
           <Footer />

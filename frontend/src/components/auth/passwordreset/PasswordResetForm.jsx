@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 function PasswordResetForm() {
 	const [email, setEmail] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
+	const [manualToken, setManualToken] = useState("");
 	const [message, setMessage] = useState("");
 	const [isError, setIsError] = useState(false);
 	const [loading, setLoading] = useState(false);
+
+	const { token: paramToken } = useParams();
+	const navigate = useNavigate();
 
 	const validateEmail = (value) => {
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -23,10 +27,15 @@ function PasswordResetForm() {
 		setIsError(false);
 
 		// Validaciones
-		if (!validateEmail(email)) {
-			setIsError(true);
-			setMessage("Por favor ingresa un correo electrónico válido.");
-			return;
+		const tokenToSend = paramToken || manualToken;
+
+		if (!tokenToSend) {
+			// if no token in URL, require email (user may be using direct form)
+			if (!validateEmail(email)) {
+				setIsError(true);
+				setMessage("Por favor ingresa un correo electrónico válido o pega el token.");
+				return;
+			}
 		}
 
 		if (!validatePassword(newPassword)) {
@@ -43,21 +52,28 @@ function PasswordResetForm() {
 
 		setLoading(true);
 		try {
-				const res = await fetch("/api/password-reset/confirm/", {
+			const body = {
+				new_password: newPassword,
+				new_password_confirm: confirmPassword,
+			};
+
+			if (paramToken || manualToken) body.token = tokenToSend;
+			else body.email = email.trim().toLowerCase();
+
+			const res = await fetch("/api/password-reset/confirm/", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					new_password: newPassword,
-					confirm_password: confirmPassword,
-				}),
+				body: JSON.stringify(body),
 			});
 
 			if (res.ok) {
 				setIsError(false);
-				setMessage("¡Contraseña restablecida exitosamente! Puedes iniciar sesión con tu nueva contraseña.");
+				setMessage("¡Contraseña restablecida exitosamente! Serás redirigido al inicio de sesión.");
 				setEmail("");
 				setNewPassword("");
 				setConfirmPassword("");
+				setManualToken("");
+				setTimeout(() => navigate('/login'), 1600);
 			} else {
 				let text = "Hubo un error al restablecer la contraseña.";
 				try {
@@ -65,6 +81,8 @@ function PasswordResetForm() {
 					if (data && data.detail) text = data.detail;
 					else if (data && data.email) text = Array.isArray(data.email) ? data.email.join(" ") : data.email;
 					else if (data && data.new_password) text = Array.isArray(data.new_password) ? data.new_password.join(" ") : data.new_password;
+					else if (data && data.new_password_confirm) text = Array.isArray(data.new_password_confirm) ? data.new_password_confirm.join(" ") : data.new_password_confirm;
+					else if (data && data.token) text = Array.isArray(data.token) ? data.token.join(" ") : data.token;
 				} catch (err) {
 					// ignore JSON parse error
 				}
@@ -83,21 +101,49 @@ function PasswordResetForm() {
 		<form className="auth-form" onSubmit={handleSubmit} aria-labelledby="password-reset-form-title">
 			<h3 id="password-reset-form-title">Restablecer contraseña</h3>
 
-			<div className="auth-field">
-				<label htmlFor="reset-email" className="auth-label">
-					Correo electrónico
-				</label>
-				<input
-					id="reset-email"
-					type="email"
-					className="auth-input"
-					placeholder="tu@correo.com"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-					required
-					aria-required="true"
-				/>
-			</div>
+			{paramToken ? (
+				<div className="auth-field">
+					<label className="auth-label">Token (desde la URL)</label>
+					<input
+						className="auth-input"
+						type="text"
+						value={paramToken}
+						readOnly
+						aria-readonly="true"
+					/>
+				</div>
+			) : (
+				<>
+					<div className="auth-field">
+						<label htmlFor="reset-email" className="auth-label">
+							Correo electrónico
+						</label>
+						<input
+							id="reset-email"
+							type="email"
+							className="auth-input"
+							placeholder="tu@correo.com"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							aria-required="true"
+						/>
+					</div>
+
+					<div className="auth-field">
+						<label htmlFor="manual-token" className="auth-label">
+							Token (opcional)
+						</label>
+						<input
+							id="manual-token"
+							type="text"
+							className="auth-input"
+							placeholder="Pega aquí el token si lo tienes"
+							value={manualToken}
+							onChange={(e) => setManualToken(e.target.value)}
+						/>
+					</div>
+				</>
+			)}
 
 			<div className="auth-field">
 				<label htmlFor="new-password" className="auth-label">

@@ -43,8 +43,9 @@ function PasswordResetRequest() {
             });
 
             let text = "El correo no está registrado o hubo un error.";
+            let data = null;
             try {
-                const data = await res.json();
+                data = await res.json();
                 if (data && data.detail) text = data.detail;
                 else if (data && data.email) text = Array.isArray(data.email) ? data.email.join(" ") : data.email;
             } catch (err) {
@@ -53,8 +54,17 @@ function PasswordResetRequest() {
 
             if (res.ok) {
                 setIsError(false);
-                setMessage("✅ Contraseña temporal enviada a tu correo. Revisa tu bandeja de entrada.");
-                setEmail("");
+                // If backend returns the token (for testing/dev), show link
+                if (data && data.token) {
+                    setMessage(
+                        "✅ Enviado. También puedes usar el siguiente enlace: " +
+                        window.location.origin + "/password-reset/" + data.token
+                    );
+                    setEmail("");
+                } else {
+                    setMessage("✅ Contraseña temporal enviada a tu correo. Revisa tu bandeja de entrada.");
+                    setEmail("");
+                }
             } else {
                 setIsError(true);
                 setMessage(text);
