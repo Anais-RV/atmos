@@ -8,7 +8,7 @@
 
 import { useState, useEffect } from 'react'
 import { Trash2, Plus, Loader, AlertCircle } from 'lucide-react'
-import { tagsService } from '../../services/tagsService'
+import { tagsService } from '../../../services/tagsService'
 import './tags.css'
 
 const TAG_COLORS = [
