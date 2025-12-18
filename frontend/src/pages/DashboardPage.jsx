@@ -13,10 +13,12 @@
 import { useState } from "react";
 import BasePageLayout from "../components/layout/BasePageLayout";
 import WeatherInfo from "../components/features/weather/WeatherInfo";
+import SunriseSunset from "../components/features/weather/sunrise/SunriseSunset";
 import { getTemperatureColor } from "../styles/temperatureColors";
 
 function DashboardPage() {
   const [temperatureC, setTemperatureC] = useState(15);
+  const [selectedCity, setSelectedCity] = useState(null);
   const containerColor = getTemperatureColor(temperatureC);
 
   return (
@@ -26,7 +28,14 @@ function DashboardPage() {
       containerColor={containerColor}
     >
       <section className="center-card center-card-top">
-        <WeatherInfo onTemperatureChange={setTemperatureC} />
+        <WeatherInfo 
+          onTemperatureChange={setTemperatureC}
+          onCityChange={setSelectedCity}
+        />
+      </section>
+
+      <section className="center-card center-card-bottom">
+        <SunriseSunset city={selectedCity} />
       </section>
 
       <section

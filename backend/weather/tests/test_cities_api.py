@@ -86,15 +86,15 @@ class CityAPITest(APITestCase):
         """Verifica que GET a lista de ciudades devuelve 200"""
         response = self.client.get('/api/weather/cities/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('results', response.data)
+        # Ahora devuelve array directo sin paginación
+        self.assertIsInstance(response.data, list)
     
     def test_cities_list_has_pagination(self):
-        """Verifica que la lista está paginada"""
+        """Verifica que la lista NO está paginada (devuelve todas)"""
         response = self.client.get('/api/weather/cities/')
-        self.assertIn('count', response.data)
-        self.assertIn('next', response.data)
-        self.assertIn('previous', response.data)
-        self.assertIn('results', response.data)
+        # Sin paginación, es un array directo
+        self.assertIsInstance(response.data, list)
+        self.assertGreaterEqual(len(response.data), 4)
     
     def test_city_detail_get_200(self):
         """Verifica que GET a detalle de ciudad devuelve 200"""
@@ -113,7 +113,8 @@ class CityAPITest(APITestCase):
         response = self.client.get('/api/weather/cities/?search=madrid')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
-        results = response.data['results']
+        # Sin paginación, data es el array directamente
+        results = response.data
         self.assertTrue(any(city['name'] == 'Madrid' for city in results))
     
     def test_city_search_case_insensitive(self):
@@ -121,21 +122,21 @@ class CityAPITest(APITestCase):
         response = self.client.get('/api/weather/cities/?search=MADRID')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
-        results = response.data['results']
+        results = response.data
         self.assertTrue(any(city['name'] == 'Madrid' for city in results))
     
     def test_city_search_no_results(self):
         """Verifica búsqueda sin resultados"""
         response = self.client.get('/api/weather/cities/?search=inexistente')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']), 0)
+        self.assertEqual(len(response.data), 0)
     
     def test_city_filter_by_comunidad_autonoma(self):
         """Verifica filtro por comunidad autónoma"""
         response = self.client.get('/api/weather/cities/?comunidad_autonoma=Cataluña')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
-        results = response.data['results']
+        results = response.data
         self.assertTrue(any(city['name'] == 'Barcelona' for city in results))
         # Verificar que no hay ciudades de otras comunidades
         self.assertFalse(any(city['name'] == 'Madrid' for city in results))
@@ -145,14 +146,14 @@ class CityAPITest(APITestCase):
         response = self.client.get('/api/weather/cities/?comunidad_autonoma=cataluña')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
-        results = response.data['results']
+        results = response.data
         self.assertTrue(any(city['name'] == 'Barcelona' for city in results))
     
     def test_city_filter_no_results(self):
         """Verifica filtro sin resultados"""
         response = self.client.get('/api/weather/cities/?comunidad_autonoma=NoExiste')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']), 0)
+        self.assertEqual(len(response.data), 0)
     
     def test_cities_search_and_filter_combined(self):
         """Verifica combinación de búsqueda y filtro"""
@@ -161,7 +162,7 @@ class CityAPITest(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
-        results = response.data['results']
+        results = response.data
         self.assertTrue(any(city['name'] == 'Barcelona' for city in results))
     
     def test_city_list_serializer_fields(self):
@@ -213,14 +214,15 @@ class CityAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
     
     def test_pagination_page_size(self):
-        """Verifica que la paginación respeta page_size"""
-        response = self.client.get('/api/weather/cities/?page_size=2')
+        """Verifica que sin paginación devuelve todas las ciudades"""
+        response = self.client.get('/api/weather/cities/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']), 2)
+        # Sin paginación, devuelve array con todas las ciudades
+        self.assertGreaterEqual(len(response.data), 4)
     
     def test_pagination_second_page(self):
-        """Verifica acceso a segunda página si existen suficientes datos"""
-        # Crear datos adicionales para verificar paginación
+        """Verifica que sin paginación devuelve todas sin página 2"""
+        # Crear datos adicionales
         for i in range(25):
             City.objects.create(
                 name=f'Test City {i}',
@@ -229,8 +231,8 @@ class CityAPITest(APITestCase):
                 comunidad_autonoma='Test'
             )
         
-        response = self.client.get('/api/weather/cities/?page_size=5')
+        response = self.client.get('/api/weather/cities/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
-        # Verificar que hay más de una página
-        self.assertIsNotNone(response.data['next'])
+        # Sin paginación, devuelve todas las ciudades (4 iniciales + 25 nuevas)
+        self.assertGreaterEqual(len(response.data), 29)

@@ -160,3 +160,90 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:5173",
 ]
+<<<<<<< HEAD
+=======
+
+# ========== CONFIGURACIÓN DE APIS EXTERNAS ==========
+
+# AEMET OpenData API - Agencia Estatal de Meteorología
+# Registro gratuito: https://opendata.aemet.es/centrodedescargas/inicio
+# Documentación: https://opendata.aemet.es/dist/index.html
+# TODO: Obtener API key y configurar en .env o aquí
+AEMET_API_KEY = config('AEMET_API_KEY', default=None)
+
+# ====================================================
+
+EMBLEM_PHOTO_BASE_URL = config(
+    "EMBLEM_PHOTO_BASE_URL",
+    default="https://cdn.example.com/emblems/",
+)
+
+CITY_PHOTO_BASE_URL = config(
+    "CITY_PHOTO_BASE_URL",
+    default="https://cdn.example.com/cities/",
+)
+
+# Habilitar Argon2 en Django para mayor seguridad 
+# https://docs.djangoproject.com/en/5.1/topics/auth/passwords/#using-argon2-with-django
+# Comando:
+# python -m pip install django[argon2]
+# Una vez instalado, modificar PASSWORD_HASHERS para listar "Argon2PasswordHasher":
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher", # Por defecto
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher", # El más frecuente
+    "django.contrib.auth.hashers.Argon2PasswordHasher", # Más seguro
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher", # Opcional
+    "django.contrib.auth.hashers.ScryptPasswordHasher", # Opcional
+]
+
+# Cache Configuration
+# https://docs.djangoproject.com/en/5.1/topics/cache/
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+        "TIMEOUT": 3600,  # 1 hour in seconds
+        "OPTIONS": {
+            "MAX_ENTRIES": 5000
+        }
+    }
+}
+
+# Weather Cache Configuration
+WEATHER_CACHE_TIMEOUT = 3600  # 1 hour
+WEATHER_CACHE_KEY_PREFIX = "weather_"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "logs/cache_signals.log",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "weather.signals": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "weather.tasks": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
+>>>>>>> origin/dev
