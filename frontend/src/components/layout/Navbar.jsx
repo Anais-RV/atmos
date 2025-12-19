@@ -5,21 +5,21 @@
 
 // src/components/layout/Navbar.jsx
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import HamburgerMenu from "../ui/HamburgerMenu/HamburgerMenu";
 import "../../styles/Navbar.css";
 
 function Navbar() {
   const navigate = useNavigate();
-  const [isLeaving, setIsLeaving] = useState(false);
+  const [leavingTarget, setLeavingTarget] = useState(null);
 
-  const goHome = () => {
-    setIsLeaving(true);
+  const animateAndNavigate = (target) => {
+    setLeavingTarget(target);
 
-    // Debe coincidir con la duración CSS
     setTimeout(() => {
-      navigate("/");
-      setIsLeaving(false);
+      if (target === "home") navigate("/");
+      if (target === "login") navigate("/login");
+      setLeavingTarget(null);
     }, 420);
   };
 
@@ -38,12 +38,14 @@ function Navbar() {
           </button>
         </div>
 
-        {/* CENTRO: LOGO CON ANIMACIÓN */}
+        {/* CENTRO */}
         <div className="navbar-center">
           <button
             type="button"
-            onClick={goHome}
-            className={`navbar-brand-button ${isLeaving ? "leaving" : ""}`}
+            onClick={() => animateAndNavigate("home")}
+            className={`navbar-brand-button nav-animatable ${
+              leavingTarget === "home" ? "leaving" : ""
+            }`}
             aria-label="Go to homepage"
           >
             <span className="navbar-brand-main">ATMOS</span>
@@ -53,9 +55,17 @@ function Navbar() {
 
         {/* DERECHA */}
         <div className="navbar-right">
-          <Link to="/login" className="navbar-cta">
+          <button
+            type="button"
+            onClick={() => animateAndNavigate("login")}
+            className={`navbar-cta nav-animatable ${
+              leavingTarget === "login" ? "leaving" : ""
+            }`}
+          >
             Sign in
-          </Link>
+          </button>
+
+          {/* ❌ SIN animación de salida */}
           <HamburgerMenu />
         </div>
 
