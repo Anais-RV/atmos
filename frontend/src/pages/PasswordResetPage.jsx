@@ -1,25 +1,28 @@
-// src/pages/PasswordResetPage.jsx
-
 import { useState } from "react";
 import BasePageLayout from "../components/layout/BasePageLayout";
 import PasswordResetRequest from "../components/auth/passwordreset/PasswordResetMail";
 import PasswordResetForm from "../components/auth/passwordreset/PasswordResetForm";
 import { getTemperatureColor } from "../styles/temperatureColors";
+import "../styles/password_reset.css";
 
 function PasswordResetPage() {
   const temperatureC = 7;
   const containerColor = getTemperatureColor(temperatureC);
-  const [recoveryMethod, setRecoveryMethod] = useState("link"); // "link" o "form"
+  const [recoveryMethod, setRecoveryMethod] = useState("link"); // "link" | "form"
 
   return (
-    <BasePageLayout title="Recuperar contraseña" description="" containerColor={containerColor}>
+    <BasePageLayout
+      title="Recuperar contraseña"
+      description=""
+      containerColor={containerColor}
+    >
       <section className="auth-card auth-password-reset-card">
         <div className="auth-login-inner">
           <div className="auth-login-content">
             <header className="auth-card-header">
               <h1 className="auth-card-title">Recuperar contraseña</h1>
               <p className="auth-card-subtitle">
-                {recoveryMethod === "link" 
+                {recoveryMethod === "link"
                   ? "Te enviaremos un enlace para restablecerla."
                   : "Ingresa tu correo y nueva contraseña para recuperar tu cuenta."}
               </p>
@@ -28,25 +31,34 @@ function PasswordResetPage() {
             {/* Selector de método de recuperación */}
             <div className="auth-recovery-method-selector">
               <button
-                className={`auth-method-btn ${recoveryMethod === "link" ? "active" : ""}`}
+                type="button"
+                className={`auth-method-btn ${
+                  recoveryMethod === "link" ? "active" : ""
+                }`}
                 onClick={() => setRecoveryMethod("link")}
               >
                 📧 Enlace de recuperación
               </button>
+
               <button
-                className={`auth-method-btn ${recoveryMethod === "form" ? "active" : ""}`}
+                type="button"
+                className={`auth-method-btn ${
+                  recoveryMethod === "form" ? "active" : ""
+                }`}
                 onClick={() => setRecoveryMethod("form")}
               >
                 🔑 Formulario directo
               </button>
             </div>
 
-            {/* Mostrar componente según la opción seleccionada */}
-            {recoveryMethod === "link" ? (
-              <PasswordResetRequest />
-            ) : (
-              <PasswordResetForm />
-            )}
+            {/* Contenido dinámico */}
+            <div className="auth-password-reset-content">
+              {recoveryMethod === "link" ? (
+                <PasswordResetRequest />
+              ) : (
+                <PasswordResetForm />
+              )}
+            </div>
           </div>
         </div>
       </section>
