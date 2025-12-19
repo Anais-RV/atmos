@@ -5,6 +5,7 @@ import BasePageLayout from "../components/layout/BasePageLayout";
 import PasswordResetRequest from "../components/auth/passwordreset/PasswordResetMail";
 import PasswordResetForm from "../components/auth/passwordreset/PasswordResetForm";
 import { getTemperatureColor } from "../styles/temperatureColors";
+import "../styles/password-reset.css";
 
 function PasswordResetPage() {
   const temperatureC = 7;
