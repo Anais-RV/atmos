@@ -1,6 +1,16 @@
 // frontend/src/components/ui/HamburgerMenu/HamburgerMenu.jsx
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { 
+  User, 
+  Sun, 
+  Moon, 
+  Globe, 
+  Accessibility,
+  Eye,
+  Ear,
+  UserX 
+} from "lucide-react";
 import "./HamburgerMenu.css";
 import { ThemeContext } from "../../../context/ThemeContext";
 
@@ -47,13 +57,13 @@ function HamburgerMenu() {
         <ul className="hamburger-menu-list">
 
           {/* Menu de usuario */}
-          <li className="hamburger-menu-item">
+          <li className="hamburger-menu-item hamburger-menu-item-first">
             <Link
               to="/user-panel"
               className="hamburger-menu-link"
               onClick={closeMenu}
             >
-              👤
+              <User size={20} />
               <div className="menu-text">
                 <span className="hamburger-menu-item-title">Menu de usuario</span>
                 <span className="hamburger-menu-item-sub">Ver tu panel y preferencias</span>
@@ -71,7 +81,7 @@ function HamburgerMenu() {
                 closeMenu();
               }}
             >
-              {isDarkMode ? "🌙" : "🌞"}
+              {isDarkMode ? <Moon size={20} /> : <Sun size={20} />}
               <div className="menu-text">
                 <span className="hamburger-menu-item-title">
                   {isDarkMode ? "Modo claro" : "Modo oscuro"}
@@ -89,7 +99,7 @@ function HamburgerMenu() {
               onClick={toggleLanguages}
               aria-expanded={isLangOpen}
             >
-              🌐
+              <Globe size={20} />
               <div className="menu-text">
                 <span className="hamburger-menu-item-title">Idiomas</span>
                 <span className="hamburger-menu-item-sub">Cambiar idioma de la app</span>
@@ -114,7 +124,7 @@ function HamburgerMenu() {
               onClick={toggleAccessibility}
               aria-expanded={isAccOpen}
             >
-              ♿
+              <Accessibility size={20} />
               <div className="menu-text">
                 <span className="hamburger-menu-item-title">Accesibilidad</span>
                 <span className="hamburger-menu-item-sub">Ajustes de discapacidad</span>
@@ -123,9 +133,9 @@ function HamburgerMenu() {
 
             {isAccOpen && (
               <ul className="hamburger-submenu">
-                <li><button type="button" onClick={closeMenu}>👁️‍🗨️ Discapacidad visual</button></li>
-                <li><button type="button" onClick={closeMenu}>🦻 Subtitulado ST</button></li>
-                <li><button type="button" onClick={closeMenu}>🧑‍🦯 Sordo-ciego</button></li>
+                <li><button type="button" onClick={closeMenu}><Eye size={16} /> Discapacidad visual</button></li>
+                <li><button type="button" onClick={closeMenu}><Ear size={16} /> Subtitulado ST</button></li>
+                <li><button type="button" onClick={closeMenu}><UserX size={16} /> Sordo-ciego</button></li>
               </ul>
             )}
           </li>

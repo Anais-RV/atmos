@@ -4,25 +4,35 @@
 
 .sunrise-sunset-container {
   width: 100%;
-  max-width: 420px;
+  max-width: 100%; /* respeta ancho del padre */
   margin: 0 auto;
   padding: 1.5rem 1.25rem;
   border-radius: 1.25rem;
-  border: 1px solid #1f2937;
-  background: rgba(15, 23, 42, 0.98);
-  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.9);
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .sunrise-sunset-container {
+    border-color: #1f2937;
+    background: rgba(15, 23, 42, 0.98);
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.9);
+  }
 }
 
 @media (min-width: 768px) {
   .sunrise-sunset-container {
-    max-width: 630px;
     padding: 1.8rem 1.6rem;
   }
 }
 
 @media (min-width: 1024px) {
   .sunrise-sunset-container {
-    max-width: 780px;
+    padding: 2rem 1.8rem;
   }
 }
 
@@ -33,46 +43,59 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
-  color: #e5e7eb;
+  color: #111827;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sunrise-sunset-title {
+    color: #e5e7eb;
+  }
 }
 
 /* cuadrícula del grid */
 .sunrise-sunset-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
   margin-top: 1rem;
-}
-
-@media (min-width: 768px) {
-  .sunrise-sunset-grid {
-    gap: 1.25rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .sunrise-sunset-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
 }
 
 /*tarjeta amanecer */
 .sun-time-card {
   padding: 1.25rem;
   border-radius: 1rem;
-  border: 1px solid #374151;
-  background: linear-gradient(135deg, rgba(31, 41, 55, 0.5) 0%, rgba(17, 24, 39, 0.7) 100%);
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
 }
 
 .sun-time-card:hover {
-  border-color: #4b5563;
-  background: linear-gradient(135deg, rgba(31, 41, 55, 0.7) 0%, rgba(17, 24, 39, 0.9) 100%);
+  border-color: #d1d5db;
+  background: #f3f4f6;
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .sun-time-card {
+    border-color: #374151;
+    background: linear-gradient(135deg, rgba(31, 41, 55, 0.5) 0%, rgba(17, 24, 39, 0.7) 100%);
+  }
+  
+  .sun-time-card:hover {
+    border-color: #4b5563;
+    background: linear-gradient(135deg, rgba(31, 41, 55, 0.7) 0%, rgba(17, 24, 39, 0.9) 100%);
+    box-shadow: 0 8px 16px rgba(15, 23, 42, 0.5);
+  }
 }
 
 .sunrise-card {
@@ -94,13 +117,6 @@
 /* dayligh tarjeta */
 .daylight-card {
   border-left: 4px solid #fbbf24;
-  grid-column: 1 / -1;
-}
-
-@media (min-width: 1024px) {
-  .daylight-card {
-    grid-column: auto;
-  }
 }
 
 .daylight-card .daylight-icon {
@@ -117,8 +133,14 @@
 .sun-time-header h3 {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #d1d5db;
+  color: #374151;
   margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sun-time-header h3 {
+    color: #d1d5db;
+  }
 }
 
 .sun-icon {
@@ -136,15 +158,25 @@
 .sun-time-value {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #f3f4f6;
+  color: #111827;
   font-family: 'Courier New', monospace;
   letter-spacing: 0.05em;
 }
 
 .sun-time-label {
   font-size: 0.85rem;
-  color: #9ca3af;
+  color: #6b7280;
   font-weight: 500;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sun-time-value {
+    color: #f3f4f6;
+  }
+  
+  .sun-time-label {
+    color: #9ca3af;
+  }
 }
 
 .sunrise-sunset-loading {

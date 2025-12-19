@@ -41,6 +41,9 @@ const Dashboard = styled.section`
   max-width: 460px;
   margin: 0 auto;
   min-height: 360px; /* alto base en móvil */
+  overflow-x: hidden; /* previene scroll horizontal */
+  overflow-y: visible; /* permite dropdowns verticales */
+  box-sizing: border-box;
 
   ${MEDIA.tablet} {
     max-width: 720px;   /* más ancho en tablet */

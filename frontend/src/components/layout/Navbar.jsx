@@ -33,6 +33,7 @@ function Navbar() {
             className="navbar-icon-button"
             aria-label="View notifications"
             type="button"
+            title="Próximamente: notificaciones"
           >
             🔔
           </button>
