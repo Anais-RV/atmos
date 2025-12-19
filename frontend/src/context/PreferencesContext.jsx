@@ -26,8 +26,11 @@ export const PreferencesProvider = ({ children }) => {
         });
         setError(null);
       } catch (err) {
-        console.error('Error loading preferences:', err);
-        setError(err.message);
+        // Silenciar errores de autenticación, usar valores por defecto
+        if (!err.message?.includes('authentication') && !err.message?.includes('Unauthorized')) {
+          console.error('Error loading preferences:', err);
+        }
+        setError(null); // No mostrar error al usuario
         // Usar valores por defecto si falla la carga
       } finally {
         setLoading(false);

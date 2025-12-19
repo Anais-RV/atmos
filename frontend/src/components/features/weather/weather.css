@@ -257,22 +257,38 @@
   margin: 0;
 }
 
+/* Modo claro por defecto */
 .temp-toggle {
-  background: rgba(56, 189, 248, 0.18);
-  border: 1px solid rgba(56, 189, 248, 0.8);
-  color: #e0f2fe;
+  background: #e0f2fe !important;
+  border: 2px solid #0284c7 !important;
+  color: #000000 !important;
   padding: 0.5rem 1rem;
   border-radius: 999px;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .temp-toggle:hover {
-  background: rgba(56, 189, 248, 0.26);
+  background: #bfdbfe !important;
+  border-color: #0369a1 !important;
   transform: translateY(-1px);
-  box-shadow: 0 10px 25px rgba(8, 47, 73, 0.6);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .temp-toggle {
+    color: #ffffff !important;
+    background: rgba(56, 189, 248, 0.25) !important;
+    border-color: rgba(56, 189, 248, 0.9) !important;
+  }
+  
+  .temp-toggle:hover {
+    background: rgba(56, 189, 248, 0.35) !important;
+    box-shadow: 0 10px 25px rgba(8, 47, 73, 0.6);
+  }
 }
 
 /* Main weather display */
