@@ -48,6 +48,100 @@
   padding: 1rem;
   min-height: 220px;
   width: 100%;
+}
+
+/* WeatherChart Container - Mobile First */
+.weather-chart-container {
+  width: 100%;
+  height: 300px;
+  position: relative;
+}
+
+@media (min-width: 640px) {
+  .weather-chart-container {
+    height: 350px;
+  }
+}
+
+@media (min-width: 768px) {
+  .weather-chart-container {
+    height: 400px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .weather-chart-container {
+    height: 450px;
+  }
+}
+
+/* Chart Loading State */
+.chart-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  gap: 1rem;
+  min-height: 300px;
+  color: #9ca3af;
+}
+
+.chart-loading .spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #3b82f6;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.chart-loading p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Chart Error State */
+.chart-error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fecaca;
+}
+
+.chart-error .error-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  color: #ef4444;
+}
+
+.chart-error p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Chart Empty State */
+.chart-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #9ca3af;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-empty p {
+  margin: 0;
+  font-size: 0.95rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,4 +193,85 @@
   text-align: center;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+/* Chart Controls Styling */
+.chart-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .chart-controls {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+}
+
+.chart-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  max-width: 100%;
+}
+
+@media (min-width: 640px) {
+  .chart-control-group {
+    max-width: 200px;
+  }
+}
+
+.chart-control-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+@media (prefers-color-scheme: dark) {
+  .chart-control-group label {
+    color: #e5e7eb;
+  }
+}
+
+.chart-select {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.chart-select:hover {
+  border-color: #3b82f6;
+}
+
+.chart-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .chart-select {
+    background: rgba(31, 41, 55, 0.8);
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+  
+  .chart-select:hover {
+    border-color: #60a5fa;
+  }
+  
+  .chart-select:focus {
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+  }
 }

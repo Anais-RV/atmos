@@ -10,13 +10,16 @@
 
 // frontend/src/pages/ForecastChartPage.jsx
 
+import { useState } from "react";
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
 import ForecastChart from "../components/features/forecast/ForecastChart";
+import WeatherInfo from "../components/features/weather/WeatherInfo";
 import "../components/features/forecast/charts.css";
 
 function ForecastChartPage() {
-  const temperatureC = 7;
+  const [temperatureC, setTemperatureC] = useState(15);
+  const [selectedCity, setSelectedCity] = useState(null);
   const containerColor = getTemperatureColor(temperatureC);
 
   return (
@@ -27,13 +30,20 @@ function ForecastChartPage() {
     >
       <section className="dashboard-center">
         <section className="center-card center-card-top">
+          <WeatherInfo 
+            onTemperatureChange={setTemperatureC}
+            onCityChange={setSelectedCity}
+          />
+        </section>
+
+        <section className="center-card center-card-middle" style={{ marginTop: '1rem' }}>
           <h2 className="center-card-title">GRÁFICAS</h2>
           <p className="center-card-text">
             Visualiza las predicciones y series temporales generadas por ATMOS.
           </p>
 
           <div className="chart-main-viewport">
-            <ForecastChart />
+            <ForecastChart cityId={selectedCity?.id} />
           </div>
         </section>
 
