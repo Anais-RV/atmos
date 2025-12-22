@@ -1,13 +1,11 @@
-from django.contrib.auth import get_user_model
-from django.core.management.base import BaseCommand
+from users.documents import UserDocument
 
-User = get_user_model()
 
 def hashed_passwords_test():
     """
     Verifica que todas las contraseñas estén hasheadas
     """
-    users = User.objects.all()
+    users = UserDocument.objects()
     users_problems = []
 
     for user in users:

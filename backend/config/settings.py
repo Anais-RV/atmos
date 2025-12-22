@@ -144,8 +144,8 @@ AUTH_TYPE = 'JWT'
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication", # Para JWT
-        "rest_framework.authentication.SessionAuthentication", # Para sesiones
+        "users.auth_backends.MongoJWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.AllowAny",  # Permite acceso público a weather API
@@ -165,6 +165,19 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
+
+# ------------------ MongoDB / MongoEngine ------------------
+# Leer URI y nombre de BD desde variables de entorno (o .env si usas python-decouple)
+MONGODB_URI = config('MONGODB_URI', default='mongodb+srv://sergiommadrid135_db_user:IxystWlTVdAwSY2m@cluster0.wcwgir0.mongodb.net/')
+MONGODB_DB = config('MONGODB_DB', default='atmos_db')
+# Use environment variable `MONGODB_URI` (recommended) and `MONGODB_DB`.
+# Example URI (Atlas):
+# mongodb+srv://<user>:<pass>@cluster0.mongodb.net/atmos_db?retryWrites=true&w=majority
+
+# Inicializar mongoengine automáticamente (ahora en users/apps.py UsersConfig.ready())
+# Se inicializa en users/apps.py para asegurar que ocurra después de que Django esté completamente configurado
+MONGOENGINE_ENABLED = False  # Se establece como True en users/apps.py si la inicialización es exitosa
+
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -277,6 +290,20 @@ LOGGING = {
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
+
+        # MongoEngine initialization (connect to MongoDB Atlas)
+        try:
+            from .mongo_config import init_mongo
+            # Initialize connection (will raise if MONGODB_URI not set)
+            try:
+                init_mongo()
+                MONGOENGINE_ENABLED = True
+            except Exception as _e:
+                print(f"Aviso: mongoengine no inicializado: {_e}")
+                MONGOENGINE_ENABLED = False
+        except Exception:
+            MONGOENGINE_ENABLED = False
+
         },
         "file": {
             "class": "logging.FileHandler",

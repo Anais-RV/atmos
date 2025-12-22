@@ -1,7 +1,7 @@
 # backend/weather/views.py
 
 from django.conf import settings
-from django.shortcuts import get_object_or_404
+# get_object_or_404 not used for MongoEngine documents
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics
@@ -11,7 +11,7 @@ from django.db.models import Q
 from .prophet_service import build_prophet_forecast
 from .emblem_photos import select_emblem_photo
 from .city_photos import select_city_photo
-from .models import City, WeatherObservation
+from .documents import CityDocument, WeatherObservationDocument
 from .serializers import (
     CurrentWeatherSerializer,
     TimeSeriesInputSerializer,
@@ -71,7 +71,12 @@ class CurrentWeatherView(APIView):
             return Response(cached_data, status=status.HTTP_200_OK)
 
         # Obtener la ciudad
-        city = get_object_or_404(City, id=city_id)
+        city = CityDocument.objects(id=city_id).first()
+        if not city:
+            return Response(
+                {"detail": f"Ciudad con ID {city_id} no encontrada"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         
         # Intentar obtener datos de AEMET (o mock data)
         weather_data = fetch_current_weather(
@@ -385,33 +390,51 @@ class CityPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class CityListView(generics.ListAPIView):
-    
-    queryset = City.objects.all()
-    serializer_class = CitySerializer
-    pagination_class = None  # Sin paginación - devolver todas las ciudades
+class CityListView(APIView):
     permission_classes = [permissions.AllowAny]
-    
-    def get_queryset(self):
-        queryset = City.objects.all()
-        
-        # Búsqueda por nombre
-        search = self.request.query_params.get('search', None)
+
+    def get(self, request, *args, **kwargs):
+        search = request.query_params.get('search', None)
+        comunidad = request.query_params.get('comunidad_autonoma', None)
+
+        qs = CityDocument.objects()
         if search:
-            queryset = queryset.filter(Q(name__icontains=search))
-        
-        # Filtro por comunidad autónoma
-        comunidad = self.request.query_params.get('comunidad_autonoma', None)
+            qs = qs.filter(name__icontains=search)
         if comunidad:
-            queryset = queryset.filter(comunidad_autonoma__iexact=comunidad)
-        
-        return queryset.order_by('name')
+            qs = qs.filter(comunidad_autonoma__iexact=comunidad)
+
+        cities = qs.order_by('name')
+        data = []
+        for c in cities:
+            data.append({
+                'id': c.id,
+                'name': c.name,
+                'latitud': c.latitud,
+                'longitud': c.longitud,
+                'altitud': getattr(c, 'altitud', None),
+                'comunidad_autonoma': getattr(c, 'comunidad_autonoma', None),
+            })
+
+        serializer = CitySerializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class CityDetailView(generics.RetrieveAPIView):
-    
-    queryset = City.objects.all()
-    serializer_class = CitySerializer
+class CityDetailView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, pk, *args, **kwargs):
+        city = CityDocument.objects(id=pk).first()
+        if not city:
+            return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = CitySerializer({
+            'id': city.id,
+            'name': city.name,
+            'latitud': city.latitud,
+            'longitud': city.longitud,
+            'altitud': getattr(city, 'altitud', None),
+            'comunidad_autonoma': getattr(city, 'comunidad_autonoma', None),
+        })
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class SunriseSunsetView(APIView):
@@ -444,7 +467,9 @@ class SunriseSunsetView(APIView):
             )
 
         # Obtener la ciudad
-        city = get_object_or_404(City, id=city_id)
+        city = CityDocument.objects(id=city_id).first()
+        if not city:
+            return Response({"detail": "city_id not found"}, status=status.HTTP_404_NOT_FOUND)
         
         # Usar fecha actual
         observation_date = datetime.now(pytz.UTC)
