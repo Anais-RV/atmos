@@ -11,12 +11,14 @@
 
 // frontend/src/pages/UserPanelPage.jsx
 
+import { useNavigate } from "react-router-dom";
 import BasePageLayout from "../components/layout/BasePageLayout";
 import UserPanelInfo from "../components/features/auth/UserPanelInfo";
 import TagManager from "../components/features/auth/TagManager";
 import { getTemperatureColor } from "../styles/temperatureColors";
 
 function UserPanelPage() {
+  const navigate = useNavigate();
   // Si quieres que sea igual que el Login/Dashboard, usa también 7
   const temperatureC = 7;
   const containerColor = getTemperatureColor(temperatureC);
@@ -60,7 +62,7 @@ function UserPanelPage() {
                 <button type="button" className="auth-button-primary">
                   Alertas personalizadas
                 </button>
-                <button type="button" className="auth-button-primary">
+                <button type="button" className="auth-button-primary" onClick={() => navigate('/settings')}>
                   Ajustes de cuenta
                 </button>
               </div>
