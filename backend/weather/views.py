@@ -496,3 +496,83 @@ class SunriseSunsetView(APIView):
         }
         
         return Response(response_data, status=status.HTTP_200_OK)
+
+
+class AlertsListView(APIView):
+    """
+    Alert history endpoint with session-gated persistence.
+
+    GET /api/alerts/
+    - If user is authenticated: returns user's alerts sorted by creation date (newest first)
+    - If user is anonymous: returns empty list
+
+    POST /api/alerts/
+    - If user is authenticated: saves a new alert with user association
+    - If user is anonymous: returns 401 Unauthorized
+    
+    Expected POST payload:
+    {
+        "city_id": <int>,
+        "title": "<string>",
+        "type": "<string>",
+        "message": "<string>"
+    }
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        from .documents import AlertDocument
+        
+        if request.user.is_authenticated:
+            # Fetch user's alerts, sorted by creation date (newest first)
+            alerts = AlertDocument.objects(user_id=request.user.id).order_by('-created_at')
+            alert_list = [alert.to_dict() for alert in alerts]
+        else:
+            # Anonymous users see no alerts
+            alert_list = []
+        
+        return Response(alert_list, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        from .documents import AlertDocument
+        
+        # Require authentication to save alerts
+        if not request.user.is_authenticated:
+            return Response(
+                {'detail': 'Authentication required to save alerts.'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        
+        # Extract and validate payload
+        city_id = request.data.get('city_id')
+        title = request.data.get('title')
+        alert_type = request.data.get('type')
+        message = request.data.get('message')
+        
+        if not all([city_id, title, alert_type, message]):
+            return Response(
+                {'detail': 'Missing required fields: city_id, title, type, message'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            # Create and save new alert
+            alert = AlertDocument(
+                user_id=request.user.id,
+                city_id=int(city_id),
+                title=str(title),
+                type=str(alert_type),
+                message=str(message)
+            )
+            alert.save()
+            
+            return Response(
+                alert.to_dict(),
+                status=status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return Response(
+                {'detail': f'Failed to save alert: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+

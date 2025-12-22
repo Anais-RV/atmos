@@ -2,6 +2,30 @@ from mongoengine import Document, StringField, FloatField, IntField, DateTimeFie
 from datetime import datetime
 
 
+class AlertDocument(Document):
+    meta = {'collection': 'alerts', 'indexes': [('user_id', '-created_at')]}
+    user_id = IntField(required=True)  # Django User.id
+    city_id = IntField(required=True)
+    title = StringField(required=True, max_length=255)
+    type = StringField(required=True, max_length=50)  # e.g., 'weather_warning', 'temperature_extreme', etc.
+    message = StringField(required=True)
+    created_at = DateTimeField(default=datetime.utcnow)
+    updated_at = DateTimeField(default=datetime.utcnow)
+
+    def to_dict(self):
+        """Convert document to dict for serialization"""
+        return {
+            'id': str(self.id),
+            'user_id': self.user_id,
+            'city_id': self.city_id,
+            'title': self.title,
+            'type': self.type,
+            'message': self.message,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
 class CityDocument(Document):
     meta = {'collection': 'cities'}
     id = IntField(primary_key=True)
