@@ -1,42 +1,42 @@
-/**
- * Componente: UserPanelInfo
- * Propósito: Muestra la información del usuario autenticado (avatar, nombre, email) y botón de Sign out.
- * Uso:
- *  - UserPanelPage.jsx (único lugar donde se renderiza)
- * Dependencias:
- *  - auth.css (.auth-user-panel, .auth-user-header, .auth-user-avatar, .auth-user-name, .auth-user-email, .auth-user-actions, .auth-button-secondary)
- */
-
-// frontend/src/components/auth/UserPanelInfo.jsx
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../../context/AuthContext'
 
 function UserPanelInfo() {
-  // TODO: replace with real user data from backend / context
-  const user = {
-    name: "SuperKode",
-    email: "SomosLaHostia@SuperKode.es",
-    location: "Madrid, ES",
-  };
+  const navigate = useNavigate()
+  const { user, logout } = useAuth()
+
+  const displayUser = {
+    name: user?.name || 'Usuario',
+    email: user?.email || 'usuario@ejemplo.com',
+  }
+
+  const handleLogout = async () => {
+    await logout()
+    navigate('/login')
+  }
 
   return (
     <div className="auth-user-panel">
       <div className="auth-user-header">
         <div className="auth-user-avatar">
-          {user.name.charAt(0)}
+          {displayUser.name.charAt(0).toUpperCase()}
         </div>
         <div>
-          <h2 className="auth-user-name">{user.name}</h2>
-          <p className="auth-user-email">{user.email}</p>
+          <h2 className="auth-user-name">{displayUser.name}</h2>
+          <p className="auth-user-email">{displayUser.email}</p>
         </div>
       </div>
 
-
       <div className="auth-user-actions">
-        <button className="auth-button-secondary">
+        <button
+          className="auth-button-secondary"
+          onClick={handleLogout}
+        >
           Sign out
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-export default UserPanelInfo;
+export default UserPanelInfo
