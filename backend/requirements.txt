@@ -12,3 +12,6 @@ pandas>=2.0
 numpy>=1.24
 astral>=3.2
 requests>=2.32.0
+mongoengine>=0.29.1
+django-mongoengine>=0.3.4
+dnspython>=2.3.0
