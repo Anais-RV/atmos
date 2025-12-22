@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HamburgerMenu from "../ui/HamburgerMenu/HamburgerMenu";
 import "../../styles/Navbar.css";
+import { useAuth } from '../../context/AuthContext'
 
 function Navbar() {
   const navigate = useNavigate();
@@ -22,6 +23,12 @@ function Navbar() {
       setLeavingTarget(null);
     }, 420);
   };
+
+  const { user } = useAuth()
+
+  const displayName = user?.first_name && user?.last_name
+    ? `${user.first_name} ${user.last_name}`
+    : user?.username || null
 
   return (
     <header className="navbar" role="banner">
@@ -58,12 +65,12 @@ function Navbar() {
         <div className="navbar-right">
           <button
             type="button"
-            onClick={() => animateAndNavigate("login")}
+            onClick={() => animateAndNavigate(displayName ? 'user' : 'login')}
             className={`navbar-cta nav-animatable ${
-              leavingTarget === "login" ? "leaving" : ""
+              leavingTarget === (displayName ? 'user' : 'login') ? "leaving" : ""
             }`}
           >
-            Sign in
+            {displayName || 'Sign in'}
           </button>
 
           {/* ❌ SIN animación de salida */}
