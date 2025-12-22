@@ -20,6 +20,7 @@ function Navbar() {
     setTimeout(() => {
       if (target === "home") navigate("/");
       if (target === "login") navigate("/login");
+      if (target === "user") navigate("/user-panel");
       setLeavingTarget(null);
     }, 420);
   };
