@@ -21,8 +21,13 @@ export function AuthProvider({ children }) {
           headers: { Authorization: `Bearer ${access}` },
         })
         setUser(resp)
-      } catch {
+      } catch (error) {
+        console.error('Error fetching user data:', error.message)
         setUser(null)
+        // Si el token es inválido, limpiarlo
+        if (error.message.includes('auth') || error.message.includes('401') || error.message.includes('403')) {
+          authService.logout()
+        }
       } finally {
         setLoading(false)
       }

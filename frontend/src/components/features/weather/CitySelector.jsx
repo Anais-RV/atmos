@@ -10,7 +10,6 @@
 
 import { useState, useEffect } from 'react'
 import { Search } from 'lucide-react'
-import apiClient from '../../../services/apiClient'
 import './weather.css'
 
 function CitySelector({ onCitySelect }) {
@@ -26,7 +25,11 @@ function CitySelector({ onCitySelect }) {
       setLoading(true)
       setError(null)
       try {
-        const data = await apiClient('/api/weather/cities/')
+        const response = await fetch('http://localhost:8000/api/weather/cities/')
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}`)
+        }
+        const data = await response.json()
         // La API devuelve un array de todas las ciudades
         setCities(Array.isArray(data) ? data : [])
       } catch (err) {

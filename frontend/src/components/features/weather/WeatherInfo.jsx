@@ -32,7 +32,7 @@ import {
   AlertCircle,
   Loader
 } from 'lucide-react'
-import { apiClient } from '../../../services/apiClient'
+import { useAuth } from '../../../context/AuthContext'
 import CitySelector from './CitySelector'
 import './weather.css'
 
@@ -95,6 +95,7 @@ function calculateFeelsLike(temp, windSpeed = 0, humidity = 50) {
 }
 
 function WeatherInfo({ onTemperatureChange, onCityChange }) {
+  const { user } = useAuth()
   const [cityId, setCityId] = useState(null)
   const [cityName, setCityName] = useState('')
   const [temperature, setTemperature] = useState(null)
@@ -117,36 +118,42 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
     setError(null)
 
     try {
-      const response = await apiClient(`/api/weather/current/?city_id=${id}`)
+      const response = await fetch(`http://localhost:8000/api/weather/current/?city_id=${id}`)
+      
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}`)
+      }
+      
+      const data = await response.json()
       
       // Validar que tengamos datos de temperatura
-      if (!response.temperature && response.temperature !== 0) {
+      if (!data.temperature && data.temperature !== 0) {
         setError(`No hay datos meteorológicos disponibles para esta ubicación`)
         setTemperature(null)
         setFeelsLike(null)
         setCondition('')
-        setCityName(response.city_name || '')
+        setCityName(data.city_name || '')
         return
       }
       
       setCityId(id)
-      setCityName(response.city_name)
-      setTemperature(response.temperature)
-      setCondition(response.condition || 'Parcialmente nublado')
+      setCityName(data.city_name)
+      setTemperature(data.temperature)
+      setCondition(data.condition || 'Parcialmente nublado')
       
       // Notificar cambio de temperatura al padre para actualizar color de fondo
       if (onTemperatureChange) {
-        onTemperatureChange(response.temperature)
+        onTemperatureChange(data.temperature)
       }
       
       // Notificar cambio de ciudad al padre (para SunriseSunset)
       if (onCityChange) {
-        onCityChange({ id, name: response.city_name })
+        onCityChange({ id, name: data.city_name })
       }
       
       // Calcular sensación térmica
       const feelsLikeTemp = calculateFeelsLike(
-        response.temperature,
+        data.temperature,
         0,
         50
       )
