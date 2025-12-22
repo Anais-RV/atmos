@@ -1,6 +1,7 @@
 /**
  * Componente: CitySelector
- * Propósito: Selector desplegable de ciudades con campo de búsqueda y lista filtrable.
+ * Propósito: Selector desplegable de ciudades con filtro por comunidad autónoma.
+ * Usa: Primero mostrar comunidades, luego ciudades filtradas por comunidad.
  * Uso:
  *  - WeatherInfo.jsx (usado internamente para cambiar de ciudad)
  * Dependencias:
@@ -16,6 +17,7 @@ function CitySelector({ onCitySelect }) {
   const [cities, setCities] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCity, setSelectedCity] = useState(null)
+  const [selectedCommunidad, setSelectedCommunidad] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -25,7 +27,7 @@ function CitySelector({ onCitySelect }) {
       setLoading(true)
       setError(null)
       try {
-        const response = await fetch('http://localhost:8000/api/weather/cities/')
+        const response = await fetch('/api/weather/cities/')
         if (!response.ok) {
           throw new Error(`Error ${response.status}`)
         }
@@ -45,31 +47,68 @@ function CitySelector({ onCitySelect }) {
   }, [])
 
   /**
-   * Filtra las ciudades según el término de búsqueda
+   * Obtiene comunidades autónomas únicas ordenadas alfabéticamente
    */
-  const normalizedSearch = searchTerm.trim().toLowerCase()
-  const filteredCities = cities.filter(city =>
-    ((city && city.name) || '').toLowerCase().includes(normalizedSearch)
-  )
+  const getComunidades = () => {
+    const comunidades = new Set()
+    cities.forEach(city => {
+      if (city.comunidad_autonoma) {
+        comunidades.add(city.comunidad_autonoma)
+      }
+    })
+    return Array.from(comunidades).sort()
+  }
+
+  /**
+   * Filtra ciudades por comunidad autónoma y término de búsqueda
+   */
+  const getFilteredCities = () => {
+    let filtered = cities
+
+    // Filtrar por comunidad autónoma si está seleccionada
+    if (selectedCommunidad) {
+      filtered = filtered.filter(city => city.comunidad_autonoma === selectedCommunidad)
+    }
+
+    // Filtrar por término de búsqueda
+    const normalizedSearch = searchTerm.trim().toLowerCase()
+    if (normalizedSearch) {
+      filtered = filtered.filter(city =>
+        ((city && city.name) || '').toLowerCase().includes(normalizedSearch)
+      )
+    }
+
+    return filtered
+  }
+
+  /**
+   * Maneja la selección de una comunidad autónoma
+   */
+  const handleSelectCommunidad = (comunidad) => {
+    setSelectedCommunidad(comunidad)
+    setSearchTerm('')
+  }
 
   /**
    * Maneja la selección de una ciudad
    */
   const handleSelectCity = (city) => {
-    // Si ya hay una ciudad seleccionada, primero la limpiamos
     if (selectedCity) {
       setSelectedCity(null)
       setSearchTerm('')
     }
     
-    // Luego seleccionamos la nueva ciudad
     setTimeout(() => {
       setSelectedCity(city)
       setSearchTerm('')
+      setSelectedCommunidad(null)
       setIsOpen(false)
       onCitySelect(city.id)
     }, 0)
   }
+
+  const comunidades = getComunidades()
+  const filteredCities = getFilteredCities()
 
   return (
     <div className="city-selector-wrapper">
@@ -87,14 +126,50 @@ function CitySelector({ onCitySelect }) {
           />
         </div>
 
-        {/* Dropdown de ciudades */}
+        {/* Dropdown: Comunidades o Ciudades filtradas */}
         {isOpen && (
           <div className="city-dropdown">
-                {loading ? (
-                  <div className="city-loading">Cargando ciudades…</div>
-                ) : error ? (
-                  <div className="city-error">{error}</div>
-                ) : filteredCities.length > 0 ? (
+            {loading ? (
+              <div className="city-loading">Cargando ciudades…</div>
+            ) : error ? (
+              <div className="city-error">{error}</div>
+            ) : !selectedCommunidad ? (
+              // Mostrar comunidades autónomas
+              comunidades.length > 0 ? (
+                <>
+                  <div className="city-section-title">Comunidades Autónomas</div>
+                  <ul className="city-list">
+                    {comunidades.map(comunidad => (
+                      <li key={comunidad} className="city-item">
+                        <button
+                          className="city-button"
+                          onClick={() => handleSelectCommunidad(comunidad)}
+                        >
+                          {comunidad}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <div className="city-no-results">No hay comunidades disponibles</div>
+              )
+            ) : (
+              // Mostrar ciudades de la comunidad seleccionada
+              <>
+                <div className="city-section-header">
+                  <button
+                    className="city-back-button"
+                    onClick={() => {
+                      setSelectedCommunidad(null)
+                      setSearchTerm('')
+                    }}
+                  >
+                    ← Volver
+                  </button>
+                  <span className="city-section-title">{selectedCommunidad}</span>
+                </div>
+                {filteredCities.length > 0 ? (
                   <ul className="city-list">
                     {filteredCities.map(city => (
                       <li key={city.id} className="city-item">
@@ -110,6 +185,8 @@ function CitySelector({ onCitySelect }) {
                 ) : (
                   <div className="city-no-results">No se encontraron ciudades</div>
                 )}
+              </>
+            )}
           </div>
         )}
       </div>
@@ -130,8 +207,6 @@ function CitySelector({ onCitySelect }) {
           </button>
         </div>
       )}
-
-      {/* debug UI removed */}
     </div>
   )
 }
