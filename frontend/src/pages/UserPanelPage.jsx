@@ -57,7 +57,7 @@ function UserPanelPage() {
                 Accede rápidamente a las secciones más importantes de tu panel:
               </p>
               <div className="user-panel-actions-buttons">
-                <button type="button" className="auth-button-primary">
+                <button type="button" className="auth-button-primary" onClick={() => navigate('/history')}>
                   Historial de alertas
                 </button>
                 <button type="button" className="auth-button-primary">
