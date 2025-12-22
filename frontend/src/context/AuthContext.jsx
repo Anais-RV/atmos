@@ -31,7 +31,21 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const data = await authService.login(email, password)
-    setUser(data.user || null)
+    
+    // Obtener datos del usuario después del login
+    try {
+      const access = authService.getAccessToken()
+      if (access) {
+        const resp = await apiClient('/api/auth/me/', {
+          headers: { Authorization: `Bearer ${access}` },
+        })
+        setUser(resp)
+      }
+    } catch (error) {
+      console.error('Error obteniendo datos del usuario:', error)
+      setUser(null)
+    }
+    
     return data
   }
 

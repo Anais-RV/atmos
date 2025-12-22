@@ -6,8 +6,10 @@ function UserPanelInfo() {
   const { user, logout } = useAuth()
 
   const displayUser = {
-    name: user?.name || 'Usuario',
-    email: user?.email || 'usuario@ejemplo.com',
+    name: user?.first_name && user?.last_name 
+      ? `${user.first_name} ${user.last_name}` 
+      : user?.username || 'Invitado',
+    email: user?.email || 'No disponible',
   }
 
   const handleLogout = async () => {
