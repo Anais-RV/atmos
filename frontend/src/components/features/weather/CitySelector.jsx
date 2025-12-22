@@ -31,7 +31,7 @@ function CitySelector({ onCitySelect }) {
         }
         const data = await response.json()
         // La API devuelve un array de todas las ciudades
-        setCities(Array.isArray(data) ? data : [])
+        setCities(Array.isArray(data) ? data : (data.results || []))
       } catch (err) {
         console.error('Error al cargar ciudades:', err)
         setError('Error al cargar ciudades')
@@ -47,8 +47,9 @@ function CitySelector({ onCitySelect }) {
   /**
    * Filtra las ciudades según el término de búsqueda
    */
+  const normalizedSearch = searchTerm.trim().toLowerCase()
   const filteredCities = cities.filter(city =>
-    city.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ((city && city.name) || '').toLowerCase().includes(normalizedSearch)
   )
 
   /**
@@ -89,24 +90,26 @@ function CitySelector({ onCitySelect }) {
         {/* Dropdown de ciudades */}
         {isOpen && (
           <div className="city-dropdown">
-            {filteredCities.length > 0 ? (
-              <ul className="city-list">
-                {filteredCities.map(city => (
-                  <li key={city.id} className="city-item">
-                    <button
-                      className={`city-button ${selectedCity?.id === city.id ? 'active' : ''}`}
-                      onClick={() => handleSelectCity(city)}
-                    >
-                      {city.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="city-no-results">
-                No se encontraron ciudades
-              </div>
-            )}
+                {loading ? (
+                  <div className="city-loading">Cargando ciudades…</div>
+                ) : error ? (
+                  <div className="city-error">{error}</div>
+                ) : filteredCities.length > 0 ? (
+                  <ul className="city-list">
+                    {filteredCities.map(city => (
+                      <li key={city.id} className="city-item">
+                        <button
+                          className={`city-button ${selectedCity?.id === city.id ? 'active' : ''}`}
+                          onClick={() => handleSelectCity(city)}
+                        >
+                          {city.name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="city-no-results">No se encontraron ciudades</div>
+                )}
           </div>
         )}
       </div>
@@ -127,6 +130,8 @@ function CitySelector({ onCitySelect }) {
           </button>
         </div>
       )}
+
+      {/* debug UI removed */}
     </div>
   )
 }
