@@ -10,13 +10,24 @@ except Exception:
     WeatherObservation = None
     City = None
     _DJANGO_ORM_AVAILABLE = False
+from django.db import models as _django_models
 
-if _DJANGO_ORM_AVAILABLE:
+# Only register with Django admin when the imported symbols are actual
+# Django model classes (subclasses of django.db.models.Model). When the
+# project uses MongoEngine documents the imports above may succeed but
+# the objects are not Django models and must not be registered.
+def _is_django_model(obj):
+    try:
+        return isinstance(obj, type) and issubclass(obj, _django_models.Model)
+    except Exception:
+        return False
+
+if _DJANGO_ORM_AVAILABLE and _is_django_model(City):
     @admin.register(City)
     class CityAdmin(admin.ModelAdmin):
         list_display = ['name', 'latitud', 'longitud', 'altitud']
 
-
+if _DJANGO_ORM_AVAILABLE and _is_django_model(WeatherObservation):
     @admin.register(WeatherObservation)
     class WeatherObservationAdmin(admin.ModelAdmin):
         list_display = [
