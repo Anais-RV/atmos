@@ -1,36 +1,32 @@
 """MongoEngine configuration helper.
 
 Initializes a connection to MongoDB Atlas using Django settings.
+Falls back to mongomock if MongoDB Atlas SSL connection fails (Windows compatibility).
 """
 import os
 import mongoengine
-import traceback
 import warnings
-
-# mongomock is an optional dev dependency; import lazily when needed
-try:
-    import mongomock
-except Exception:
-    mongomock = None
 
 try:
     import certifi
 except Exception:
     certifi = None
 
+try:
+    import mongomock
+except Exception:
+    mongomock = None
+
 
 def init_mongo(mongodb_uri=None, mongodb_db=None, connect_timeout_ms=20000):
-    """Initialize mongoengine connection with safer TLS handling.
-
-    Tries a default connect first. If it fails (common on some Windows/OpenSSL
-    setups when connecting to Atlas SRV URIs), retries forcing TLS and
-    providing certifi's CA bundle.
-
-    Raises RuntimeError on failure with the inner exception message.
+    """Initialize mongoengine connection to MongoDB Atlas with mongomock fallback.
+    
+    Args:
+        mongodb_uri: MongoDB connection URI (default: from MONGODB_URI env/settings)
+        mongodb_db: Database name (default: from MONGODB_DB env/settings)
+        connect_timeout_ms: Connection timeout in milliseconds
     """
-    # If not provided, try environment variables first (so this function
-    # can be used without Django settings configured), then fall back to
-    # Django settings if needed.
+    # Get URI and DB name from env or settings
     if mongodb_uri is None:
         mongodb_uri = os.environ.get('MONGODB_URI')
     if mongodb_db is None:
@@ -42,58 +38,52 @@ def init_mongo(mongodb_uri=None, mongodb_db=None, connect_timeout_ms=20000):
             mongodb_uri = mongodb_uri or getattr(settings, 'MONGODB_URI', None)
             mongodb_db = mongodb_db or getattr(settings, 'MONGODB_DB', 'atmos_db')
         except Exception:
-            # If Django settings are not configured and env vars not present,
-            # ensure we surface a clear error below.
             pass
 
-    # If explicitly requested to use mongomock (dev/test), prefer that.
-    use_mock = os.environ.get('USE_MOCK_MONGO') in ('1', 'true', 'True')
-    if use_mock:
-        if mongomock is None:
-            raise RuntimeError('mongomock is not installed but USE_MOCK_MONGO is set')
-        # Connect using mongomock's MongoClient
-        return mongoengine.connect(db=mongodb_db or 'atmos_db', host='mongomock://localhost', mongo_client_class=mongomock.MongoClient)
-
+    # Validate configuration
     if not mongodb_uri:
-        # If no URI provided, fallback to mongomock when available to avoid crashes in dev.
-        if mongomock is not None:
-            warnings.warn('MONGODB_URI not set — falling back to mongomock for development/testing')
-            return mongoengine.connect(db=mongodb_db or 'atmos_db', host='mongomock://localhost', mongo_client_class=mongomock.MongoClient)
         raise RuntimeError('MONGODB_URI not configured')
+    if not mongodb_db:
+        mongodb_db = 'atmos_db'
 
-    # First attempt: default connect
-    # Attempt normal connection, with a TLS + certifi retry on failure.
+    # Try to connect to MongoDB Atlas with SSL configuration for Windows
     try:
-        conn = mongoengine.connect(db=mongodb_db, host=mongodb_uri, connectTimeoutMS=connect_timeout_ms)
+        connect_kwargs = {
+            'db': mongodb_db,
+            'host': mongodb_uri,
+            'connectTimeoutMS': connect_timeout_ms,
+            'serverSelectionTimeoutMS': 5000,
+            # Use secure TLS with system CA bundle from certifi
+            'tls': True,
+            'retryWrites': False,
+        }
+        
+        if certifi:
+            # Provide certifi CA bundle for TLS verification
+            connect_kwargs['tlsCAFile'] = certifi.where()
+        
+        conn = mongoengine.connect(**connect_kwargs)
+        warnings.warn(f'✅ Connected to MongoDB Atlas: {mongodb_db}')
         return conn
-    except Exception as e_default:
-        # If certifi is available, retry with explicit TLS CA bundle
-        if certifi is not None:
+    except Exception as e_connection:
+        error_msg = str(e_connection).lower()
+        is_ssl_error = 'ssl' in error_msg or 'handshake' in error_msg or 'tls' in error_msg
+        
+        # Fallback to mongomock for Windows SSL issues
+        if is_ssl_error and mongomock is not None:
+            warnings.warn(
+                f'⚠️  MongoDB Atlas SSL connection failed (Windows compatibility issue). '
+                f'Using mongomock in-memory database.\n   Original error: {str(e_connection)[:80]}'
+            )
             try:
-                cafile = certifi.where()
                 conn = mongoengine.connect(
-                    db=mongodb_db,
-                    host=mongodb_uri,
-                    tls=True,
-                    tlsCAFile=cafile,
-                    connectTimeoutMS=connect_timeout_ms,
+                    db=mongodb_db or 'atmos_db',
+                    host='mongodb://localhost:27017',
+                    mongo_client_class=mongomock.MongoClient
                 )
+                warnings.warn('✅ mongomock initialized successfully as fallback')
                 return conn
-            except Exception as e_tls:
-                # If mongomock is available, fallback to it in dev
-                if mongomock is not None:
-                    warnings.warn(
-                        'Connection to MongoDB failed; falling back to mongomock for development/testing'
-                    )
-                    return mongoengine.connect(db=mongodb_db or 'atmos_db', host='mongomock://localhost', mongo_client_class=mongomock.MongoClient)
-                tb = traceback.format_exc()
-                raise RuntimeError(
-                    f"Failed to initialize mongoengine. Default error: {e_default!r}; TLS retry error: {e_tls!r}. Traceback: {tb}"
-                )
+            except Exception as e_mock:
+                raise RuntimeError(f"mongomock fallback also failed: {e_mock}")
         else:
-            # No certifi: if mongomock exists, fallback; otherwise bubble up.
-            if mongomock is not None:
-                warnings.warn('Default Mongo connection failed and certifi not available; using mongomock')
-                return mongoengine.connect(db=mongodb_db or 'atmos_db', host='mongomock://localhost', mongo_client_class=mongomock.MongoClient)
-            tb = traceback.format_exc()
-            raise RuntimeError(f"Failed to initialize mongoengine. Default error: {e_default!r}. Traceback: {tb}")
+            raise RuntimeError(f"MongoDB connection failed: {e_connection}")
