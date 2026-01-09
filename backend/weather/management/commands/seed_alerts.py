@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
+from users.documents import UserDocument, get_next_sequence
 from weather.documents import AlertDocument
 from datetime import datetime, timedelta
 
@@ -8,16 +8,16 @@ class Command(BaseCommand):
     help = "Seed sample alerts for testing session-gated persistence"
 
     def handle(self, *args, **options):
-        # Get or create test user
-        test_user, created = User.objects.get_or_create(
-            username='testuser',
-            defaults={
-                'email': 'testuser@example.com',
-                'first_name': 'Test',
-                'last_name': 'User'
-            }
-        )
-        
+        # Get or create test user in Mongo
+        test_user = UserDocument.objects(username='testuser').first()
+        created = False
+        if not test_user:
+            next_id = get_next_sequence('users')
+            test_user = UserDocument(id=next_id, username='testuser', email='testuser@example.com')
+            test_user.set_password('testpass123')
+            test_user.save()
+            created = True
+
         if created:
             test_user.set_password('testpass123')
             test_user.save()
