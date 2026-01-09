@@ -12,26 +12,24 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 import django
 django.setup()
 
-from django.contrib.auth.models import User
+from users.documents import UserDocument, get_next_sequence
 from weather.documents import AlertDocument
 from datetime import datetime, timedelta
 
 def seed_alerts():
     """Create sample alerts for testing."""
     
-    # Get or create test user
-    test_user, created = User.objects.get_or_create(
-        username='testuser',
-        defaults={
-            'email': 'testuser@example.com',
-            'first_name': 'Test',
-            'last_name': 'User'
-        }
-    )
-    
-    if created:
+    # Get or create test user in Mongo
+    test_user = UserDocument.objects(username='testuser').first()
+    created = False
+    if not test_user:
+        next_id = get_next_sequence('users')
+        test_user = UserDocument(id=next_id, username='testuser', email='testuser@example.com')
         test_user.set_password('testpass123')
         test_user.save()
+        created = True
+
+    if created:
         print(f"✓ Created test user: {test_user.username}")
     else:
         print(f"✓ Using existing test user: {test_user.username}")
