@@ -10,7 +10,7 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
-from users.documents import UserDocument
+from users.documents import UserDocument, get_next_sequence
 from weather.documents import AlertDocument
 from datetime import datetime
 
@@ -74,10 +74,12 @@ def test_alerts():
     
     # Test 4: Verify anonymous user gets no alerts (simulation)
     print("\n4. Testing alert filtering logic (simulated):")
-    another_user, _ = User.objects.get_or_create(
-        username='other_user',
-        defaults={'email': 'other@example.com'}
-    )
+    another_user = UserDocument.objects(username='other_user').first()
+    if not another_user:
+        next_id = get_next_sequence('users')
+        another_user = UserDocument(id=next_id, username='other_user', email='other@example.com')
+        another_user.set_password('password')
+        another_user.save()
     other_alerts = AlertDocument.objects(user_id=another_user.id)
     print(f"   ✓ Alerts for other user: {other_alerts.count()} (should be 0)")
     assert other_alerts.count() == 0, "Other user should have no alerts"
