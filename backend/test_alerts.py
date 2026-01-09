@@ -10,7 +10,7 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
-from django.contrib.auth.models import User
+from users.documents import UserDocument
 from weather.documents import AlertDocument
 from datetime import datetime
 
@@ -21,15 +21,18 @@ def test_alerts():
     print("TESTING ALERTS PERSISTENCE")
     print("=" * 60)
     
-    # Get or create test user
-    user, created = User.objects.get_or_create(
-        username='test_persist_user',
-        defaults={'email': 'persist@example.com'}
-    )
-    
-    if created:
+    # Get or create test user in Mongo
+    user = UserDocument.objects(username='test_persist_user').first()
+    created = False
+    if not user:
+        from users.documents import get_next_sequence
+        next_id = get_next_sequence('users')
+        user = UserDocument(id=next_id, username='test_persist_user', email='persist@example.com')
         user.set_password('password')
         user.save()
+        created = True
+
+    if created:
         print(f"\n✓ Created test user: {user.username} (id={user.id})")
     else:
         print(f"\n✓ Using existing test user: {user.username} (id={user.id})")
