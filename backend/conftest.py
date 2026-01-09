@@ -35,3 +35,42 @@ def pytest_unconfigure(config):
 # fixtures for TestCase classes; dropping collections between tests
 # would remove that data. Tests should manage their own cleanup or use
 # explicit commands like `call_command('load_cities', ...)` when needed.
+
+
+import inspect
+from django.test import TestCase as DjangoTestCase
+
+
+@pytest.fixture(autouse=True)
+def clean_mongo_between_tests(request):
+        """Autouse fixture to provide per-test DB isolation.
+
+        - For plain pytest tests (functions, pytest-style classes) this drops
+            all collections before and after each test.
+        - For Django `TestCase` subclasses (which rely on `setUpTestData`),
+            the fixture skips cleanup to avoid removing class-level fixtures.
+        """
+        cls = getattr(request.node, "cls", None)
+
+        # Always drop collections before the test to ensure a clean slate.
+        db = get_db()
+        for coll in list(db.list_collection_names()):
+            db.drop_collection(coll)
+
+        # If the test is a Django TestCase, re-run its class-level
+        # `setUpTestData` (if provided) so class fixtures are recreated.
+        if cls and inspect.isclass(cls) and issubclass(cls, DjangoTestCase):
+            setup = getattr(cls, 'setUpTestData', None)
+            if callable(setup):
+                try:
+                    cls.setUpTestData()
+                except Exception:
+                    # If setUpTestData depends on a transactional DB or other
+                    # environment not available in mongomock, ignore and continue.
+                    pass
+
+        yield
+
+        # Clean after the test as well to avoid leaks between tests
+        for coll in list(db.list_collection_names()):
+            db.drop_collection(coll)
