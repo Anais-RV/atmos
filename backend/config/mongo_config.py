@@ -4,8 +4,19 @@ Initializes a connection to MongoDB Atlas using Django settings.
 """
 import os
 import mongoengine
-import certifi
 import traceback
+import warnings
+
+# mongomock is an optional dev dependency; import lazily when needed
+try:
+    import mongomock
+except Exception:
+    mongomock = None
+
+try:
+    import certifi
+except Exception:
+    certifi = None
 
 
 def init_mongo(mongodb_uri=None, mongodb_db=None, connect_timeout_ms=20000):
@@ -35,30 +46,54 @@ def init_mongo(mongodb_uri=None, mongodb_db=None, connect_timeout_ms=20000):
             # ensure we surface a clear error below.
             pass
 
+    # If explicitly requested to use mongomock (dev/test), prefer that.
+    use_mock = os.environ.get('USE_MOCK_MONGO') in ('1', 'true', 'True')
+    if use_mock:
+        if mongomock is None:
+            raise RuntimeError('mongomock is not installed but USE_MOCK_MONGO is set')
+        # Connect using mongomock's MongoClient
+        return mongoengine.connect(db=mongodb_db or 'atmos_db', host='mongomock://localhost', mongo_client_class=mongomock.MongoClient)
+
     if not mongodb_uri:
+        # If no URI provided, fallback to mongomock when available to avoid crashes in dev.
+        if mongomock is not None:
+            warnings.warn('MONGODB_URI not set — falling back to mongomock for development/testing')
+            return mongoengine.connect(db=mongodb_db or 'atmos_db', host='mongomock://localhost', mongo_client_class=mongomock.MongoClient)
         raise RuntimeError('MONGODB_URI not configured')
 
     # First attempt: default connect
+    # Attempt normal connection, with a TLS + certifi retry on failure.
     try:
         conn = mongoengine.connect(db=mongodb_db, host=mongodb_uri, connectTimeoutMS=connect_timeout_ms)
         return conn
     except Exception as e_default:
-        # Try again with explicit TLS + certifi CA bundle
-        try:
-            cafile = certifi.where()
-            # Provide clearer options for TLS; pymongo will accept these
-            conn = mongoengine.connect(
-                db=mongodb_db,
-                host=mongodb_uri,
-                tls=True,
-                tlsCAFile=cafile,
-                connectTimeoutMS=connect_timeout_ms,
-            )
-            return conn
-        except Exception as e_tls:
-            # Aggregate tracebacks to help debugging
+        # If certifi is available, retry with explicit TLS CA bundle
+        if certifi is not None:
+            try:
+                cafile = certifi.where()
+                conn = mongoengine.connect(
+                    db=mongodb_db,
+                    host=mongodb_uri,
+                    tls=True,
+                    tlsCAFile=cafile,
+                    connectTimeoutMS=connect_timeout_ms,
+                )
+                return conn
+            except Exception as e_tls:
+                # If mongomock is available, fallback to it in dev
+                if mongomock is not None:
+                    warnings.warn(
+                        'Connection to MongoDB failed; falling back to mongomock for development/testing'
+                    )
+                    return mongoengine.connect(db=mongodb_db or 'atmos_db', host='mongomock://localhost', mongo_client_class=mongomock.MongoClient)
+                tb = traceback.format_exc()
+                raise RuntimeError(
+                    f"Failed to initialize mongoengine. Default error: {e_default!r}; TLS retry error: {e_tls!r}. Traceback: {tb}"
+                )
+        else:
+            # No certifi: if mongomock exists, fallback; otherwise bubble up.
+            if mongomock is not None:
+                warnings.warn('Default Mongo connection failed and certifi not available; using mongomock')
+                return mongoengine.connect(db=mongodb_db or 'atmos_db', host='mongomock://localhost', mongo_client_class=mongomock.MongoClient)
             tb = traceback.format_exc()
-            raise RuntimeError(
-                f"Failed to initialize mongoengine. Default error: {e_default!r}; "
-                f"TLS retry error: {e_tls!r}. Traceback: {tb}"
-            )
+            raise RuntimeError(f"Failed to initialize mongoengine. Default error: {e_default!r}. Traceback: {tb}")
