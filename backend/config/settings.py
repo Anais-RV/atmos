@@ -166,16 +166,14 @@ SIMPLE_JWT = {
 }
 
 # ------------------ MongoDB / MongoEngine ------------------
-# Leer URI y nombre de BD desde variables de entorno (o .env si usas python-decouple)
-MONGODB_URI = config('MONGODB_URI', default='mongodb+srv://sergiommadrid135_db_user:IxystWlTVdAwSY2m@cluster0.wcwgir0.mongodb.net/')
+# Use mongomock for development (reliable, no SSL issues)
+# Set MONGODB_USE_MOCK=False to use real MongoDB Atlas
+MONGODB_USE_MOCK = config('MONGODB_USE_MOCK', default=True, cast=bool)
+MONGODB_URI = config('MONGODB_URI', default='mongodb+srv://sergiomadrid135:sergiomadrid135@cluster0.loijxvu.mongodb.net/')
 MONGODB_DB = config('MONGODB_DB', default='atmos_db')
-# Use environment variable `MONGODB_URI` (recommended) and `MONGODB_DB`.
-# Example URI (Atlas):
-# mongodb+srv://<user>:<pass>@cluster0.mongodb.net/atmos_db?retryWrites=true&w=majority
 
-# Inicializar mongoengine automáticamente (ahora en users/apps.py UsersConfig.ready())
-# Se inicializa en users/apps.py para asegurar que ocurra después de que Django esté completamente configurado
-MONGOENGINE_ENABLED = False  # Se establece como True en users/apps.py si la inicialización es exitosa
+# Inicializar mongoengine en users/apps.py
+MONGOENGINE_ENABLED = False
 
 
 CORS_ALLOWED_ORIGINS = [
