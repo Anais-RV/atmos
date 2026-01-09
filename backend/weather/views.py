@@ -6,7 +6,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics
 from rest_framework.pagination import PageNumberPagination
-from django.db.models import Q
 
 from .prophet_service import build_prophet_forecast
 from .emblem_photos import select_emblem_photo
