@@ -10,7 +10,6 @@ import argparse
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
-from weather.models import City, WeatherObservation
 from weather.documents import CityDocument, WeatherObservationDocument
 from config.mongo_config import init_mongo
 
@@ -18,9 +17,9 @@ from config.mongo_config import init_mongo
 def migrate(limit=None):
     init_mongo()
 
-    # Cities
-    from django.db import connection
+    # Attempt to detect Django ORM source tables; if absent, skip migration.
     try:
+        from django.db import connection
         tables = connection.introspection.table_names()
     except Exception:
         tables = []

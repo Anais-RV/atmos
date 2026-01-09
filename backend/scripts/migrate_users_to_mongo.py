@@ -11,13 +11,22 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
-from users.models import User  # Django ORM model
 from users.documents import UserDocument, UserPreferencesDocument, TagDocument
 from config.mongo_config import init_mongo
 from decouple import config
 
+
 def migrate():
     init_mongo()
+    # This script previously migrated from Django ORM `users.models.User` to MongoDB.
+    # In a Mongo-only setup the source ORM may be absent; we exit early with guidance.
+    try:
+        # Attempt to import ORM model only to detect legacy DB presence
+        from users.models import User  # type: ignore
+    except Exception:
+        print('Django ORM `users.models.User` not available; skipping users migration.')
+        return
+
     qs = User.objects.all()
     total = qs.count()
     print(f'Migrating {total} users to MongoDB', flush=True)

@@ -13,19 +13,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
 from config.mongo_config import init_mongo
-try:
-    init_mongo()
-except Exception:
-    # If mongo is not configured, continue — models may be using the Django ORM.
-    pass
+init_mongo()
 
-# Try to import mongoengine documents first, fall back to Django models.
-use_mongo = False
-try:
-    from weather.documents import CityDocument, WeatherObservationDocument
-    use_mongo = True
-except Exception:
-    from weather.models import City as CityModel, WeatherObservation as WeatherObservationModel
+# Import mongoengine documents (mongo-only seed)
+from weather.documents import CityDocument, WeatherObservationDocument
+use_mongo = True
 
 # Crear ciudades
 cities_data = [
