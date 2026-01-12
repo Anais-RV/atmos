@@ -168,8 +168,8 @@ SIMPLE_JWT = {
 # ------------------ MongoDB / MongoEngine ------------------
 # Use mongomock for development (reliable, no SSL issues)
 # Set MONGODB_USE_MOCK=False to use real MongoDB Atlas
-MONGODB_USE_MOCK = config('MONGODB_USE_MOCK', default=True, cast=bool)
-MONGODB_URI = config('MONGODB_URI', default='mongodb+srv://sergiomadrid135:sergiomadrid135@cluster0.loijxvu.mongodb.net/')
+MONGODB_USE_MOCK = config('MONGODB_USE_MOCK', default=False, cast=bool)
+MONGODB_URI = config('MONGODB_URI', default='mongodb+srv://sergiomadrid135:sergiomadrid135@cluster0.loijxvu.mongodb.net/?appName=Cluster0')
 MONGODB_DB = config('MONGODB_DB', default='atmos_db')
 
 # Inicializar mongoengine en users/apps.py
