@@ -11,6 +11,9 @@
   flex-direction: column;
   gap: 1.5rem;
   align-items: center;
+  /* allow wrapping so cards never get pushed off-screen */
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* En tablet y superior: las dos tarjetas en fila */
@@ -35,6 +38,33 @@
   flex-direction: column;
   gap: 0.75rem;
   align-items: center;
+}
+
+/* Desktop and larger: allow three-up layout but wrap if viewport is too narrow */
+@media (min-width: 1024px) {
+  .chart-layout {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    padding-inline: clamp(1rem, 4vw, 2.5rem);
+  }
+
+  .chart-card-main,
+  .chart-card-summary {
+    /* fixed third width so three cards always fit in one row */
+    flex: 0 0 calc((100% - 2rem) / 3);
+    width: calc((100% - 2rem) / 3);
+    min-width: 0;
+    box-sizing: border-box;
+    margin: 0 0.5rem;
+  }
+}
+
+/* Tighter spacing on large desktops so three cards fit comfortably */
+@media (min-width: 1200px) {
+  .chart-layout { gap: clamp(1rem, 1.5vw, 1.5rem); padding-inline: 2rem; }
+  .chart-card-main, .chart-card-summary { margin: 0 0.6rem; }
 }
 
 /* Texto de cabecera ya lo dan .center-card-title y .center-card-text */
