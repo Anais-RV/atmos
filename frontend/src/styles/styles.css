@@ -241,6 +241,13 @@ body {
   margin-bottom: 1.5rem;
 }
 
+/* Smaller variant for center-card when using the full tag manager */
+.center-card-full {
+  max-width: 640px;         /* narrower than default, more compact */
+  aspect-ratio: 5 / 4;      /* slightly taller than 4/3 but smaller overall */
+  padding: 0.6rem;         /* smaller padding for compact look */
+}
+
 /* Asegurar que cards estén detrás del menú hamburguesa */
 @media (max-width: 767px) {
   .center-card-top,
