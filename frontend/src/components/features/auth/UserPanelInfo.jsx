@@ -8,8 +8,10 @@
  */
 
 // frontend/src/components/auth/UserPanelInfo.jsx
+import { useNavigate } from "react-router-dom";
 
 function UserPanelInfo() {
+  const navigate = useNavigate();
   // TODO: replace with real user data from backend / context
   const user = {
     name: "SuperKode",
@@ -31,6 +33,13 @@ function UserPanelInfo() {
 
 
       <div className="auth-user-actions">
+        <button
+          className="auth-button-secondary"
+          onClick={() => navigate('/tags')}
+        >
+          Mis etiquetas
+        </button>
+
         <button className="auth-button-secondary">
           Sign out
         </button>
