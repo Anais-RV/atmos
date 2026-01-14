@@ -4,7 +4,6 @@
  * Componentes principales:
  *  - BasePageLayout (layout general)
  *  - UserPanelInfo (información detallada del usuario: nombre, email, acciones)
- *  - TagManager (gestión de etiquetas personalizadas del usuario)
  * Feature/dominio: auth
  * Tipo: Página de panel (dashboard de usuario con botones de acción)
  */
@@ -13,7 +12,6 @@
 
 import BasePageLayout from "../components/layout/BasePageLayout";
 import UserPanelInfo from "../components/features/auth/UserPanelInfo";
-import TagManager from "../components/features/auth/TagManager";
 import { getTemperatureColor } from "../styles/temperatureColors";
 
 function UserPanelPage() {
@@ -72,10 +70,7 @@ function UserPanelPage() {
         </div>
       </section>
 
-      {/* Gestor de etiquetas personalizadas */}
-      <section className="center-card center-card-bottom">
-        <TagManager />
-      </section>
+  {/* Las etiquetas se gestionan ahora en la página /tags */}
     </BasePageLayout>
   );
 }
