@@ -3,6 +3,7 @@ import { getTemperatureColor } from "../styles/temperatureColors";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import PropTypes from 'prop-types';
 import { Trash2, Plus, Loader, AlertCircle, Edit2 } from "lucide-react";
+import { usePreferences } from '../context/usePreferences';
 import { tagsService } from "../services/tagsService";
 import "../styles/Tags.css";
 
@@ -30,6 +31,8 @@ function TagsPage() {
   const [modal, setModal] = useState({ open: false, mode: null, tag: null });
 
   const [selectedIds, setSelectedIds] = useState(new Set());
+  const { preferences } = usePreferences();
+  const theme = preferences?.theme || 'dark';
 
   const loadTags = useCallback(async () => {
     setLoading(true);
@@ -177,10 +180,10 @@ function TagsPage() {
       <section className="dashboard-center">
         {/* Banner showing currently editing/selected tag (subtle) */}
         {modal.open && modal.mode === 'edit' && modal.tag && (
-          <div className="tag-editing-banner">Editando: {modal.tag.name}</div>
+          <div className={`tag-editing-banner ${theme === 'dark' ? 'dark' : 'light'}`}>Editando: {modal.tag.name}</div>
         )}
 
-        <section className="center-card center-card-full">
+        <section className={`center-card center-card-full ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`}>
           <h2 className="center-card-title">Mis etiquetas</h2>
           <p className="center-card-text">Crea, edita y elimina tus etiquetas personalizadas</p>
 
