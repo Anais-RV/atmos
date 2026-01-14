@@ -5,15 +5,26 @@
   padding: 0.6rem;
 }
 
+/* Smooth transitions for theme toggles and interactions */
+.tag-manager-item,
+.tag-manager-tag-badge,
+.tag-create-action,
+.tag-create-color,
+.tag-editing-banner,
+.modal {
+  transition: background-color 220ms ease, color 220ms ease, transform 160ms ease, box-shadow 220ms ease;
+}
+
 .tag-create-bar {
   display: flex;
   gap: 0.75rem;
   align-items: center;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  padding: 0.5rem;
-  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  padding: 0.6rem;
+  border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.04);
   margin-bottom: 1rem;
+  backdrop-filter: blur(6px);
 }
 
 .tag-create-input {
@@ -24,6 +35,12 @@
   background: white;
   color: #0f172a; /* ensure high contrast text */
   box-shadow: 0 1px 2px rgba(16,24,40,0.03);
+}
+
+.tag-create-input:focus {
+  outline: none;
+  box-shadow: 0 6px 18px rgba(59,130,246,0.12);
+  border-color: rgba(59,130,246,0.6);
 }
 
 .tag-create-input::placeholder { color: #9ca3af; }
@@ -53,13 +70,16 @@
   background: linear-gradient(135deg,#3b82f6,#2563eb);
   color: white;
   border: none;
-  padding: 0.5rem 0.7rem;
-  border-radius: 8px;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  box-shadow: 0 8px 20px rgba(37,99,235,0.18);
 }
+
+.tag-create-action:hover { transform: translateY(-2px); }
 
 .tag-manager-header h2 {
   margin: 0 0 0.25rem 0;
@@ -110,12 +130,12 @@
 .tag-manager-item {
   background: linear-gradient(180deg, #ffffff, #fbfbfd);
   border: 1px solid rgba(16,24,40,0.04);
-  padding: 0.45rem;
-  border-radius: 10px;
+  padding: 0.45rem 0.6rem;
+  border-radius: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+  box-shadow: 0 6px 22px rgba(16,24,40,0.06);
   color: #0f172a; /* force readable text on the white card */
 }
 
@@ -127,13 +147,24 @@
   font-weight: 700;
   letter-spacing: -0.2px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.18);
+}
+
+.tag-manager-tag-badge {
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  padding: 0.35rem 0.65rem;
+  font-size: 0.95rem;
 }
 
 .tag-manager-button {
-  padding: 0.4rem 0.6rem;
-  border-radius: 6px;
-  border: none;
+  padding: 0.36rem 0.64rem;
+  border-radius: 999px;
+  border: 1px solid rgba(15,23,42,0.06);
+  background: rgba(15,23,42,0.04);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .tag-manager-button-small {
@@ -141,8 +172,36 @@
 }
 
 .tag-manager-button-danger {
-  background: #fee2e2;
+  background: rgba(254,226,226,0.6);
+  color: #7f1d1d;
 }
+
+.tag-manager-button-danger:hover { background: rgba(254,226,226,0.9); transform: translateY(-1px); }
+
+.tag-manager-tag-actions .tag-manager-button { min-width: 36px; height: 36px; border-radius: 8px; padding: 0; justify-content:center }
+.tag-manager-tag-actions .tag-manager-button svg { opacity: 0.95 }
+
+/* modern checkbox */
+.tag-manager-tag-display input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 2px solid rgba(15,23,42,0.2);
+  background: transparent;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+.tag-manager-tag-display input[type="checkbox"]:checked {
+  background: linear-gradient(135deg,#6366f1,#8b5cf6);
+  border-color: rgba(99,102,241,0.9);
+}
+
+/* delete icon circle */
+.tag-manager-button-danger { display:inline-flex; align-items:center; justify-content:center }
+.tag-manager-button-danger svg { color: #7f1d1d }
 
 .tag-manager-alert {
   padding: 0.5rem;
@@ -245,7 +304,7 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(2,6,23,0.5);
+  background: linear-gradient(180deg, rgba(2,6,23,0.45), rgba(2,6,23,0.6));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -253,15 +312,23 @@
 }
 .modal {
   background: var(--bg-card, #ffffff);
-  border-radius: 10px;
-  padding: 0.8rem;
-  width: 360px;
-  max-width: calc(100% - 32px);
-  box-shadow: 0 12px 40px rgba(2,6,23,0.25);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  width: 460px;
+  max-width: calc(100% - 40px);
+  box-shadow: 0 20px 50px rgba(2,6,23,0.35);
 }
-.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px }
-.modal-close { background: transparent; border:none; font-size:1.2rem; cursor:pointer }
-.modal-body { padding-top:4px }
+.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-bottom:4px; border-bottom: 1px solid rgba(15,23,42,0.04) }
+.modal-close { background: rgba(0,0,0,0.04); border:none; font-size:1.15rem; cursor:pointer; border-radius:8px; padding:4px 8px }
+.modal-close:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08) }
+.modal-body { padding-top:8px }
+
+.tag-form label { display:block; margin-bottom:6px; color:var(--text-secondary) }
+.tag-form .tag-create-input { width:100%; }
+
+@media (max-width: 520px) {
+  .modal { width: calc(100% - 32px); padding: 0.75rem }
+}
 
 /* Banner for currently editing tag */
 .tag-editing-banner {
@@ -287,6 +354,23 @@
 .tag-form .tag-create-input { width:100% }
 .tag-manager-button-success { background: linear-gradient(135deg,#10b981,#059669); color: #fff }
 .tag-manager-button-secondary { background: transparent; border: 1px solid rgba(15,23,42,0.06) }
+
+/* Theme variants */
+.theme-dark .tag-manager-container { background: transparent }
+.theme-dark .tag-manager-item { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.03); box-shadow: none }
+.theme-dark .tag-manager-tag-badge { box-shadow: 0 6px 16px rgba(15,23,42,0.35); color: #fff }
+.theme-dark .tag-create-action { background: linear-gradient(135deg,#3b82f6,#2563eb); }
+.theme-dark .toast { background: #081124; color: #e6eef6 }
+.theme-dark .tag-manager-alert { background: rgba(255,255,255,0.03); color: #f8e7e7 }
+
+.theme-light .tag-manager-alert { background: #fff1f2; color: #7f1d1d }
+
+.theme-light .tag-manager-container { background: transparent }
+.theme-light .tag-manager-item { background: #ffffff; border-color: #e6e7eb; box-shadow: 0 6px 18px rgba(16,24,40,0.04) }
+.theme-light .tag-manager-tag-badge { box-shadow: 0 4px 10px rgba(0,0,0,0.08); color: #fff }
+
+.tag-editing-banner.dark { background: rgba(255,255,255,0.04); color: var(--text-primary) }
+.tag-editing-banner.light { background: rgba(15,23,42,0.04); color: #0f172a }
 /* removed - use Tags.css */
 .tag-manager-container {
   max-width: 900px;
