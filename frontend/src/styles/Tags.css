@@ -1,0 +1,531 @@
+/* Canonical styles for Tags page */
+.tag-manager-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.tag-create-bar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding: 0.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.04);
+  margin-bottom: 1rem;
+}
+
+.tag-create-input {
+  flex: 1 1 auto;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: white;
+  box-shadow: 0 1px 2px rgba(16,24,40,0.03);
+}
+
+.tag-create-colors {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tag-create-color {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.tag-create-color.selected {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(59,130,246,0.14);
+  border-color: #fff;
+}
+
+.tag-create-action {
+  background: linear-gradient(135deg,#3b82f6,#2563eb);
+  color: white;
+  border: none;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.tag-manager-header h2 {
+  margin: 0 0 0.25rem 0;
+}
+
+.tag-manager-form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tag-manager-input {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.tag-manager-color-picker {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag-manager-color-option {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.tag-manager-color-option.selected {
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+  border-color: #ffffffaa;
+}
+
+.tag-manager-list {
+  margin-top: 1rem;
+}
+
+.tag-manager-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.9rem;
+}
+
+.tag-manager-item {
+  background: linear-gradient(180deg, #ffffff, #fbfbfd);
+  border: 1px solid rgba(16,24,40,0.04);
+  padding: 0.6rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+}
+
+.tag-manager-tag-badge {
+  display: inline-block;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.tag-manager-button {
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.tag-manager-button-small {
+  padding: 0.3rem 0.5rem;
+}
+
+.tag-manager-button-danger {
+  background: #fee2e2;
+}
+
+.tag-manager-alert {
+  padding: 0.5rem;
+  border-radius: 6px;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.tag-manager-alert-error {
+  background: #fff1f2;
+  color: #b91c1c;
+}
+
+.tag-manager-alert-success {
+  background: #f0fdf4;
+  color: #065f46;
+}
+
+.tag-manager-empty p {
+  color: #6b7280;
+}
+
+/* Toasts */
+.toast-root {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.12);
+  min-width: 220px;
+  max-width: 360px;
+  animation: toast-in 240ms ease;
+}
+
+.toast-success {
+  border-left: 4px solid #10b981;
+}
+
+.toast-body {
+  flex: 1 1 auto;
+}
+
+.toast-message {
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  font-size: 1.15rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+@keyframes toast-in {
+  from { transform: translateY(8px); opacity: 0 }
+  to { transform: translateY(0); opacity: 1 }
+}
+/* removed - use Tags.css */
+.tag-manager-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.tag-create-bar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding: 0.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.04);
+  margin-bottom: 1rem;
+}
+
+.tag-create-input {
+  flex: 1 1 auto;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: white;
+  box-shadow: 0 1px 2px rgba(16,24,40,0.03);
+}
+
+.tag-create-colors {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tag-create-color {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.tag-create-color.selected {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(59,130,246,0.14);
+  border-color: #fff;
+}
+
+.tag-create-action {
+  background: linear-gradient(135deg,#3b82f6,#2563eb);
+  color: white;
+  border: none;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+
+.tag-manager-header h2 {
+  margin: 0 0 0.25rem 0;
+}
+
+.tag-manager-form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tag-manager-input {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.tag-manager-color-picker {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag-manager-color-option {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.tag-manager-color-option.selected {
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+  border-color: #ffffffaa;
+}
+
+.tag-manager-list {
+  margin-top: 1rem;
+}
+
+.tag-manager-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.9rem;
+}
+
+.tag-manager-item {
+  background: linear-gradient(180deg, #ffffff, #fbfbfd);
+  border: 1px solid rgba(16,24,40,0.04);
+  padding: 0.6rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+}
+
+.tag-manager-tag-badge {
+  display: inline-block;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.tag-manager-button {
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.tag-manager-button-small {
+  padding: 0.3rem 0.5rem;
+}
+
+.tag-manager-button-danger {
+  background: #fee2e2;
+}
+
+.tag-manager-alert {
+  padding: 0.5rem;
+  border-radius: 6px;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.tag-manager-alert-error {
+  background: #fff1f2;
+  color: #b91c1c;
+}
+
+.tag-manager-alert-success {
+  background: #f0fdf4;
+  color: #065f46;
+}
+
+.tag-manager-empty p {
+  color: #6b7280;
+}
+
+/* Toasts */
+.toast-root {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.12);
+  min-width: 220px;
+  max-width: 360px;
+  animation: toast-in 240ms ease;
+}
+
+.toast-success {
+  border-left: 4px solid #10b981;
+}
+
+.toast-body {
+  flex: 1 1 auto;
+}
+
+.toast-message {
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  font-size: 1.15rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+@keyframes toast-in {
+  from { transform: translateY(8px); opacity: 0 }
+  to { transform: translateY(0); opacity: 1 }
+}
+/* Minimal styles for TagManager component */
+.tag-manager-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.tag-manager-header h2 {
+  margin: 0 0 0.25rem 0;
+}
+
+.tag-manager-form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tag-manager-input {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.tag-manager-color-picker {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag-manager-color-option {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.tag-manager-color-option.selected {
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+  border-color: #ffffffaa;
+}
+
+.tag-manager-list {
+  margin-top: 1rem;
+}
+
+.tag-manager-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.tag-manager-item {
+  background: #ffffff;
+  border: 1px solid #e6e7eb;
+  padding: 0.75rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tag-manager-tag-badge {
+  display: inline-block;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.tag-manager-button {
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.tag-manager-button-small {
+  padding: 0.3rem 0.5rem;
+}
+
+.tag-manager-button-danger {
+  background: #fee2e2;
+}
+
+.tag-manager-alert {
+  padding: 0.5rem;
+  border-radius: 6px;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.tag-manager-alert-error {
+  background: #fff1f2;
+  color: #b91c1c;
+}
+
+.tag-manager-alert-success {
+  background: #f0fdf4;
+  color: #065f46;
+}
