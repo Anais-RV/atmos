@@ -222,6 +222,10 @@ body {
   box-sizing: border-box;
 }
 
+.center-card, .center-card * {
+  transition: color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
+}
+
 /* Móvil: stack vertical sin aspect-ratio fijo */
 @media (max-width: 767px) {
   .center-card {
