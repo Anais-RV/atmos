@@ -14,7 +14,7 @@
 }
 
 /* En tablet y superior: las dos tarjetas en fila */
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .chart-layout {
     flex-direction: row;
     align-items: stretch;
@@ -57,13 +57,13 @@
   position: relative;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 640px) and (max-width: 767px) {
   .weather-chart-container {
     height: 350px;
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .weather-chart-container {
     height: 400px;
   }
@@ -168,7 +168,7 @@
 }
 
 /* En pantallas medianas y grandes, las 3 en fila */
-@media (min-width: 640px) {
+@media (min-width: 640px) and (max-width: 767px) {
   .chart-summary-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -204,7 +204,7 @@
   width: 100%;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 640px) and (max-width: 767px) {
   .chart-controls {
     flex-direction: row;
     justify-content: center;
@@ -220,7 +220,7 @@
   max-width: 100%;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 640px) and (max-width: 767px) {
   .chart-control-group {
     max-width: 200px;
   }
