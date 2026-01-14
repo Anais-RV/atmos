@@ -69,8 +69,6 @@ function UserPanelPage() {
           </div>
         </div>
       </section>
-
-  {/* Las etiquetas se gestionan ahora en la página /tags */}
     </BasePageLayout>
   );
 }
