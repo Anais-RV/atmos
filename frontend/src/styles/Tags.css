@@ -1,8 +1,8 @@
 /* Canonical styles for Tags page */
 .tag-manager-container {
-  max-width: 900px;
+  max-width: 600px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 0.6rem;
 }
 
 .tag-create-bar {
@@ -35,8 +35,8 @@
 }
 
 .tag-create-color {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   border-radius: 6px;
   border: 2px solid transparent;
   cursor: pointer;
@@ -110,8 +110,8 @@
 .tag-manager-item {
   background: linear-gradient(180deg, #ffffff, #fbfbfd);
   border: 1px solid rgba(16,24,40,0.04);
-  padding: 0.6rem;
-  border-radius: 12px;
+  padding: 0.45rem;
+  border-radius: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -121,12 +121,12 @@
 
 .tag-manager-tag-badge {
   display: inline-block;
-  padding: 0.45rem 0.75rem;
+  padding: 0.3rem 0.55rem;
   border-radius: 999px;
   color: #fff;
   font-weight: 700;
   letter-spacing: -0.2px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.06);
 }
 
 .tag-manager-button {
@@ -240,6 +240,53 @@
 .tag-manager-alert svg {
   color: #7f1d1d !important;
 }
+
+/* Modal styles */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+.modal {
+  background: var(--bg-card, #ffffff);
+  border-radius: 10px;
+  padding: 0.8rem;
+  width: 360px;
+  max-width: calc(100% - 32px);
+  box-shadow: 0 12px 40px rgba(2,6,23,0.25);
+}
+.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px }
+.modal-close { background: transparent; border:none; font-size:1.2rem; cursor:pointer }
+.modal-body { padding-top:4px }
+
+/* Banner for currently editing tag */
+.tag-editing-banner {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  z-index: 5;
+}
+
+.tag-manager-item.selected {
+  outline: 3px solid rgba(59,130,246,0.12);
+  transform: translateY(-2px);
+}
+
+.confirm-box p { margin: 0 }
+.tag-form label { display:block; margin-top:8px; font-size:0.85rem; color:var(--text-secondary) }
+.tag-form .tag-create-input { width:100% }
+.tag-manager-button-success { background: linear-gradient(135deg,#10b981,#059669); color: #fff }
+.tag-manager-button-secondary { background: transparent; border: 1px solid rgba(15,23,42,0.06) }
 /* removed - use Tags.css */
 .tag-manager-container {
   max-width: 900px;
