@@ -149,24 +149,36 @@ function CitySelector({ onCitySelect }) {
               >
                 Todas
               </button>
-              {Array.from(new Set(cities.map(c => c.comunidad_autonoma).filter(Boolean))).map(r => (
+              {/* Si hay región seleccionada, mostrar solo ese chip. Si no, mostrar todos */}
+              {selectedRegion ? (
                 <button
-                  key={r}
+                  key={selectedRegion}
                   type="button"
-                  className={`region-chip ${selectedRegion === r ? 'active' : ''}`}
+                  className="region-chip active"
                   onClick={() => {
-                    // toggle region filter and mirror it in the input
-                    setSelectedRegion(prev => {
-                      const next = prev === r ? '' : r
-                      setSearchTerm(next ? r : '')
-                      return next
-                    })
+                    setSelectedRegion('')
+                    setSearchTerm('')
                     setIsOpen(true)
                   }}
                 >
-                  {r}
+                  {selectedRegion} ✕
                 </button>
-              ))}
+              ) : (
+                Array.from(new Set(cities.map(c => c.comunidad_autonoma).filter(Boolean))).map(r => (
+                  <button
+                    key={r}
+                    type="button"
+                    className="region-chip"
+                    onClick={() => {
+                      setSelectedRegion(r)
+                      setSearchTerm(r)
+                      setIsOpen(true)
+                    }}
+                  >
+                    {r}
+                  </button>
+                ))
+              )}
             </div>
             {filteredCities.length > 0 ? (
               <ul className="city-list">
