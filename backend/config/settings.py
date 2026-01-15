@@ -159,6 +159,17 @@ REST_FRAMEWORK = {
     }
 }
 
+# Disable DRF throttling during local development (DEBUG=True) to avoid
+# ``429 Too Many Requests`` while testing. In production DEBUG should be False
+# and throttling will apply as configured above.
+if DEBUG:
+    REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"] = []
+    # Optionally increase rates in development instead of disabling entirely
+    REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = {
+        "user": "10000/hour",
+        "anon": "2000/hour",
+    }
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
