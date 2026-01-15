@@ -17,11 +17,7 @@ function CitySelector({ onCitySelect }) {
   const [cities, setCities] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCity, setSelectedCity] = useState(null)
-<<<<<<< HEAD
-  const [selectedCommunidad, setSelectedCommunidad] = useState(null)
-=======
   const [selectedRegion, setSelectedRegion] = useState('')
->>>>>>> beta
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
