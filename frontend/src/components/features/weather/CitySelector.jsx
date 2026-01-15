@@ -8,7 +8,7 @@
  *  - lucide-react (icono Search)
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Search } from 'lucide-react'
 import apiClient from '../../../services/apiClient'
 import './weather.css'
@@ -17,9 +17,11 @@ function CitySelector({ onCitySelect }) {
   const [cities, setCities] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCity, setSelectedCity] = useState(null)
+  const [selectedRegion, setSelectedRegion] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const wrapperRef = useRef(null)
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -41,12 +43,53 @@ function CitySelector({ onCitySelect }) {
     fetchCities()
   }, [])
 
+  // Cerrar el dropdown cuando se hace click fuera del componente
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => document.removeEventListener('mousedown', handleOutsideClick)
+  }, [])
+
   /**
    * Filtra las ciudades según el término de búsqueda
    */
-  const filteredCities = cities.filter(city =>
-    city.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredCities = (() => {
+    const q = searchTerm.trim().toLowerCase()
+    // Si hay filtro por región activo, devolver ciudades solo de esa región
+    if (selectedRegion) {
+      return cities
+        .filter(c => (c.comunidad_autonoma || '').toLowerCase() === selectedRegion.toLowerCase())
+        .sort((a, b) => a.name.localeCompare(b.name))
+    }
+
+    if (!q) return cities.sort((a, b) => a.name.localeCompare(b.name))
+
+    // 1) Si el término coincide con alguna comunidad (parcial), mostrar todas las ciudades de esas comunidades
+    const matchedRegions = Array.from(new Set(
+      cities
+        .map(c => c.comunidad_autonoma)
+        .filter(Boolean)
+        .filter(r => r.toLowerCase().includes(q))
+    ))
+
+    if (matchedRegions.length > 0) {
+      return cities
+        .filter(c => matchedRegions.includes(c.comunidad_autonoma))
+        .sort((a, b) => a.name.localeCompare(b.name))
+    }
+
+    // 2) si no hay regiones coincidentes, buscar por nombre o por comunidad en modo libre
+    return cities.filter(city => {
+      const matchesName = city.name.toLowerCase().includes(q)
+      const matchesRegion = (city.comunidad_autonoma || '').toLowerCase().includes(q)
+      return matchesName || matchesRegion
+    }).sort((a, b) => a.name.localeCompare(b.name))
+  })()
 
   /**
    * Maneja la selección de una ciudad
@@ -61,14 +104,19 @@ function CitySelector({ onCitySelect }) {
     // Luego seleccionamos la nueva ciudad
     setTimeout(() => {
       setSelectedCity(city)
-      setSearchTerm('')
+      // Mantener el texto de la comunidad si hay un filtro por región activo
+      if (selectedRegion) {
+        setSearchTerm(selectedRegion)
+      } else {
+        setSearchTerm('')
+      }
       setIsOpen(false)
       onCitySelect(city.id)
     }, 0)
   }
 
   return (
-    <div className="city-selector-wrapper">
+    <div className="city-selector-wrapper" ref={wrapperRef}>
       <div className="city-selector-container">
         {/* Input de búsqueda */}
         <div className="city-search-input-wrapper">
@@ -79,6 +127,8 @@ function CitySelector({ onCitySelect }) {
             placeholder="Buscar ciudad..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            readOnly={!!selectedRegion}
+            title={selectedRegion ? 'Filtrado por comunidad: ' + selectedRegion + ' — pulsa "Todas" para editar' : 'Buscar ciudad'}
             onFocus={() => setIsOpen(true)}
           />
         </div>
@@ -86,6 +136,50 @@ function CitySelector({ onCitySelect }) {
         {/* Dropdown de ciudades */}
         {isOpen && (
           <div className="city-dropdown">
+            {/* Chips de regiones (filtrado) */}
+            <div className="region-chips">
+              <button
+                className={`region-chip ${selectedRegion === '' ? 'active' : ''}`}
+                onClick={() => {
+                  setSelectedRegion('')
+                  setSearchTerm('')
+                  setIsOpen(true)
+                }}
+                type="button"
+              >
+                Todas
+              </button>
+              {/* Si hay región seleccionada, mostrar solo ese chip. Si no, mostrar todos */}
+              {selectedRegion ? (
+                <button
+                  key={selectedRegion}
+                  type="button"
+                  className="region-chip active"
+                  onClick={() => {
+                    setSelectedRegion('')
+                    setSearchTerm('')
+                    setIsOpen(true)
+                  }}
+                >
+                  {selectedRegion} ✕
+                </button>
+              ) : (
+                Array.from(new Set(cities.map(c => c.comunidad_autonoma).filter(Boolean))).map(r => (
+                  <button
+                    key={r}
+                    type="button"
+                    className="region-chip"
+                    onClick={() => {
+                      setSelectedRegion(r)
+                      setSearchTerm(r)
+                      setIsOpen(true)
+                    }}
+                  >
+                    {r}
+                  </button>
+                ))
+              )}
+            </div>
             {filteredCities.length > 0 ? (
               <ul className="city-list">
                 {filteredCities.map(city => (
@@ -107,6 +201,7 @@ function CitySelector({ onCitySelect }) {
           </div>
         )}
       </div>
+      
 
       {/* Ciudad seleccionada mostrada como tag */}
       {selectedCity && (
@@ -117,6 +212,8 @@ function CitySelector({ onCitySelect }) {
             onClick={() => {
               setSelectedCity(null)
               setSearchTerm('')
+              setIsOpen(false)
+              if (typeof onCitySelect === 'function') onCitySelect(null)
             }}
             title="Limpiar selección"
           >
