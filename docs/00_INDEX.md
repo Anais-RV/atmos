@@ -4,6 +4,8 @@
 
 Esta es tu guía para empezar y trabajar en el proyecto. Lee los documentos **en este orden** 👇
 
+> **📌 Nota importante:** El proyecto está ahora en **Fase 2 (v2.0)**, desarrollándose en la rama `beta` por un grupo reducido de estudiantes. Si te incorporas ahora, trabajarás sobre esta versión mejorada con MongoDB, UX optimizada y nuevas funcionalidades.
+
 ---
 
 ## 🚀 Empieza aquí (orden recomendado)
@@ -13,7 +15,7 @@ Esta es tu guía para empezar y trabajar en el proyecto. Lee los documentos **en
 
 **Léelo primero**. Te enseña a:
 - Instalar el proyecto en tu máquina
-- Arrancar backend y frontend
+- Arrancar backend y frontend  
 - Comandos básicos que usarás cada día
 
 **¿Cuándo leerlo?** → Ahora mismo, antes de tocar nada.
@@ -24,12 +26,15 @@ Esta es tu guía para empezar y trabajar en el proyecto. Lee los documentos **en
 ⏱️ 10 minutos
 
 **Léelo antes de hacer tu primer commit**. Te explica:
+- **Rama de destino** (`beta` para v2.0, `dev` para v1.0 hotfixes)
 - Cómo crear ramas (feat/...)
 - Formato de commits
 - Cómo abrir un Pull Request
 - Dónde poner cada archivo (backend/frontend)
 
 **¿Cuándo leerlo?** → Antes de empezar a programar.
+
+**⚠️ Importante:** Las PRs ahora van a `beta` (no a `dev`), salvo hotfixes críticos de v1.0.
 
 ---
 
@@ -51,7 +56,7 @@ Esta es tu guía para empezar y trabajar en el proyecto. Lee los documentos **en
 | Documento | ¿Cuándo? | ¿Para qué? |
 |-----------|----------|------------|
 | **INICIO_RAPIDO.md** | **Ahora** | Setup del proyecto |
-| **GUIA_CONTRIBUCION.md** | **Antes de programar** | Aprender el flujo de trabajo |
+| **GUIA_CONTRIBUCION.md** | **Antes de programar** | Aprender el flujo de trabajo (¡incluye info de `beta`!) |
 | **FAQ.md** | **Cuando tengas dudas** | Resolver problemas |
 
 ---
@@ -65,7 +70,8 @@ Antes de programar, asegúrate de haber hecho esto:
 - [ ] El backend arranca en http://127.0.0.1:8000
 - [ ] El frontend arranca en http://localhost:5173
 - [ ] Leí [GUIA_CONTRIBUCION.md](./GUIA_CONTRIBUCION.md)
-- [ ] Sé cómo crear una rama `feat/`
+- [ ] **Sé que debo hacer PRs a `beta` (v2.0)**
+- [ ] Sé cómo crear una rama `feat/` desde `beta`
 - [ ] Tengo el [FAQ.md](./FAQ.md) a mano por si algo falla
 
 **✅ ¿Quieres verificar que todo funciona?** → Usa [../VERIFICAR.md](../VERIFICAR.md)
