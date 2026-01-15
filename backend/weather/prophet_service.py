@@ -3,7 +3,7 @@ from typing import List, Dict
 import pandas as pd
 from prophet import Prophet
 
-from .models import WeatherObservation
+from .documents import WeatherObservationDocument
 
 
 def build_prophet_forecast(
@@ -12,18 +12,17 @@ def build_prophet_forecast(
     freq: str = "H",
 ) -> List[Dict]:
     qs = (
-        WeatherObservation.objects
-        .filter(city_id=city_id)
+        WeatherObservationDocument.objects(city_id=city_id)
         .order_by("timestamp")
+        .only("timestamp", "temperature")
     )
 
-    if not qs.exists():
+    # Convertir a lista de registros
+    records = [{"timestamp": o.timestamp, "temperature": getattr(o, "temperature", None)} for o in qs]
+    if not records:
         return []
 
-    df = pd.DataFrame.from_records(
-        qs.values("timestamp", "temperature"),
-        columns=["timestamp", "temperature"],
-    )
+    df = pd.DataFrame.from_records(records, columns=["timestamp", "temperature"])
 
     # Prophet espera ds (fecha) y y (valor)
     df.rename(columns={"timestamp": "ds", "temperature": "y"}, inplace=True)

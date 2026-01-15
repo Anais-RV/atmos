@@ -1,6 +1,7 @@
 /**
  * Componente: CitySelector
- * Propósito: Selector desplegable de ciudades con campo de búsqueda y lista filtrable.
+ * Propósito: Selector desplegable de ciudades con filtro por comunidad autónoma.
+ * Usa: Primero mostrar comunidades, luego ciudades filtradas por comunidad.
  * Uso:
  *  - WeatherInfo.jsx (usado internamente para cambiar de ciudad)
  * Dependencias:
@@ -10,14 +11,17 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Search } from 'lucide-react'
-import apiClient from '../../../services/apiClient'
 import './weather.css'
 
 function CitySelector({ onCitySelect }) {
   const [cities, setCities] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCity, setSelectedCity] = useState(null)
+<<<<<<< HEAD
+  const [selectedCommunidad, setSelectedCommunidad] = useState(null)
+=======
   const [selectedRegion, setSelectedRegion] = useState('')
+>>>>>>> beta
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -28,9 +32,13 @@ function CitySelector({ onCitySelect }) {
       setLoading(true)
       setError(null)
       try {
-        const data = await apiClient('/api/weather/cities/')
+        const response = await fetch('/api/weather/cities/')
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}`)
+        }
+        const data = await response.json()
         // La API devuelve un array de todas las ciudades
-        setCities(Array.isArray(data) ? data : [])
+        setCities(Array.isArray(data) ? data : (data.results || []))
       } catch (err) {
         console.error('Error al cargar ciudades:', err)
         setError('Error al cargar ciudades')
@@ -56,8 +64,49 @@ function CitySelector({ onCitySelect }) {
   }, [])
 
   /**
-   * Filtra las ciudades según el término de búsqueda
+   * Obtiene comunidades autónomas únicas ordenadas alfabéticamente
    */
+<<<<<<< HEAD
+  const getComunidades = () => {
+    const comunidades = new Set()
+    cities.forEach(city => {
+      if (city.comunidad_autonoma) {
+        comunidades.add(city.comunidad_autonoma)
+      }
+    })
+    return Array.from(comunidades).sort()
+  }
+
+  /**
+   * Filtra ciudades por comunidad autónoma y término de búsqueda
+   */
+  const getFilteredCities = () => {
+    let filtered = cities
+
+    // Filtrar por comunidad autónoma si está seleccionada
+    if (selectedCommunidad) {
+      filtered = filtered.filter(city => city.comunidad_autonoma === selectedCommunidad)
+    }
+
+    // Filtrar por término de búsqueda
+    const normalizedSearch = searchTerm.trim().toLowerCase()
+    if (normalizedSearch) {
+      filtered = filtered.filter(city =>
+        ((city && city.name) || '').toLowerCase().includes(normalizedSearch)
+      )
+    }
+
+    return filtered
+  }
+
+  /**
+   * Maneja la selección de una comunidad autónoma
+   */
+  const handleSelectCommunidad = (comunidad) => {
+    setSelectedCommunidad(comunidad)
+    setSearchTerm('')
+  }
+=======
   const filteredCities = (() => {
     const q = searchTerm.trim().toLowerCase()
     // Si hay filtro por región activo, devolver ciudades solo de esa región
@@ -90,30 +139,37 @@ function CitySelector({ onCitySelect }) {
       return matchesName || matchesRegion
     }).sort((a, b) => a.name.localeCompare(b.name))
   })()
+>>>>>>> beta
 
   /**
    * Maneja la selección de una ciudad
    */
   const handleSelectCity = (city) => {
-    // Si ya hay una ciudad seleccionada, primero la limpiamos
     if (selectedCity) {
       setSelectedCity(null)
       setSearchTerm('')
     }
     
-    // Luego seleccionamos la nueva ciudad
     setTimeout(() => {
       setSelectedCity(city)
+<<<<<<< HEAD
+      setSearchTerm('')
+      setSelectedCommunidad(null)
+=======
       // Mantener el texto de la comunidad si hay un filtro por región activo
       if (selectedRegion) {
         setSearchTerm(selectedRegion)
       } else {
         setSearchTerm('')
       }
+>>>>>>> beta
       setIsOpen(false)
       onCitySelect(city.id)
     }, 0)
   }
+
+  const comunidades = getComunidades()
+  const filteredCities = getFilteredCities()
 
   return (
     <div className="city-selector-wrapper" ref={wrapperRef}>
@@ -133,9 +189,36 @@ function CitySelector({ onCitySelect }) {
           />
         </div>
 
-        {/* Dropdown de ciudades */}
+        {/* Dropdown: Comunidades o Ciudades filtradas */}
         {isOpen && (
           <div className="city-dropdown">
+<<<<<<< HEAD
+            {loading ? (
+              <div className="city-loading">Cargando ciudades…</div>
+            ) : error ? (
+              <div className="city-error">{error}</div>
+            ) : !selectedCommunidad ? (
+              // Mostrar comunidades autónomas
+              comunidades.length > 0 ? (
+                <>
+                  <div className="city-section-title">Comunidades Autónomas</div>
+                  <ul className="city-list">
+                    {comunidades.map(comunidad => (
+                      <li key={comunidad} className="city-item">
+                        <button
+                          className="city-button"
+                          onClick={() => handleSelectCommunidad(comunidad)}
+                        >
+                          {comunidad}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <div className="city-no-results">No hay comunidades disponibles</div>
+              )
+=======
             {/* Chips de regiones (filtrado) */}
             <div className="region-chips">
               <button
@@ -193,10 +276,39 @@ function CitySelector({ onCitySelect }) {
                   </li>
                 ))}
               </ul>
+>>>>>>> beta
             ) : (
-              <div className="city-no-results">
-                No se encontraron ciudades
-              </div>
+              // Mostrar ciudades de la comunidad seleccionada
+              <>
+                <div className="city-section-header">
+                  <button
+                    className="city-back-button"
+                    onClick={() => {
+                      setSelectedCommunidad(null)
+                      setSearchTerm('')
+                    }}
+                  >
+                    ← Volver
+                  </button>
+                  <span className="city-section-title">{selectedCommunidad}</span>
+                </div>
+                {filteredCities.length > 0 ? (
+                  <ul className="city-list">
+                    {filteredCities.map(city => (
+                      <li key={city.id} className="city-item">
+                        <button
+                          className={`city-button ${selectedCity?.id === city.id ? 'active' : ''}`}
+                          onClick={() => handleSelectCity(city)}
+                        >
+                          {city.name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="city-no-results">No se encontraron ciudades</div>
+                )}
+              </>
             )}
           </div>
         )}

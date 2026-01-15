@@ -172,27 +172,48 @@
   color: var(--text-secondary);
   cursor: pointer;
   font-size: 0.9rem;
-  transition: all 0.15s ease;
-}
+  .city-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0;
+  }
 
-.city-button:hover {
-  background-color: var(--button-secondary-bg);
-  color: var(--text-primary);
-}
+  .city-item {
+    display: flex;
+  }
 
-.city-button.active {
-  background-color: var(--button-secondary-bg);
-  color: var(--accent-primary);
-  font-weight: 500;
-}
+  .city-section-title {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    background-color: var(--button-secondary-bg);
+  }
 
-.city-no-results {
-  padding: 1rem;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-}
+  .city-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--button-secondary-bg);
+    border-bottom: 1px solid var(--border-light);
+  }
 
+<<<<<<< HEAD
+  .city-back-button {
+    background: none;
+    border: none;
+    color: var(--accent-primary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    transition: opacity 0.15s ease;
+    flex-shrink: 0;
+  }
+=======
 /* Region chips inside dropdown */
 .region-chips {
   display: flex;
@@ -237,41 +258,72 @@
   font-weight: 500;
   transition: background-color 0.3s ease;
 }
+>>>>>>> beta
 
-.city-tag-close {
-  background: none;
-  border: none;
-  color: var(--accent-primary);
-  cursor: pointer;
-  font-size: 1.2rem;
-  padding: 0;
-  margin-left: 0.25rem;
-  line-height: 1;
-  transition: opacity 0.15s ease;
-}
+  .city-back-button:hover {
+    opacity: 0.8;
+  }
 
-.city-tag-close:hover {
-  opacity: 0.7;
-}
+  .city-button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 0.6rem 1rem;
+    text-align: left;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.15s ease;
+  }
 
-/* ===== Loading State ===== */
-.weather-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 2rem 1rem;
-  color: var(--text-secondary);
-}
+  .city-button:hover {
+    background-color: var(--button-secondary-bg);
+    color: var(--text-primary);
+  }
 
-.weather-spinner {
-  animation: spin 1s linear infinite;
-  color: var(--accent-primary);
-}
+  .city-button.active {
+    background-color: var(--button-secondary-bg);
+    color: var(--accent-primary);
+    font-weight: 500;
+  }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
+  .city-no-results {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+  }
+
+  /* Selected city tag */
+  .selected-city-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--button-secondary-bg);
+    border: 1px solid var(--accent-primary);
+    border-radius: 999px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    color: var(--accent-primary);
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  .city-tag-close {
+    background: none;
+    border: none;
+    color: var(--accent-primary);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    margin-left: 0.25rem;
+    line-height: 1;
+    transition: opacity 0.15s ease;
+  }
+
+  .city-tag-close:hover {
+    opacity: 0.7;
+  }
   to { transform: rotate(360deg); }
 }
 

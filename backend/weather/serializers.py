@@ -1,24 +1,21 @@
 from rest_framework import serializers
-from .models import City, WeatherObservation
 
 
-class CitySerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = City
-        fields = ['id', 'name', 'latitud', 'longitud', 'altitud', 'comunidad_autonoma']
-        read_only_fields = ['id', 'name', 'latitud', 'longitud', 'altitud', 'comunidad_autonoma']
+class CitySerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    latitud = serializers.FloatField()
+    longitud = serializers.FloatField()
+    altitud = serializers.FloatField(allow_null=True)
+    comunidad_autonoma = serializers.CharField(allow_null=True)
 
 
-class WeatherObservationSerializer(serializers.ModelSerializer):
-    city_name = serializers.SerializerMethodField()
-    
-    class Meta:
-        model = WeatherObservation
-        fields = ['id', 'city', 'city_name', 'temperature', 'timestamp']
-    
-    def get_city_name(self, obj):
-        return obj.city.name if obj.city else None
+class WeatherObservationSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=False)
+    city_id = serializers.IntegerField()
+    city_name = serializers.CharField(required=False, allow_null=True)
+    temperature = serializers.FloatField(allow_null=True)
+    timestamp = serializers.DateTimeField()
 
 
 class CurrentWeatherSerializer(serializers.Serializer):

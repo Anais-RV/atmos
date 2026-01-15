@@ -65,17 +65,23 @@ export const PreferencesProvider = ({ children }) => {
 
   const setLanguage = useCallback((language) => {
     setPreferences((prev) => ({ ...prev, language }));
-    updatePreferences({ ...preferences, language });
+    updatePreferences({ ...preferences, language }).catch((err) => {
+      console.error('Error updating language:', err);
+    });
   }, [preferences, updatePreferences]);
 
   const setTheme = useCallback((theme) => {
     setPreferences((prev) => ({ ...prev, theme }));
-    updatePreferences({ ...preferences, theme });
+    updatePreferences({ ...preferences, theme }).catch((err) => {
+      console.error('Error updating theme:', err);
+    });
   }, [preferences, updatePreferences]);
 
   const setFavoriteStation = useCallback((favorite_station) => {
     setPreferences((prev) => ({ ...prev, favorite_station }));
-    updatePreferences({ ...preferences, favorite_station });
+    updatePreferences({ ...preferences, favorite_station }).catch((err) => {
+      console.error('Error updating favorite station:', err);
+    });
   }, [preferences, updatePreferences]);
 
   const value = {

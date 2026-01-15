@@ -10,10 +10,11 @@
 // frontend/src/components/features/auth/LoginForm.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import authService from "../../../services/authService";
+import { useAuth } from "../../../context/AuthContext";
 
 function LoginForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -36,7 +37,7 @@ function LoginForm() {
     setLoading(true);
 
     try {
-      await authService.login(formData.email, formData.password);
+      await login(formData.email, formData.password);
       navigate('/user-panel');
     } catch (err) {
       setError(err.message || 'Error al iniciar sesión');
