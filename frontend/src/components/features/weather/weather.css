@@ -8,6 +8,7 @@
   margin: 0 auto;
   padding: 1.5rem 1.25rem;
   border-radius: 1.25rem;
+  overflow: hidden; /* recorta elementos hijos (dropdown) dentro del card */
   border: 1px solid var(--border-light);
   background-color: var(--bg-secondary);
   box-shadow: var(--shadow-medium);
@@ -95,6 +96,44 @@
   color: var(--text-secondary);
 }
 
+.city-search-input[readonly] {
+  cursor: default;
+  opacity: 0.95;
+  background: transparent;
+}
+
+/* Estilos para el selector de comunidad/autónoma */
+.region-select-wrapper {
+  display: block;
+}
+
+.region-select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: transparent;
+  border: 1px solid var(--border-light);
+  border-radius: 0.75rem;
+  padding: 0.45rem 0.7rem;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  background: var(--bg-secondary);
+  cursor: pointer;
+}
+
+.region-select:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--button-secondary-bg);
+}
+
+.region-select option {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
 /* Dropdown */
 .city-dropdown {
   position: absolute;
@@ -105,10 +144,12 @@
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
   border-radius: 0.75rem;
-  max-height: 300px;
+  /* Limitar la altura para que la lista no sobresalga y permitir scroll */
+  max-height: 220px;
   overflow-y: auto;
   z-index: 10;
-  box-shadow: var(--shadow-light);
+  /* Sombra externa ligera + sombras internas para dar sensación de contención */
+  box-shadow: var(--shadow-light), inset 0 10px 14px rgba(0,0,0,0.25), inset 0 -10px 12px rgba(0,0,0,0.12);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -160,6 +201,7 @@
     border-bottom: 1px solid var(--border-light);
   }
 
+<<<<<<< HEAD
   .city-back-button {
     background: none;
     border: none;
@@ -171,6 +213,52 @@
     transition: opacity 0.15s ease;
     flex-shrink: 0;
   }
+=======
+/* Region chips inside dropdown */
+.region-chips {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.region-chip {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.region-chip:hover {
+  background: rgba(255,255,255,0.02);
+  color: var(--text-primary);
+}
+
+.region-chip.active {
+  background: var(--button-secondary-bg);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+/* Selected city tag */
+.selected-city-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--button-secondary-bg);
+  border: 1px solid var(--accent-primary);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  color: var(--accent-primary);
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+>>>>>>> beta
 
   .city-back-button:hover {
     opacity: 0.8;

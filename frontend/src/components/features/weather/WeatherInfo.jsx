@@ -110,7 +110,15 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
    */
   const fetchWeatherData = async (id) => {
     if (!id) {
-      setError('Por favor selecciona una ciudad')
+      // Si se pasa null/undefined, limpiar los datos mostrados
+      setCityId(null)
+      setCityName('')
+      setTemperature(null)
+      setFeelsLike(null)
+      setCondition('')
+      setError(null)
+      // Notificar al padre para actualizar componentes dependientes (ej. SunriseSunset)
+      if (onCityChange) onCityChange(null)
       return
     }
 
