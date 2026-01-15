@@ -29,6 +29,9 @@ function TagsPage() {
 
   // modal state: { open: boolean, mode: 'create'|'edit'|'delete', tag: object|null }
   const [modal, setModal] = useState({ open: false, mode: null, tag: null });
+  const [creating, setCreating] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   const [selectedIds, setSelectedIds] = useState(new Set());
   const { preferences } = usePreferences();
@@ -81,7 +84,8 @@ function TagsPage() {
 
 
   const startEdit = useCallback((tag) => {
-    setModal({ open: true, mode: "edit", tag });
+    // open inline editor for this tag
+    setEditingId(tag.id);
   }, []);
 
   const saveEdit = useCallback(
@@ -108,7 +112,8 @@ function TagsPage() {
   );
 
   const cancelEdit = useCallback(() => {
-    setModal({ open: false, mode: null, tag: null });
+  setModal({ open: false, mode: null, tag: null });
+  setEditingId(null);
   }, []);
 
   const deleteTag = useCallback(
@@ -132,6 +137,14 @@ function TagsPage() {
 
   const openModal = useCallback((mode, tag = null) => setModal({ open: true, mode, tag }), []);
   const closeModal = useCallback(() => setModal({ open: false, mode: null, tag: null }), []);
+
+  const startDelete = useCallback((tag) => {
+    setDeletingId(tag.id);
+  }, []);
+
+  const cancelDelete = useCallback(() => {
+    setDeletingId(null);
+  }, []);
 
   const toggleSelect = useCallback((id) => {
     setSelectedIds((s) => {
@@ -175,6 +188,31 @@ function TagsPage() {
 
   const sorted = useMemo(() => [...tags].sort((a, b) => a.name.localeCompare(b.name)), [tags]);
 
+  // add/remove a class on body when modal opens so fixed-level modals can be
+  // targeted reliably. Also add a dark variant when theme is dark.
+  useEffect(() => {
+    try {
+      const body = document?.body;
+      if (!body) return;
+      const rootCls = 'modal-root';
+      const darkCls = 'modal-root-dark';
+      if (modal.open) {
+        body.classList.add(rootCls);
+        if (theme === 'dark') body.classList.add(darkCls);
+        else body.classList.remove(darkCls);
+      } else {
+        body.classList.remove(rootCls);
+        body.classList.remove(darkCls);
+      }
+      return () => {
+        body.classList.remove(rootCls);
+        body.classList.remove(darkCls);
+      };
+    } catch (e) {
+      // ignore in non-DOM environments
+    }
+  }, [modal.open, theme]);
+
   return (
     <BasePageLayout title="Mis etiquetas" description="Gestiona tus etiquetas" containerColor={containerColor}>
       <section className="dashboard-center">
@@ -198,12 +236,19 @@ function TagsPage() {
               )}
 
               <div className="tag-create-bar">
-                <button className="tag-create-action" onClick={() => openModal('create')} aria-label="Crear etiqueta">
+                <button className="tag-create-action" onClick={() => setCreating(true)} aria-label="Crear etiqueta">
                   <Plus size={16} /> Crear etiqueta
                 </button>
                 <div style={{ flex: 1 }} />
                 <button className="tag-manager-button" onClick={() => openModal('select')}>Seleccionar etiquetas</button>
               </div>
+
+              {/* Inline create form (replaces popup) */}
+              {creating && (
+                <div className="tag-create-inline">
+                  <TagForm theme={theme} initial={{ name: '', color: TAG_COLORS[0] }} onCancel={() => setCreating(false)} onConfirm={async (payload) => { const ok = await createTag(payload); if (ok) setCreating(false); }} />
+                </div>
+              )}
 
               <div className="tag-manager-list">
                 {loading && !sorted.length ? (
@@ -218,11 +263,41 @@ function TagsPage() {
                           <input type="checkbox" checked={selectedIds.has(tag.id)} readOnly />
                           <span className="tag-manager-tag-badge" style={{ backgroundColor: tag.color, marginLeft: 8 }}>{tag.name}</span>
                         </div>
+
+                        {/* Inline editor area: if this tag is being edited, render TagForm here */}
+                        {editingId === tag.id ? (
+                          <div className="tag-inline-editor">
+                            <TagForm
+                              theme={theme}
+                              initial={{ id: tag.id, name: tag.name, color: tag.color }}
+                              onCancel={() => setEditingId(null)}
+                              onConfirm={async (payload) => {
+                                const ok = await saveEdit(payload);
+                                if (ok) setEditingId(null);
+                              }}
+                            />
+                          </div>
+                        ) : null}
+
                         <div className="tag-manager-tag-actions">
                           <button className="tag-manager-button tag-manager-button-small tag-manager-button-secondary" onClick={() => startEdit(tag)} aria-label={`Editar ${tag.name}`}><Edit2 size={14} />
                           </button>
-                          <button className="tag-manager-button tag-manager-button-small tag-manager-button-danger" onClick={() => openModal('delete', tag)} aria-label={`Eliminar ${tag.name}`}><Trash2 size={14} /></button>
+                          <button className="tag-manager-button tag-manager-button-small tag-manager-button-danger" onClick={() => startDelete(tag)} aria-label={`Eliminar ${tag.name}`}><Trash2 size={14} /></button>
                         </div>
+
+                        {/* Inline delete confirm: if this tag is pending delete, show ConfirmBox */}
+                        {deletingId === tag.id ? (
+                          <div className="tag-inline-delete">
+                            <ConfirmBox
+                              message={`¿Eliminar etiqueta "${tag.name}"?`}
+                              onCancel={() => setDeletingId(null)}
+                              onConfirm={async () => {
+                                const ok = await deleteTag(tag.id);
+                                if (ok) setDeletingId(null);
+                              }}
+                            />
+                          </div>
+                        ) : null}
                       </article>
                     ))}
                   </div>
@@ -238,27 +313,10 @@ function TagsPage() {
                 )}
               </div>
 
-              {/* Modals */}
-              {modal.open && modal.mode === 'create' && (
-                <Modal onClose={closeModal} title="Crear etiqueta">
-                  <TagForm initial={{ name: '', color: TAG_COLORS[0] }} onCancel={closeModal} onConfirm={async (payload) => { const ok = await createTag(payload); if (ok) closeModal(); }} />
-                </Modal>
-              )}
-
-              {modal.open && modal.mode === 'edit' && modal.tag && (
-                <Modal onClose={closeModal} title={`Editar ${modal.tag.name}`}>
-                  <TagForm initial={{ id: modal.tag.id, name: modal.tag.name, color: modal.tag.color }} onCancel={() => { cancelEdit(); closeModal(); }} onConfirm={async (payload) => { const ok = await saveEdit(payload); if (ok) closeModal(); }} />
-                </Modal>
-              )}
-
-              {modal.open && modal.mode === 'delete' && modal.tag && (
-                <Modal onClose={closeModal} title={`Eliminar ${modal.tag.name}`}>
-                  <ConfirmBox message={`¿Eliminar etiqueta "${modal.tag.name}"?`} onCancel={closeModal} onConfirm={async () => { const ok = await deleteTag(modal.tag.id); if (ok) closeModal(); }} />
-                </Modal>
-              )}
+              {/* Inline edit/delete handling. Keep the select modal for batch actions. */}
 
               {modal.open && modal.mode === 'select' && (
-                <Modal onClose={closeModal} title={`Seleccionar etiquetas (${selectedIds.size})`}>
+                <Modal onClose={closeModal} title={`Seleccionar etiquetas (${selectedIds.size})`} theme={theme} embedded={true}>
                   <ConfirmApply count={selectedIds.size} onCancel={closeModal} onConfirm={async () => { const ok = await batchDeleteSelected(); if (ok) closeModal(); }} />
                 </Modal>
               )}
@@ -273,11 +331,46 @@ function TagsPage() {
 export default TagsPage;
 
 /* Small local UI components */
-function Modal({ children, onClose, title }) {
+function Modal({ children, onClose, title, theme, embedded = false }) {
+  let dark = theme === 'dark';
+  try {
+    // also detect document/body classes in case theme prop is stale
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      const body = document.body;
+      if (root && root.classList.contains('theme-dark')) dark = true;
+      if (body && body.classList.contains('modal-root-dark')) dark = true;
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  const modalStyle = dark
+    ? { background: '#071328', color: '#e6eef6', boxShadow: '0 30px 80px rgba(2,6,23,0.9)', border: '1px solid rgba(255,255,255,0.04)' }
+    : undefined;
+  const backdropStyle = dark ? { background: 'linear-gradient(180deg, rgba(2,6,23,0.72), rgba(2,6,23,0.84))' } : undefined;
+
+  const headerStyle = dark ? { borderBottom: '1px solid rgba(255,255,255,0.04)' } : undefined;
+
+  if (embedded) {
+    // render inline (no fixed backdrop) so the modal inherits parent theme/styles
+    return (
+      <div className="modal-embedded" style={{ padding: '0.6rem' }}>
+        <div className="modal modal-embedded-inner" style={modalStyle} role="dialog" aria-modal="true">
+          <div className="modal-header" style={headerStyle}>
+            <h3>{title}</h3>
+            <button className="modal-close" onClick={onClose}>×</button>
+          </div>
+          <div className="modal-body">{children}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="modal-backdrop" onMouseDown={onClose}>
-      <div className="modal" onMouseDown={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
-        <div className="modal-header">
+    <div className="modal-backdrop" onMouseDown={onClose} style={backdropStyle}>
+      <div className="modal" style={modalStyle} onMouseDown={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+        <div className="modal-header" style={headerStyle}>
           <h3>{title}</h3>
           <button className="modal-close" onClick={onClose}>×</button>
         </div>
@@ -287,13 +380,26 @@ function Modal({ children, onClose, title }) {
   );
 }
 
-function TagForm({ initial = { name: '', color: TAG_COLORS[0], id: null }, onCancel, onConfirm }) {
+function TagForm({ theme, initial = { name: '', color: TAG_COLORS[0], id: null }, onCancel, onConfirm }) {
   const [state, setState] = useState({ ...initial });
+  let dark = theme === 'dark';
+  try {
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      const body = document.body;
+      if (root && root.classList.contains('theme-dark')) dark = true;
+      if (body && body.classList.contains('modal-root-dark')) dark = true;
+    }
+  } catch (e) {}
+
+  const inputStyle = dark ? { background: 'rgba(255,255,255,0.03)', color: '#e6eef6', borderColor: 'rgba(255,255,255,0.06)' } : undefined;
+  const labelStyle = dark ? { color: '#cbd5e1' } : undefined;
+
   return (
     <form onSubmit={async (e) => { e.preventDefault(); await onConfirm(state); }} className="tag-form">
-      <label>Nombre</label>
-      <input className="tag-create-input" value={state.name} onChange={(e) => setState((s) => ({ ...s, name: e.target.value }))} />
-      <label>Color</label>
+      <label style={labelStyle}>Nombre</label>
+      <input style={inputStyle} className="tag-create-input" value={state.name} onChange={(e) => setState((s) => ({ ...s, name: e.target.value }))} />
+      <label style={labelStyle}>Color</label>
       <div className="tag-create-colors">
         {TAG_COLORS.map((c) => (
           <button key={c} type="button" className={`tag-create-color ${state.color === c ? 'selected' : ''}`} style={{ backgroundColor: c }} onClick={() => setState((s) => ({ ...s, color: c }))} />
@@ -324,8 +430,16 @@ Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string,
 };
+Modal.defaultProps = { theme: 'dark' };
+Modal.propTypes = {
+  children: PropTypes.node,
+  onClose: PropTypes.func.isRequired,
+  title: PropTypes.string,
+  theme: PropTypes.string,
+};
 
 TagForm.propTypes = {
+  theme: PropTypes.string,
   initial: PropTypes.object,
   onCancel: PropTypes.func.isRequired,
   onConfirm: PropTypes.func.isRequired,

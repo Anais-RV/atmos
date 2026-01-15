@@ -363,6 +363,34 @@
 .theme-dark .toast { background: #081124; color: #e6eef6 }
 .theme-dark .tag-manager-alert { background: rgba(255,255,255,0.03); color: #f8e7e7 }
 
+/* Make modal and popup controls dark-friendly */
+.theme-dark .modal {
+  background: #071328 !important; /* dark card */
+  color: #e6eef6 !important;
+  box-shadow: 0 24px 60px rgba(2,6,23,0.85) !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+}
+.theme-dark .modal-header { border-bottom-color: rgba(255,255,255,0.04); }
+.theme-dark .modal-close { background: rgba(255,255,255,0.03) !important; color: #e6eef6 !important; }
+.theme-dark .modal-close:hover { box-shadow: 0 8px 20px rgba(255,255,255,0.03) !important; }
+.theme-dark .tag-create-input { background: rgba(255,255,255,0.03) !important; color: #e6eef6 !important; border-color: rgba(255,255,255,0.06) !important; }
+.theme-dark .tag-create-input::placeholder { color: #94a3b8 !important; }
+.theme-dark .tag-create-color.selected { box-shadow: 0 6px 14px rgba(99,102,241,0.18) !important; border-color: rgba(255,255,255,0.14) !important; }
+.theme-dark .tag-manager-button { background: rgba(255,255,255,0.02) !important; border-color: rgba(255,255,255,0.03) !important; color: #e6eef6 !important }
+.theme-dark .tag-manager-button-danger { background: rgba(124,58,237,0.06) !important; color: #fca5a5 !important }
+.theme-dark .toast-message { color: #e6eef6 !important }
+
+/* darken the backdrop so the modal feels separate from the page */
+.theme-dark .modal-backdrop {
+  background: linear-gradient(180deg, rgba(2,6,23,0.68), rgba(2,6,23,0.78)) !important;
+}
+
+/* increase contrast for labels inside modal */
+.theme-dark .tag-form label { color: #cbd5e1 !important; }
+
+/* swatches shadow to show on dark background */
+.theme-dark .tag-create-color { box-shadow: 0 8px 28px rgba(2,6,23,0.55); }
+
 .theme-light .tag-manager-alert { background: #fff1f2; color: #7f1d1d }
 
 .theme-light .tag-manager-container { background: transparent }
@@ -372,13 +400,13 @@
 .tag-editing-banner.dark { background: rgba(255,255,255,0.04); color: var(--text-primary) }
 .tag-editing-banner.light { background: rgba(15,23,42,0.04); color: #0f172a }
 /* removed - use Tags.css */
-.tag-manager-container {
+.theme-light .tag-manager-container {
   max-width: 900px;
   margin: 0 auto;
   padding: 1rem;
 }
 
-.tag-create-bar {
+.theme-light .tag-create-bar {
   display: flex;
   gap: 0.75rem;
   align-items: center;
@@ -389,12 +417,13 @@
   margin-bottom: 1rem;
 }
 
-.tag-create-input {
+.theme-light .tag-create-input {
   flex: 1 1 auto;
   padding: 0.6rem 0.75rem;
   border-radius: 8px;
   border: 1px solid rgba(0,0,0,0.08);
   background: white;
+  color: #0f172a;
   box-shadow: 0 1px 2px rgba(16,24,40,0.03);
 }
 
@@ -444,39 +473,133 @@
   flex-wrap: wrap;
 }
 
-.tag-manager-input {
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
-}
-
-.tag-manager-color-picker {
+.theme-light .tag-create-colors {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
 }
 
-.tag-manager-color-option {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+.theme-light .tag-create-color {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
   border: 2px solid transparent;
   cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
-.tag-manager-color-option.selected {
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
-  border-color: #ffffffaa;
+.theme-light .tag-create-color.selected {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(59,130,246,0.14);
+  border-color: #fff;
 }
 
-.tag-manager-list {
-  margin-top: 1rem;
+.theme-light .tag-create-action {
+  background: linear-gradient(135deg,#3b82f6,#2563eb);
+  color: white;
+  border: none;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(37,99,235,0.18);
 }
 
-.tag-manager-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 0.9rem;
+.tag-create-inline { margin-top: 0.75rem; padding: 0.8rem; border-radius: 12px; }
+.theme-light .tag-create-inline { background: #ffffff; border: 1px solid rgba(0,0,0,0.04); }
+.theme-dark .tag-create-inline { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03); }
+
+/* Highest-priority dark rules to avoid any remaining overrides (covers html/body root) */
+html.theme-dark .modal,
+:root.theme-dark .modal,
+body.theme-dark .modal {
+  background: #071328 !important;
+  color: #e6eef6 !important;
+  box-shadow: 0 30px 80px rgba(2,6,23,0.9) !important;
+  border: 1px solid rgba(255,255,255,0.04) !important;
 }
+
+html.theme-dark .modal-backdrop,
+:root.theme-dark .modal-backdrop,
+body.theme-dark .modal-backdrop {
+  background: linear-gradient(180deg, rgba(2,6,23,0.72), rgba(2,6,23,0.84)) !important;
+}
+
+html.theme-dark .tag-create-input,
+:root.theme-dark .tag-create-input,
+body.theme-dark .tag-create-input {
+  background: rgba(255,255,255,0.03) !important;
+  color: #e6eef6 !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+
+html.theme-dark .modal-close,
+:root.theme-dark .modal-close,
+body.theme-dark .modal-close {
+  background: rgba(255,255,255,0.03) !important;
+  color: #e6eef6 !important;
+}
+
+html.theme-dark .tag-create-color,
+:root.theme-dark .tag-create-color,
+body.theme-dark .tag-create-color {
+  box-shadow: 0 8px 28px rgba(2,6,23,0.55) !important;
+}
+
+/* Force modal styles when we add a body modal class from React */
+body.modal-root .modal {
+  z-index: 11000;
+}
+
+body.modal-root-dark .modal {
+  background: #071428 !important;
+  color: #e6eef6 !important;
+  border: 1px solid rgba(255,255,255,0.04) !important;
+  box-shadow: 0 30px 80px rgba(2,6,23,0.95) !important;
+}
+
+body.modal-root-dark .modal-backdrop {
+  background: linear-gradient(180deg, rgba(2,6,23,0.74), rgba(2,6,23,0.86)) !important;
+}
+
+body.modal-root-dark .tag-create-input,
+body.modal-root-dark .modal-close {
+  background: rgba(255,255,255,0.03) !important;
+  color: #e6eef6 !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+
+/* Embedded modal (rendered inline inside center-card) */
+.modal-embedded { width: 100%; display: flex; justify-content: center; padding: 0.5rem 0 }
+.modal-embedded .modal-embedded-inner { width: 100%; max-width: 720px; box-shadow: 0 10px 30px rgba(2,6,23,0.12); }
+.theme-dark .modal-embedded .modal-embedded-inner { box-shadow: none; }
+.theme-dark .modal-embedded .modal-embedded-inner { background: #071328 !important; border: 1px solid rgba(255,255,255,0.03) !important; color: #e6eef6 !important }
+.theme-dark .modal-embedded .modal-embedded-inner .tag-create-input { background: rgba(255,255,255,0.03) !important; color: #e6eef6 !important; border-color: rgba(255,255,255,0.06) !important }
+.theme-dark .modal-embedded .modal-embedded-inner .modal-close { background: rgba(255,255,255,0.03) !important; color: #e6eef6 !important }
+.theme-light .modal-embedded .modal-embedded-inner { background: #fff; border: 1px solid rgba(0,0,0,0.04); color: #0f172a }
+
+/* Inline editor / delete blocks inside each tag card */
+.tag-inline-editor,
+.tag-inline-delete {
+  margin-top: 8px;
+  width: 100%;
+}
+.tag-inline-editor .tag-form,
+.tag-inline-delete .confirm-box {
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: #ffffff;
+}
+.theme-dark .tag-inline-editor .tag-form,
+.theme-dark .tag-inline-delete .confirm-box {
+  background: rgba(255,255,255,0.03) !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+  color: #e6eef6 !important;
+}
+
 
 .tag-manager-item {
   background: linear-gradient(180deg, #ffffff, #fbfbfd);
