@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from io import StringIO
 
-from weather.models import City
+from weather.documents import CityDocument
 
 
 class LoadCitiesCommandTest(TestCase):
@@ -16,16 +16,16 @@ class LoadCitiesCommandTest(TestCase):
         call_command('load_cities', '--file', 'data/cities.json')
         
         # Debe haber al menos 50 ciudades cargadas
-        self.assertGreaterEqual(City.objects.count(), 50)
+        self.assertGreaterEqual(CityDocument.objects.count(), 50)
     
     def test_command_is_idempotent(self):
         """Verifica que ejecutar el comando varias veces no crea duplicados"""
         call_command('load_cities', '--file', 'data/cities.json')
-        count_after_first_load = City.objects.count()
+        count_after_first_load = CityDocument.objects.count()
         
         # Ejecutar nuevamente
         call_command('load_cities', '--file', 'data/cities.json')
-        count_after_second_load = City.objects.count()
+        count_after_second_load = CityDocument.objects.count()
         
         # Las cuentas deben ser idénticas (no hay duplicados)
         self.assertEqual(count_after_first_load, count_after_second_load)
@@ -34,7 +34,7 @@ class LoadCitiesCommandTest(TestCase):
         """Verifica que las ciudades tienen comunidad_autonoma"""
         call_command('load_cities', '--file', 'data/cities.json')
         
-        madrid = City.objects.get(name='Madrid')
+        madrid = CityDocument.objects(name='Madrid').first()
         self.assertEqual(madrid.comunidad_autonoma, 'Madrid')
         self.assertIsNotNone(madrid.latitud)
         self.assertIsNotNone(madrid.longitud)
@@ -52,35 +52,15 @@ class CityAPITest(APITestCase):
     @classmethod
     def setUpTestData(cls):
         """Prepara datos de prueba"""
-        # Crear algunas ciudades de prueba
-        cls.madrid = City.objects.create(
-            name='Madrid',
-            latitud=40.4168,
-            longitud=-3.7038,
-            altitud=640,
-            comunidad_autonoma='Madrid'
-        )
-        cls.barcelona = City.objects.create(
-            name='Barcelona',
-            latitud=41.3851,
-            longitud=2.1734,
-            altitud=12,
-            comunidad_autonoma='Cataluña'
-        )
-        cls.valencia = City.objects.create(
-            name='Valencia',
-            latitud=39.4699,
-            longitud=-0.3763,
-            altitud=0,
-            comunidad_autonoma='Comunidad Valenciana'
-        )
-        cls.sevilla = City.objects.create(
-            name='Sevilla',
-            latitud=37.3886,
-            longitud=-5.9823,
-            altitud=7,
-            comunidad_autonoma='Andalucía'
-        )
+        # Crear algunas ciudades de prueba con id único
+        cls.madrid = CityDocument(id=1, name='Madrid', latitud=40.4168, longitud=-3.7038, altitud=640, comunidad_autonoma='Madrid')
+        cls.madrid.save()
+        cls.barcelona = CityDocument(id=2, name='Barcelona', latitud=41.3851, longitud=2.1734, altitud=12, comunidad_autonoma='Cataluña')
+        cls.barcelona.save()
+        cls.valencia = CityDocument(id=3, name='Valencia', latitud=39.4699, longitud=-0.3763, altitud=0, comunidad_autonoma='Comunidad Valenciana')
+        cls.valencia.save()
+        cls.sevilla = CityDocument(id=4, name='Sevilla', latitud=37.3886, longitud=-5.9823, altitud=7, comunidad_autonoma='Andalucía')
+        cls.sevilla.save()
     
     def test_cities_list_get_200(self):
         """Verifica que GET a lista de ciudades devuelve 200"""
@@ -222,14 +202,9 @@ class CityAPITest(APITestCase):
     
     def test_pagination_second_page(self):
         """Verifica que sin paginación devuelve todas sin página 2"""
-        # Crear datos adicionales
+        # Crear datos adicionales con id único
         for i in range(25):
-            City.objects.create(
-                name=f'Test City {i}',
-                latitud=40.0 + i,
-                longitud=-3.0 + i,
-                comunidad_autonoma='Test'
-            )
+            CityDocument(id=100+i, name=f'Test City {i}', latitud=40.0 + i, longitud=-3.0 + i, comunidad_autonoma='Test').save()
         
         response = self.client.get('/api/weather/cities/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)

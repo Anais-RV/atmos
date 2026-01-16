@@ -1,17 +1,16 @@
 # backend/weather/views.py
 
 from django.conf import settings
-from django.shortcuts import get_object_or_404
+# get_object_or_404 not used for MongoEngine documents
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics
 from rest_framework.pagination import PageNumberPagination
-from django.db.models import Q
 
 from .prophet_service import build_prophet_forecast
 from .emblem_photos import select_emblem_photo
 from .city_photos import select_city_photo
-from .models import City, WeatherObservation
+from .documents import CityDocument, WeatherObservationDocument
 from .serializers import (
     CurrentWeatherSerializer,
     TimeSeriesInputSerializer,
@@ -71,7 +70,12 @@ class CurrentWeatherView(APIView):
             return Response(cached_data, status=status.HTTP_200_OK)
 
         # Obtener la ciudad
-        city = get_object_or_404(City, id=city_id)
+        city = CityDocument.objects(id=city_id).first()
+        if not city:
+            return Response(
+                {"detail": f"Ciudad con ID {city_id} no encontrada"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         
         # Intentar obtener datos de AEMET (o mock data)
         weather_data = fetch_current_weather(
@@ -385,33 +389,51 @@ class CityPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class CityListView(generics.ListAPIView):
-    
-    queryset = City.objects.all()
-    serializer_class = CitySerializer
-    pagination_class = None  # Sin paginación - devolver todas las ciudades
+class CityListView(APIView):
     permission_classes = [permissions.AllowAny]
-    
-    def get_queryset(self):
-        queryset = City.objects.all()
-        
-        # Búsqueda por nombre
-        search = self.request.query_params.get('search', None)
+
+    def get(self, request, *args, **kwargs):
+        search = request.query_params.get('search', None)
+        comunidad = request.query_params.get('comunidad_autonoma', None)
+
+        qs = CityDocument.objects()
         if search:
-            queryset = queryset.filter(Q(name__icontains=search))
-        
-        # Filtro por comunidad autónoma
-        comunidad = self.request.query_params.get('comunidad_autonoma', None)
+            qs = qs.filter(name__icontains=search)
         if comunidad:
-            queryset = queryset.filter(comunidad_autonoma__iexact=comunidad)
-        
-        return queryset.order_by('name')
+            qs = qs.filter(comunidad_autonoma__iexact=comunidad)
+
+        cities = qs.order_by('name')
+        data = []
+        for c in cities:
+            data.append({
+                'id': c.id,
+                'name': c.name,
+                'latitud': c.latitud,
+                'longitud': c.longitud,
+                'altitud': getattr(c, 'altitud', None),
+                'comunidad_autonoma': getattr(c, 'comunidad_autonoma', None),
+            })
+
+        serializer = CitySerializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class CityDetailView(generics.RetrieveAPIView):
-    
-    queryset = City.objects.all()
-    serializer_class = CitySerializer
+class CityDetailView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, pk, *args, **kwargs):
+        city = CityDocument.objects(id=pk).first()
+        if not city:
+            return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = CitySerializer({
+            'id': city.id,
+            'name': city.name,
+            'latitud': city.latitud,
+            'longitud': city.longitud,
+            'altitud': getattr(city, 'altitud', None),
+            'comunidad_autonoma': getattr(city, 'comunidad_autonoma', None),
+        })
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class SunriseSunsetView(APIView):
@@ -444,7 +466,9 @@ class SunriseSunsetView(APIView):
             )
 
         # Obtener la ciudad
-        city = get_object_or_404(City, id=city_id)
+        city = CityDocument.objects(id=city_id).first()
+        if not city:
+            return Response({"detail": "city_id not found"}, status=status.HTTP_404_NOT_FOUND)
         
         # Usar fecha actual
         observation_date = datetime.now(pytz.UTC)
@@ -471,3 +495,83 @@ class SunriseSunsetView(APIView):
         }
         
         return Response(response_data, status=status.HTTP_200_OK)
+
+
+class AlertsListView(APIView):
+    """
+    Alert history endpoint with session-gated persistence.
+
+    GET /api/alerts/
+    - If user is authenticated: returns user's alerts sorted by creation date (newest first)
+    - If user is anonymous: returns empty list
+
+    POST /api/alerts/
+    - If user is authenticated: saves a new alert with user association
+    - If user is anonymous: returns 401 Unauthorized
+    
+    Expected POST payload:
+    {
+        "city_id": <int>,
+        "title": "<string>",
+        "type": "<string>",
+        "message": "<string>"
+    }
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        from .documents import AlertDocument
+        
+        if request.user.is_authenticated:
+            # Fetch user's alerts, sorted by creation date (newest first)
+            alerts = AlertDocument.objects(user_id=request.user.id).order_by('-created_at')
+            alert_list = [alert.to_dict() for alert in alerts]
+        else:
+            # Anonymous users see no alerts
+            alert_list = []
+        
+        return Response(alert_list, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        from .documents import AlertDocument
+        
+        # Require authentication to save alerts
+        if not request.user.is_authenticated:
+            return Response(
+                {'detail': 'Authentication required to save alerts.'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        
+        # Extract and validate payload
+        city_id = request.data.get('city_id')
+        title = request.data.get('title')
+        alert_type = request.data.get('type')
+        message = request.data.get('message')
+        
+        if not all([city_id, title, alert_type, message]):
+            return Response(
+                {'detail': 'Missing required fields: city_id, title, type, message'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            # Create and save new alert
+            alert = AlertDocument(
+                user_id=request.user.id,
+                city_id=int(city_id),
+                title=str(title),
+                type=str(alert_type),
+                message=str(message)
+            )
+            alert.save()
+            
+            return Response(
+                alert.to_dict(),
+                status=status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return Response(
+                {'detail': f'Failed to save alert: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+

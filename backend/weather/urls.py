@@ -9,6 +9,7 @@ from .views import (
     CityListView,
     CityDetailView,
     SunriseSunsetView,
+    AlertsListView,
 )
 
 urlpatterns = [
@@ -18,6 +19,7 @@ urlpatterns = [
     path("api/weather/conditions/", CurrentConditionsView.as_view(), name="current-conditions"),
     path("api/metrics/timeseries/", TimeSeriesView.as_view(), name="timeseries"),
     path("api/weather/sunrise-sunset/", SunriseSunsetView.as_view(), name="sunrise-sunset"),
+    path("api/alerts/", AlertsListView.as_view(), name="alerts-list"),
     
     # Endpoints de ciudades (solo lectura)
     path("api/weather/cities/", CityListView.as_view(), name="cities-list"),

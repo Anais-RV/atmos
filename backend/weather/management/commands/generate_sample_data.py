@@ -3,10 +3,9 @@ Comando para generar datos de muestra de series temporales.
 """
 
 from django.core.management.base import BaseCommand
-from django.utils import timezone
-from datetime import timedelta
+from datetime import datetime, timedelta
 import random
-from weather.models import City, WeatherObservation
+from weather.documents import CityDocument, WeatherObservationDocument
 
 
 class Command(BaseCommand):
@@ -31,9 +30,9 @@ class Command(BaseCommand):
         interval_hours = options['interval']
 
         # Obtener todas las ciudades
-        cities = City.objects.all()
-        
-        if not cities.exists():
+        cities = CityDocument.objects()
+
+        if cities.count() == 0:
             self.stdout.write(self.style.ERROR(
                 'No hay ciudades en la base de datos. Ejecuta primero: python manage.py load_cities'
             ))
@@ -43,7 +42,7 @@ class Command(BaseCommand):
         self.stdout.write(f'Periodo: últimos {days} días, intervalo: {interval_hours} hora(s)')
 
         total_records = 0
-        now = timezone.now()
+        now = datetime.utcnow()
         
         for city in cities:
             self.stdout.write(f'\nProcesando: {city.name}...')
@@ -81,8 +80,8 @@ class Command(BaseCommand):
                 cloud_cover = random.uniform(0, 100)
                 
                 # Crear registro
-                WeatherObservation.objects.create(
-                    city=city,
+                WeatherObservationDocument(
+                    city_id=city.id,
                     timestamp=current_time,
                     temperature=round(temperature, 1),
                     humidity=round(humidity, 1),
@@ -91,7 +90,7 @@ class Command(BaseCommand):
                     wind_direction=round(wind_direction, 1),
                     precipitation=round(precipitation, 1),
                     cloud_cover=round(cloud_cover, 1)
-                )
+                ).save()
                 
                 city_records += 1
                 current_time += timedelta(hours=interval_hours)

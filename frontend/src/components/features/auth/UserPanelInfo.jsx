@@ -1,36 +1,57 @@
-/**
- * Componente: UserPanelInfo
- * Propósito: Muestra la información del usuario autenticado (avatar, nombre, email) y botón de Sign out.
- * Uso:
- *  - UserPanelPage.jsx (único lugar donde se renderiza)
- * Dependencias:
- *  - auth.css (.auth-user-panel, .auth-user-header, .auth-user-avatar, .auth-user-name, .auth-user-email, .auth-user-actions, .auth-button-secondary)
- */
-
-// frontend/src/components/auth/UserPanelInfo.jsx
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../../context/AuthContext'
 
 function UserPanelInfo() {
-  const navigate = useNavigate();
-  // TODO: replace with real user data from backend / context
-  const user = {
-    name: "SuperKode",
-    email: "SomosLaHostia@SuperKode.es",
-    location: "Madrid, ES",
-  };
+  const navigate = useNavigate()
+  const { user, logout } = useAuth()
+
+  if (!user) {
+    return (
+      <div className="auth-user-panel auth-user-panel-guest">
+        <div className="auth-user-header">
+          <div className="auth-user-avatar guest">I</div>
+          <div>
+            <h2 className="auth-user-name">Invitado</h2>
+          </div>
+        </div>
+
+        <div className="auth-user-actions">
+          <button
+            className="auth-button-primary"
+            onClick={() => navigate('/login')}
+          >
+            Inicia sesión
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const displayUser = {
+    name: user?.first_name && user?.last_name
+      ? `${user.first_name} ${user.last_name}`
+      : user?.username || 'Invitado',
+    email: user?.email || null,
+  }
+
+  const handleLogout = async () => {
+    await logout()
+    navigate('/login')
+  }
 
   return (
     <div className="auth-user-panel">
       <div className="auth-user-header">
         <div className="auth-user-avatar">
-          {user.name.charAt(0)}
+          {displayUser.name.charAt(0).toUpperCase()}
         </div>
         <div>
-          <h2 className="auth-user-name">{user.name}</h2>
-          <p className="auth-user-email">{user.email}</p>
+          <h2 className="auth-user-name">{displayUser.name}</h2>
+          {displayUser.email && (
+            <p className="auth-user-email">{displayUser.email}</p>
+          )}
         </div>
       </div>
-
 
       <div className="auth-user-actions">
         <button
@@ -40,12 +61,18 @@ function UserPanelInfo() {
           Mis etiquetas
         </button>
 
-        <button className="auth-button-secondary">
-          Sign out
-        </button>
+        {user && (
+          <button
+            className="auth-button-secondary"
+            onClick={handleLogout}
+          >
+            Sign out
+          </button>
+        )}
+      </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default UserPanelInfo;
+export default UserPanelInfo

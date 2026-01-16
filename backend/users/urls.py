@@ -4,7 +4,7 @@ from .views import (
     RegisterView, MeView, ProfileView,
     AdminOnlyView, SuperuserOnlyView, PublicView,
     LoginView, ChangePasswordView, PasswordResetRequestView,
-    UserPreferencesView, UserPreferencesAPIView,
+    UserPreferencesView,
     TagViewSet
 )
 

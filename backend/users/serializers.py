@@ -1,34 +1,29 @@
-from django.contrib.auth.models import User
 from django.core.validators import validate_email
 from rest_framework import serializers
-from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
+from users.documents import UserDocument, PasswordResetTokenDocument
+from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from .models import PasswordResetToken, UserPreferences
+from .documents import UserPreferencesDocument
 from .errors import PasswordResetError
 from django.utils import timezone
+from .documents import get_next_sequence
 
-# Devolvemos el modelo del usuario activo:
-User = get_user_model() 
+User = UserDocument
 
-class UserRegisterSerializer(serializers.ModelSerializer):
+class UserRegisterSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150, required=True)
+    email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True, required=True)
     password2 = serializers.CharField(write_only=True, required=True)
 
-    class Meta:
-        model = User
-        fields = ("username", "email", "password", "password2")
-        extra_kwargs = {
-            "password": {"write_only": True},
-        }
-
     def validate_email(self, value):
         validate_email(value)
-        if User.objects.filter(email=value).exists():
+        if User.objects(email=value).first():
             raise serializers.ValidationError("Este correo ya está registrado.")
         return value
     
@@ -65,43 +60,53 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         # )
     
         # Método 2: Manual
-        user = User(
+        # Create MongoEngine document
+        pwd = make_password(validated_data["password"])
+        # assign an incremental integer id using counters collection
+        next_id = get_next_sequence('users')
+        user_doc = UserDocument(
+            id=next_id,
             username=validated_data["username"],
-            email=validated_data.get("email", "")
+            email=validated_data.get("email", ""),
+            password=pwd,
         )
-        user.set_password(validated_data["password"]) # Hashea la contraseña
-        # Guardamos los cambios en user y lo retornamos
-        user.save()
-        return user
+        user_doc.save()
+        return user_doc
 
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class ProfileSerializer(serializers.Serializer):
     """Serializer para visualizar el perfil."""
+    id = serializers.IntegerField(read_only=True)
+    username = serializers.CharField(read_only=True)
+    email = serializers.EmailField()
+    first_name = serializers.CharField(required=False, allow_blank=True)
+    last_name = serializers.CharField(required=False, allow_blank=True)
 
-    class Meta:
-        model = User
-        fields = ["id", "username", "email", "first_name", "last_name"]
-        read_only_fields = ["id", "username"]
-
-
-class ProfileUpdateSerializer(serializers.ModelSerializer):
-    """Serializer exclusivo para actualización del usuario."""
-
-    class Meta:
-        model = User
-        fields = ["email", "first_name", "last_name"]
-        extra_kwargs = {
-            "email": {"required": True},
+    def to_representation(self, instance):
+        # instance may be UserDocument
+        return {
+            'id': getattr(instance, 'id', None),
+            'username': getattr(instance, 'username', None),
+            'email': getattr(instance, 'email', None),
+            'first_name': getattr(instance, 'first_name', None),
+            'last_name': getattr(instance, 'last_name', None),
         }
+
+
+class ProfileUpdateSerializer(serializers.Serializer):
+    """Serializer exclusivo para actualización del usuario."""
+    email = serializers.EmailField(required=True)
+    first_name = serializers.CharField(required=False, allow_blank=True)
+    last_name = serializers.CharField(required=False, allow_blank=True)
 
     def validate_email(self, value):
         validate_email(value)
-        user = self.context["request"].user
-
-        if User.objects.exclude(pk=user.pk).filter(email=value).exists():
+        user = self.context['request'].user
+        # check if another user has same email
+        existing = UserDocument.objects(email=value).first()
+        if existing and int(existing.id) != int(user.pk):
             raise serializers.ValidationError("Este correo ya está en uso.")
-
         return value
 
     def to_representation(self, instance):
@@ -117,31 +122,15 @@ class LoginSerializer(serializers.Serializer):
         password = data.get('password')
 
         if email and password:
-            # Buscar usuario por email
-            from django.contrib.auth import get_user_model
-            User = get_user_model()
-
-            try:
-                user = User.objects.get(email=email)
-                username = user.username
-            except User.DoesNotExist:
+            # Buscar usuario por email en MongoEngine
+            user = UserDocument.objects(email=email).first()
+            if not user:
                 raise serializers.ValidationError('Credenciales incorrectas')
-            
-            # Usar authenticate() para verificar credenciales
-            user = authenticate(username=username, password=password)
-
-            if user is None:
-                raise serializers.ValidationError(
-                    'Credenciales inválidas',
-                    code='authentication_failed'
-                )
-            
-            if not user.is_active:
-                raise serializers.ValidationError(
-                    'Esta cuenta ha sido desactivada',
-                    code='account_disabled'
-                )
-
+            if not getattr(user, 'is_active', True):
+                raise serializers.ValidationError('Esta cuenta ha sido desactivada')
+            # Verificar contraseña
+            if not user.check_password(password):
+                raise serializers.ValidationError('Credenciales inválidas', code='authentication_failed')
             data['user'] = user
         
         else:
@@ -157,7 +146,10 @@ class ChangePasswordSerializer(serializers.Serializer):
     def validate_old_password(self, value):
         """Verifica que la contraseña actual sea correcta"""
         user = self.context["request"].user
-        if not user.check_password(value):
+        # user may be adapter; fetch UserDocument
+        from users.documents import UserDocument
+        user_doc = UserDocument.objects(id=int(user.pk)).first()
+        if not user_doc or not user_doc.check_password(value):
             raise serializers.ValidationError('La contraseña actual es incorrecta')
         return value
     
@@ -186,11 +178,12 @@ class ChangePasswordSerializer(serializers.Serializer):
     
     def save(self):
         """Actualiza la contraseña del usuario"""
-        user = self.context["request"].user
-        # Usar set_password() para hashear la nueva contraseña
-        user.set_password(self.validated_data["new_password"])
-        user.save()
-        return user
+        user = self.context['request'].user
+        from users.documents import UserDocument
+        user_doc = UserDocument.objects(id=int(user.pk)).first()
+        user_doc.password = make_password(self.validated_data['new_password'])
+        user_doc.save()
+        return user_doc
     
 class PasswordResetRequestSerializer(serializers.Serializer):
     """
@@ -205,22 +198,10 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         # Normalizar email (convertir a minúsculas)
         value = value.lower().strip()
 
-        try:
-            user = User.objects.get(email=value)
-
-            # Verificar que el usuario esté activo
-            if not user.is_active:
-                raise serializers.ValidationError(
-                    "Esta cuenta ha sido desactivada"
-                )
-            
-            # Guardar el usuario para uso posterior
-            self.context["user"] = user
-
-        except User.DoesNotExist:
-            # Por seguridad, NO revelamos si el email existe
-            # Pero guardamos None para manejarlo después
-            self.context["user"] = user
+        user = UserDocument.objects(email=value).first()
+        if user and not getattr(user, 'is_active', True):
+            raise serializers.ValidationError("Esta cuenta ha sido desactivada")
+        self.context["user"] = user
         
         return value
     
@@ -268,13 +249,24 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         if user is None:
             return None
         
-        # Invalidar tokens anteriores del usuario
-        PasswordResetToken.invalidate_user_tokens(user)
+        if user is None:
+            return None
 
-        # Crear nuevo token
-        reset_token = PasswordResetToken.objects.create(user=user)
+        # Invalidate previous tokens
+        PasswordResetTokenDocument.invalidate_user_tokens(user.id)
 
-        # Enviar email
+        import uuid
+        from datetime import datetime, timedelta
+        token_str = str(uuid.uuid4())
+        expires_at = datetime.utcnow() + timedelta(hours=24)
+        reset_token = PasswordResetTokenDocument(
+            user_id=user.id,
+            token=token_str,
+            expires_at=expires_at
+        )
+        reset_token.save()
+
+        # send email (we keep same _send_reset_email method expecting a user-like object)
         self._send_reset_email(user, reset_token)
 
         return reset_token
@@ -289,25 +281,15 @@ class PasswordResetVerifySerialzer(serializers.Serializer):
         """
         Valida que el token existe y es válido.
         """
-        try:
-            reset_token = PasswordResetToken.objects.get(token=value)
-
-            if not reset_token.is_valid():
-                if reset_token.is_used:
-                    raise serializers.ValidationError(
-                        "Este enlace ya ha sido utilizado."
-                    )
-                else:
-                    raise serializers.ValidationError(
-                        "Este enlace ha expirado."
-                    )
-            
-            self.context["reset_token"] = reset_token
-        
-        except PasswordResetToken.DoesNotExist:
-            raise serializers.ValidationError(
-                "Enlace de recuperación inválido"
-            )
+        reset_token = PasswordResetTokenDocument.objects(token=str(value)).first()
+        if not reset_token:
+            raise serializers.ValidationError("Enlace de recuperación inválido")
+        if not reset_token.is_valid():
+            if reset_token.is_used:
+                raise serializers.ValidationError("Este enlace ya ha sido utilizado.")
+            else:
+                raise serializers.ValidationError("Este enlace ha expirado.")
+        self.context["reset_token"] = reset_token
         
         return value
 
@@ -331,30 +313,30 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         """
         Valida que el token existe y es válido
         """
-        try:
-            reset_token = PasswordResetToken.objects.get(token=value)
+        # Use the MongoEngine document for tokens
+        token_str = str(value)
+        reset_token = PasswordResetTokenDocument.objects(token=token_str).first()
 
-            
-            if reset_token.is_used:
-                raise serializers.ValidationError({
-                    "code": PasswordResetError.TOKEN_USED,
-                    "message": "Este enlace ya ha sido utilizado."
-                })
-            
-            if timezone.now() > reset_token.expires_at:
-                raise serializers.ValidationError({
-                    "code": PasswordResetError.TOKEN_EXPIRED,
-                    "message": "Este enlace ha expirado."
-                })
-            
-            self.context["reset_token"] = reset_token
-
-        except PasswordResetToken.DoesNotExist:
+        if not reset_token:
             raise serializers.ValidationError({
                 "code": PasswordResetError.TOKEN_INVALID,
                 "message": "Enlace de recuperación inválido."
             })
-        
+
+        if reset_token.is_used:
+            raise serializers.ValidationError({
+                "code": PasswordResetError.TOKEN_USED,
+                "message": "Este enlace ya ha sido utilizado."
+            })
+
+        from datetime import datetime
+        if datetime.utcnow() > reset_token.expires_at:
+            raise serializers.ValidationError({
+                "code": PasswordResetError.TOKEN_EXPIRED,
+                "message": "Este enlace ha expirado."
+            })
+
+        self.context["reset_token"] = reset_token
         return value
 
     def validate_new_password(self, value):
@@ -382,44 +364,31 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         Cambia la contraseña del usuario y marca el token como usado
         """
         reset_token = self.context["reset_token"]
-        user = reset_token.user
+        user = UserDocument.objects(id=reset_token.user_id).first()
+        if not user:
+            raise serializers.ValidationError('Usuario no encontrado')
 
-        # Cambiar la contraseña (se hashea/encripta automáticamente)
-        user.set_password(self.validated_data["new_password"])
+        user.password = make_password(self.validated_data["new_password"])
         user.save()
 
-        # Marcar token como usado
         reset_token.mark_as_used()
-
-        # Invalidar otros tokens del usuario
-        PasswordResetToken.invalidate_user_tokens(user)
+        PasswordResetTokenDocument.invalidate_user_tokens(user.id)
 
         return user
 
 
-class UserPreferencesSerializer(serializers.ModelSerializer):
+class UserPreferencesSerializer(serializers.Serializer):
     """
     Serializer para las preferencias de usuario.
     Incluye validación de choices y campos personalizados.
     """
 
-    # Campos de solo lectura
-    user = serializers.StringRelatedField(read_only=True)
-    created_at = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M:%S')
-    updated_at = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M:%S')
-    
-    class Meta:
-        model = UserPreferences
-        fields = [
-            'id',
-            'user',
-            'theme',
-            'language',
-            'favorite_weather_station',
-            'created_at',
-            'updated_at'
-        ]
-        read_only_fields = ['id', 'user', 'created_at', 'updated_at']
+    # Fields for embedded preferences document
+    theme = serializers.CharField()
+    language = serializers.CharField()
+    favourite_weather_station = serializers.CharField(allow_null=True, required=False)
+    created_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
 
     def validate_theme(self, value):
         """
@@ -469,28 +438,39 @@ class UserPreferencesSerializer(serializers.ModelSerializer):
         """
         Personaliza la representación de salida.
         """
-        representation = super().to_representation(instance)
-        
-        # Añadir nombres legibles para los choices
-        representation['theme_display'] = instance.get_theme_display()
-        representation['language_display'] = instance.get_language_display()
-        
-        return representation
+        # instance may be EmbeddedDocument or dict
+        def _get(inst, attr):
+            if inst is None:
+                return None
+            # prefer attribute access for EmbeddedDocument
+            if hasattr(inst, attr):
+                return getattr(inst, attr)
+            # if it's a dict-like, try get
+            try:
+                return inst.get(attr)
+            except Exception:
+                return None
+
+        data = {
+            'theme': _get(instance, 'theme'),
+            'language': _get(instance, 'language'),
+            'favourite_weather_station': _get(instance, 'favourite_weather_station'),
+            'created_at': _get(instance, 'created_at'),
+            'updated_at': _get(instance, 'updated_at'),
+        }
+        data['theme_display'] = data['theme']
+        data['language_display'] = data['language']
+        return data
     
-class UserPreferencesUpdateSerializer(serializers.ModelSerializer):
+class UserPreferencesUpdateSerializer(serializers.Serializer):
     """
     Serializer específico para actualizaciones parciales (PATCH).
     Todos los campos son opcionales.
     """
     
-    class Meta:
-        model = UserPreferences
-        fields = ['theme', 'language', 'favorite_weather_station']
-        extra_kwargs = {
-            'theme': {'required': False},
-            'language': {'required': False},
-            'favorite_weather_station': {'required': False},
-        }
+    theme = serializers.CharField(required=False)
+    language = serializers.CharField(required=False)
+    favourite_weather_station = serializers.CharField(required=False, allow_null=True)
 
     def validate_theme(self, value):
         """Validación de tema"""
@@ -519,17 +499,17 @@ class UserPreferencesUpdateSerializer(serializers.ModelSerializer):
         return value
 
 
-class TagSerializer(serializers.ModelSerializer):
+class TagSerializer(serializers.Serializer):
     """
     Serializer para etiquetas de usuario.
     """
-    class Meta:
-        model = __import__('users.models', fromlist=['Tag']).Tag
-        fields = ['id', 'name', 'color', 'created_at']
-        read_only_fields = ['id', 'created_at']
+    # Serializer for TagDocument
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField()
+    color = serializers.CharField()
+    created_at = serializers.DateTimeField(read_only=True)
 
     def validate_name(self, value):
-        """Validar que el nombre no esté vacío y tenga longitud adecuada"""
         if not value or not value.strip():
             raise serializers.ValidationError("El nombre no puede estar vacío")
         if len(value) > 50:
@@ -537,9 +517,25 @@ class TagSerializer(serializers.ModelSerializer):
         return value.strip()
 
     def validate_color(self, value):
-        """Validar formato de color hexadecimal"""
         import re
         if not re.match(r'^#[0-9A-Fa-f]{6}$', value):
             raise serializers.ValidationError("El color debe ser un código hex válido (ej: #3b82f6)")
         return value
+
+    def update(self, instance, validated_data):
+        """Update an existing TagDocument instance."""
+        # instance is expected to be a TagDocument
+        if not instance:
+            raise serializers.ValidationError('Instancia de etiqueta no encontrada')
+
+        name = validated_data.get('name', getattr(instance, 'name', None))
+        color = validated_data.get('color', getattr(instance, 'color', None))
+
+        if name is not None:
+            instance.name = name
+        if color is not None:
+            instance.color = color
+
+        instance.save()
+        return instance
     
