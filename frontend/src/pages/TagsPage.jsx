@@ -100,7 +100,6 @@ export default function TagsPage() {
 
   const sortedTags = [...state.tags].sort((a, b) => a.name.localeCompare(b.name));
 
-
   // Load tags on mount
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -340,8 +339,7 @@ function TagFormCard({ onCancel, onSubmit }) {
             <button
               key={c}
               type="button"
-              className={`color-swatch ${color === c ? 'active' : ''}`}
-              style={{ backgroundColor: c }}
+              className={`color-swatch ${color === c ? 'active' : ''} tag-color-${TAG_COLORS.indexOf(c)+1}`}
               onClick={() => setColor(c)}
             />
           ))}
@@ -431,8 +429,7 @@ function TagCard({
             <button
               key={c}
               type="button"
-              className={`color-swatch ${editColor === c ? 'active' : ''}`}
-              style={{ backgroundColor: c }}
+              className={`color-swatch ${editColor === c ? 'active' : ''} tag-color-${TAG_COLORS.indexOf(c)+1}`}
               onClick={() => setEditColor(c)}
             />
           ))}
@@ -471,7 +468,7 @@ function TagCard({
           onChange={onToggleSelect}
         />
       </label>
-      <span className="tag-badge" style={{ backgroundColor: tag.color }}>
+      <span className={`tag-badge tag-color-${TAG_COLORS.indexOf(tag.color)+1}`}>
         {tag.name}
       </span>
       <div className="tag-card-actions">
@@ -499,23 +496,21 @@ function Toast({ message, onClose }) {
   );
 }
 
+// PropTypes
 Alert.propTypes = {
   type: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-
 BatchBar.propTypes = {
   count: PropTypes.number.isRequired,
   onDelete: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
 };
-
 TagFormCard.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
-
 TagGrid.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   tags: PropTypes.array.isRequired,
@@ -530,7 +525,6 @@ TagGrid.propTypes = {
   onCancelDelete: PropTypes.func.isRequired,
   onConfirmDelete: PropTypes.func.isRequired,
 };
-
 TagCard.propTypes = {
   tag: PropTypes.object.isRequired,
   isSelected: PropTypes.bool.isRequired,
@@ -540,6 +534,7 @@ TagCard.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onCancelEdit: PropTypes.func.isRequired,
   onSaveEdit: PropTypes.func.isRequired,
+
   onDelete: PropTypes.func.isRequired,
   onCancelDelete: PropTypes.func.isRequired,
   onConfirmDelete: PropTypes.func.isRequired,
