@@ -70,7 +70,6 @@ function UserPanelInfo() {
           </button>
         )}
       </div>
-      </div>
     </div>
   )
 }
