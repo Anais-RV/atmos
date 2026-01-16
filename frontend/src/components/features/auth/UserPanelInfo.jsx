@@ -54,6 +54,13 @@ function UserPanelInfo() {
       </div>
 
       <div className="auth-user-actions">
+        <button
+          className="auth-button-secondary"
+          onClick={() => navigate('/tags')}
+        >
+          Mis etiquetas
+        </button>
+
         {user && (
           <button
             className="auth-button-secondary"
@@ -62,6 +69,7 @@ function UserPanelInfo() {
             Sign out
           </button>
         )}
+      </div>
       </div>
     </div>
   )

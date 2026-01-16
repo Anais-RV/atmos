@@ -24,6 +24,7 @@ import ForecastPage from "./pages/ForecastPage";
 import ForecastExtendedPage from "./pages/ForecastExtendedPage";
 import PasswordResetPage from "./pages/PasswordResetPage";
 import SettingsPage from "./pages/SettingsPage";
+import TagsPage from "./pages/TagsPage";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
             <Route path="/password-reset" element={<PasswordResetPage />} />
             <Route path="/password-reset/:token" element={<PasswordResetPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/tags" element={<TagsPage />} />
           </Routes>
 
           <Footer />

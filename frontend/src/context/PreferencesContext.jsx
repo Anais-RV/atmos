@@ -94,6 +94,21 @@ export const PreferencesProvider = ({ children }) => {
     updatePreferences,
   };
 
+  // Ensure the selected theme is applied globally on the document element so
+  // fixed/modals and other top-level UI elements can style based on it.
+  useEffect(() => {
+    try {
+      const root = document.documentElement;
+      if (!root) return;
+      root.classList.remove('theme-dark', 'theme-light');
+      const cls = preferences?.theme === 'dark' ? 'theme-dark' : 'theme-light';
+      root.classList.add(cls);
+    } catch {
+      // defensive: document may not be available in some environments
+      // swallow silently
+    }
+  }, [preferences.theme]);
+
   return (
     <PreferencesContext.Provider value={value}>
       {children}
