@@ -465,12 +465,12 @@ function TagCard({
     return (
       <div className="tag-card tag-card-deleting">
         <p>¿Eliminar {tag.name}?</p>
-        <div className="tag-card-actions">
+        <div className="form-actions">
           <button
             onClick={onCancelDelete}
-            className="btn btn-sm btn-primary"
+            className="btn btn-primary"
           >Cancelar</button>
-          <button onClick={onConfirmDelete} className="btn btn-sm btn-danger">Eliminar</button>
+          <button onClick={onConfirmDelete} className="btn btn-danger">Eliminar</button>
         </div>
       </div>
     );

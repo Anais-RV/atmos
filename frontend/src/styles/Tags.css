@@ -37,7 +37,7 @@
 /* ----------------------
 	Create bar / top area
 	---------------------- */
-.tag-create-bar{display:flex;gap:.75rem;align-items:center;margin-bottom:0.8rem}
+.tag-create-bar{display:flex;gap:.75rem;align-items:center;justify-content:center;width:100%;margin-bottom:1rem}
 
 /* ----------------------
 	Forms
@@ -75,7 +75,7 @@
 /* ----------------------
 	Alerts / toasts
 	---------------------- */
-.tag-manager-alert{display:flex;align-items:center;gap:.6rem;padding:.6rem;border-radius:8px;margin-bottom:.8rem}
+.tag-manager-alert{display:inline-flex;align-items:center;gap:.6rem;padding:.6rem;border-radius:8px;margin:0.6rem auto 0.8rem;max-width:820px;width:auto}
 .tag-manager-alert-error{background:#fff1f2;color:#7f1d1d;border:1px solid rgba(220,38,38,0.3)}
 .tag-manager-alert-close{background:transparent;border:none;margin-left:auto;cursor:pointer}
 
@@ -100,7 +100,7 @@ html.theme-dark .tag-manager-alert span,
 	Loading / empty
 	---------------------- */
 .loading-center{display:flex;align-items:center;justify-content:center;min-height:120px}
-.empty-state{padding:2rem;color:#6b7280;text-align:center}
+.empty-state{padding:2rem;color:#6b7280;text-align:center;margin-top:0.5rem}
 
 /* ----------------------
 	Dark theme (scoped)
