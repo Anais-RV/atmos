@@ -11,10 +11,13 @@
   flex-direction: column;
   gap: 1.5rem;
   align-items: center;
+  /* allow wrapping so cards never get pushed off-screen */
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* En tablet y superior: las dos tarjetas en fila */
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .chart-layout {
     flex-direction: row;
     align-items: stretch;
@@ -37,6 +40,33 @@
   align-items: center;
 }
 
+/* Desktop and larger: allow three-up layout but wrap if viewport is too narrow */
+@media (min-width: 1024px) {
+  .chart-layout {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    padding-inline: clamp(1rem, 4vw, 2.5rem);
+  }
+
+  .chart-card-main,
+  .chart-card-summary {
+    /* fixed third width so three cards always fit in one row */
+    flex: 0 0 calc((100% - 2rem) / 3);
+    width: calc((100% - 2rem) / 3);
+    min-width: 0;
+    box-sizing: border-box;
+    margin: 0 0.5rem;
+  }
+}
+
+/* Tighter spacing on large desktops so three cards fit comfortably */
+@media (min-width: 1200px) {
+  .chart-layout { gap: clamp(1rem, 1.5vw, 1.5rem); padding-inline: 2rem; }
+  .chart-card-main, .chart-card-summary { margin: 0 0.6rem; }
+}
+
 /* Texto de cabecera ya lo dan .center-card-title y .center-card-text */
 
 /* Zona principal donde irá la gráfica (azul claro) */
@@ -57,13 +87,13 @@
   position: relative;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 640px) and (max-width: 767px) {
   .weather-chart-container {
     height: 350px;
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .weather-chart-container {
     height: 400px;
   }
@@ -168,7 +198,7 @@
 }
 
 /* En pantallas medianas y grandes, las 3 en fila */
-@media (min-width: 640px) {
+@media (min-width: 640px) and (max-width: 767px) {
   .chart-summary-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -204,7 +234,7 @@
   width: 100%;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 640px) and (max-width: 767px) {
   .chart-controls {
     flex-direction: row;
     justify-content: center;
@@ -220,7 +250,7 @@
   max-width: 100%;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 640px) and (max-width: 767px) {
   .chart-control-group {
     max-width: 200px;
   }

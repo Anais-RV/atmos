@@ -10,10 +10,8 @@ Este módulo proporciona funciones para:
 
 from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional, Tuple
-from django.db.models import QuerySet, Avg, Max, Min
-from django.utils import timezone
 import logging
-from .models import City, WeatherObservation
+from .documents import CityDocument, WeatherObservationDocument
 
 logger = logging.getLogger(__name__)
 
@@ -126,9 +124,8 @@ def validate_parameters(
 ) -> Tuple[int, str, int, str]:
     
     # Validar que la ciudad existe
-    try:
-        City.objects.get(id=city_id)
-    except City.DoesNotExist:
+    city = CityDocument.objects(id=city_id).first()
+    if not city:
         raise TimeSeriesValidationError(f"Ciudad con ID {city_id} no existe")
     
     # Normalizar variable
@@ -161,22 +158,29 @@ def get_time_series_queryset(
     city_id: int,
     variable_field: str,
     hours: int
-) -> QuerySet:
-    
-    end_time = timezone.now()
+ ) -> List[Dict[str, Any]]:
+
+    end_time = datetime.utcnow()
     start_time = end_time - timedelta(hours=hours)
-    
-    queryset = WeatherObservation.objects.filter(
+
+    qs = WeatherObservationDocument.objects(
         city_id=city_id,
         timestamp__gte=start_time,
         timestamp__lte=end_time
-    ).order_by('timestamp').values('timestamp', variable_field)
-    
-    return queryset
+    ).order_by('timestamp').only('timestamp', variable_field)
+
+    results: List[Dict[str, Any]] = []
+    for obs in qs:
+        results.append({
+            'timestamp': obs.timestamp,
+            variable_field: getattr(obs, variable_field, None)
+        })
+
+    return results
 
 
 def aggregate_data(
-    queryset: QuerySet,
+    observations_list: List[Dict[str, Any]],
     variable_field: str,
     aggregation: str
 ) -> List[Dict[str, Any]]:
@@ -188,11 +192,11 @@ def aggregate_data(
                 'timestamp': obs['timestamp'],
                 'value': obs[variable_field]
             }
-            for obs in queryset
+            for obs in observations_list
         ]
-    
-    # Convertir queryset a lista para procesamiento en memoria
-    observations = list(queryset)
+
+    # Observations list para procesamiento en memoria
+    observations = list(observations_list)
     
     if not observations:
         return []
@@ -284,19 +288,19 @@ def build_time_series(
     )
     
     # Obtener ciudad
-    city = City.objects.get(id=city_id)
-    
+    city = CityDocument.objects(id=city_id).first()
+
     # Obtener datos
     queryset = get_time_series_queryset(city_id, normalized_variable, hours)
-    
-    if not queryset.exists():
+
+    if not queryset:
         logger.warning(
             f"No data found for city_id={city_id}, "
             f"variable={normalized_variable}, hours={hours}"
         )
         return {
             'city_id': city_id,
-            'city_name': city.name,
+            'city_name': city.name if city else None,
             'variable': variable,
             'variable_field': normalized_variable,
             'unit': VARIABLE_UNITS.get(normalized_variable, ''),

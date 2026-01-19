@@ -1,11 +1,11 @@
-from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
 from django.contrib.auth import login
 from django.conf import settings
 
-from .models import UserPreferences
+ 
+from users.documents import UserDocument
 from .serializers import (
     UserRegisterSerializer,
     ProfileSerializer,
@@ -95,9 +95,33 @@ class LoginView(APIView):
             auth_type = getattr(settings, 'AUTH_TYPE', 'SESSION')
 
             if auth_type == 'JWT' and JWT_AVAILABLE:
-                return self._handle_jwt_login(user)
+                # Generate tokens for Mongo user document via adapter
+                from rest_framework_simplejwt.tokens import RefreshToken
+                from .auth_backends import UserAdapter
+
+                adapter = UserAdapter(user)
+                refresh = RefreshToken.for_user(adapter)
+
+                return Response({
+                    "success": True,
+                    "message": "Autenticación exitosa",
+                    "auth_type": "JWT",
+                    "tokens": {
+                        "refresh": str(refresh),
+                        "access": str(refresh.access_token),
+                    },
+                    "user": {
+                        "id": user.id,
+                        "username": user.username,
+                        "email": user.email,
+                    }
+                }, status=status.HTTP_200_OK)
             else:
-                return self._handle_session_login(request, user)
+                # Session login is not supported for Mongo users; fall back error
+                return Response({
+                    'success': False,
+                    'message': 'Session login no soportado para Mongo users. Use JWT',
+                }, status=status.HTTP_400_BAD_REQUEST)
             
         # Si el serializer no es válido, devuelve errores
         return Response(
@@ -307,17 +331,28 @@ class UserPreferencesView(generics.RetrieveUpdateAPIView):
     serializer_class = UserPreferencesSerializer
 
     def get_object(self):
-        """
-        Obtiene o crea las preferencias del usuario autenticado.
-        """
-        preferences, created = UserPreferences.objects.get_or_create(
-            user=self.request.user
-        )
-        
-        if created:
-            logger.info(f"Preferencias creadas para usuario: {self.request.user.username}")
-        
-        return preferences
+        # Use embedded preferences in UserDocument
+        user = getattr(self.request, 'user', None)
+        if user is None:
+            raise Exception('No authenticated user')
+
+        # user is UserAdapter or Django user; try to load UserDocument
+        try:
+            from users.documents import UserDocument, UserPreferencesDocument
+            user_doc = UserDocument.objects(id=int(user.pk)).first()
+        except Exception:
+            user_doc = None
+
+        if not user_doc:
+            raise Exception('User document not found')
+
+        if not user_doc.preferences:
+            # create default
+            user_doc.preferences = UserPreferencesDocument()
+            user_doc.save()
+            logger.info(f"Preferencias creadas para usuario: {user_doc.username}")
+
+        return user_doc.preferences
     
     def get_serializer_class(self):
         """
@@ -332,29 +367,45 @@ class UserPreferencesView(generics.RetrieveUpdateAPIView):
         Personaliza la respuesta de actualización.
         """
         partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        
-        if serializer.is_valid():
-            self.perform_update(serializer)
-            
-            logger.info(
-                f"Preferencias actualizadas para usuario: {request.user.username}"
-            )
+        prefs = self.get_object()
+        # prefs is an EmbeddedDocument
+        # Update fields manually
+        # Normalize incoming data so clients can send either
+        # 'favourite_weather_station' (UK) or 'favorite_weather_station' (US)
+        try:
+            incoming = request.data.copy()
+        except Exception:
+            incoming = dict(request.data)
 
-            # Usar el serializer completo para la respuesta
-            response_serializer = UserPreferencesSerializer(instance)
-            
+        # map US spelling to the stored field name
+        if 'favorite_weather_station' in incoming and 'favourite_weather_station' not in incoming:
+            incoming['favourite_weather_station'] = incoming.get('favorite_weather_station')
+
+        allowed = ['theme', 'language', 'favourite_weather_station']
+        updated = False
+        for k, v in incoming.items():
+            if k in allowed:
+                setattr(prefs, k, v)
+                updated = True
+
+        if updated:
+            # save parent document
+            from users.documents import UserDocument
+            user = getattr(request, 'user')
+            user_doc = UserDocument.objects(id=int(user.pk)).first()
+            user_doc.preferences = prefs
+            user_doc.save()
+            response_serializer = UserPreferencesSerializer(prefs)
             return Response({
                 'success': True,
                 'message': 'Preferencias actualizadas exitosamente',
                 'data': response_serializer.data
             }, status=status.HTTP_200_OK)
-        
+
         return Response({
             'success': False,
             'error': 'Error al actualizar preferencias',
-            'detail': serializer.errors
+            'detail': 'No se proporcionaron campos válidos'
         }, status=status.HTTP_400_BAD_REQUEST)
     
     def retrieve(self, request, *args, **kwargs):
@@ -369,143 +420,7 @@ class UserPreferencesView(generics.RetrieveUpdateAPIView):
             'data': serializer.data
         }, status=status.HTTP_200_OK)
     
-# Vista alternativa usando APIView (más control)
-class UserPreferencesAPIView(APIView):
-    """
-    Vista alternativa con más control sobre cada método HTTP.
-    """
-    permission_classes = [permissions.IsAuthenticated, IsAuthenticatedAndOwner]
 
-    def get(self, request):
-        """
-        GET /api/auth/preferences/
-        Obtiene las preferencias del usuario autenticado.
-        """
-        try:
-            # Obtener o crear preferencias
-            preferences, created = UserPreferences.objects.get_or_create(
-                user=request.user
-            )
-            
-            serializer = UserPreferencesSerializer(preferences)
-            
-            return Response({
-                'success': True,
-                'data': serializer.data,
-                'created': created
-            }, status=status.HTTP_200_OK)
-            
-        except Exception as e:
-            logger.error(f"Error obteniendo preferencias: {str(e)}")
-            
-            return Response({
-                'success': False,
-                'error': 'Error al obtener preferencias',
-                'detail': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-    def put(self, request):
-        """
-        PUT /api/auth/preferences/
-        Actualiza todas las preferencias del usuario.
-        """
-        try:
-            preferences = UserPreferences.objects.get(user=request.user)
-            serializer = UserPreferencesSerializer(
-                preferences,
-                data=request.data,
-                partial=False
-            )
-            
-            if serializer.is_valid():
-                serializer.save()
-                
-                logger.info(f"Preferencias actualizadas (PUT): {request.user.username}")
-                
-                return Response({
-                    'success': True,
-                    'message': 'Preferencias actualizadas exitosamente',
-                    'data': serializer.data
-                }, status=status.HTTP_200_OK)
-            
-            return Response({
-                'success': False,
-                'error': 'Datos inválidos',
-                'detail': serializer.errors
-            }, status=status.HTTP_400_BAD_REQUEST)
-            
-        except UserPreferences.DoesNotExist:
-            # Si no existen preferencias, crearlas
-            serializer = UserPreferencesSerializer(data=request.data)
-            
-            if serializer.is_valid():
-                serializer.save(user=request.user)
-                
-                return Response({
-                    'success': True,
-                    'message': 'Preferencias creadas exitosamente',
-                    'data': serializer.data
-                }, status=status.HTTP_201_CREATED)
-            
-            return Response({
-                'success': False,
-                'error': 'Datos inválidos',
-                'detail': serializer.errors
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
-        except Exception as e:
-            logger.error(f"Error actualizando preferencias: {str(e)}")
-            
-            return Response({
-                'success': False,
-                'error': 'Error al actualizar preferencias',
-                'detail': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-    def patch(self, request):
-        """
-        PATCH /api/auth/preferences/
-        Actualiza parcialmente las preferencias del usuario.
-        """
-        try:
-            preferences, created = UserPreferences.objects.get_or_create(
-                user=request.user
-            )
-            
-            serializer = UserPreferencesUpdateSerializer(
-                preferences,
-                data=request.data,
-                partial=True
-            )
-
-            if serializer.is_valid():
-                serializer.save()
-                
-                logger.info(f"Preferencias actualizadas (PATCH): {request.user.username}")
-                
-                # Devolver datos completos
-                response_serializer = UserPreferencesSerializer(preferences)
-                
-                return Response({
-                    'success': True,
-                    'message': 'Preferencias actualizadas exitosamente',
-                    'data': response_serializer.data
-                }, status=status.HTTP_200_OK)
-            
-            return Response({
-                'success': False,
-                'error': 'Datos inválidos',
-                'detail': serializer.errors
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
-        except Exception as e:
-            logger.error(f"Error actualizando preferencias: {str(e)}")
-            
-            return Response({
-                'success': False,
-                'error': 'Error al actualizar preferencias',
-                'detail': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -516,10 +431,23 @@ class TagViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        """Solo devuelve etiquetas del usuario autenticado"""
-        Tag = __import__('users.models', fromlist=['Tag']).Tag
-        return Tag.objects.filter(user=self.request.user)
+        """Return TagDocument objects for authenticated user"""
+        from users.documents import TagDocument
+        user = getattr(self.request, 'user', None)
+        if not user:
+            return TagDocument.objects.none()
+        return TagDocument.objects(user_id=int(user.pk)).order_by('-created_at')
 
     def perform_create(self, serializer):
-        """Asigna el usuario autenticado al crear etiqueta"""
-        serializer.save(user=self.request.user)
+        from users.documents import TagDocument, get_next_sequence
+        user = getattr(self.request, 'user')
+        data = serializer.validated_data
+        # assign incremental id for TagDocument
+        next_id = get_next_sequence('tags')
+        tag = TagDocument(
+            id=next_id,
+            user_id=int(user.pk),
+            name=data.get('name'),
+            color=data.get('color')
+        )
+        tag.save()

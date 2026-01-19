@@ -1,5 +1,28 @@
 # 📖 Guía de Contribución - Atmos
 
+> **📌 IMPORTANTE:** Este proyecto está actualmente en **Fase 2 (v2.0)**, desarrollándose en la rama `beta`.  
+> Si necesitas hacer cambios para v1.0, consulta la sección ["Rama de destino"](#rama-de-destino).
+
+---
+
+## Rama de Destino
+
+### Desarrollo activo (v2.0) → `beta`
+
+El equipo reducido que continúa el proyecto trabaja sobre la rama **`beta`**, que contiene:
+- ✅ Migración completa a MongoDB
+- ✅ Mejoras en UX (selector de ciudades con chips colapsables)
+- ✅ Optimizaciones de rendimiento y CSS responsive
+- 🚧 Nuevas funcionalidades en desarrollo
+
+**Todas las PRs deben ir a `beta` por defecto.**
+
+### Mantenimiento estable (v1.0) → `dev`
+
+Solo para hotfixes críticos de la versión 1.0 (bugs bloqueantes, seguridad).
+
+---
+
 ## Formato de Commits
 
 ```
@@ -28,6 +51,11 @@ docs: actualiza guía de setup
 
 ## Crear Pull Request (3 pasos)
 
+### 0. Verifica la rama base
+
+Para **v2.0 (desarrollo activo)** → PR hacia `beta`  
+Para **v1.0 (hotfix crítico)** → PR hacia `dev`
+
 ### 1. Asegúrate de estar en tu rama
 
 ```bash
@@ -38,6 +66,14 @@ git branch
 Si no estás en una rama `feat/`:
 
 ```bash
+# Para v2.0:
+git checkout beta
+git pull origin beta
+git checkout -b feat/nombre-descriptivo
+
+# Para v1.0:
+git checkout dev
+git pull origin dev
 git checkout -b feat/nombre-descriptivo
 ```
 
@@ -52,7 +88,7 @@ git push -u origin feat/tu-funcionalidad
 1. Ve a https://github.com/Anais-RV/atmos/pulls
 2. Click **"New Pull Request"**
 3. Selecciona:
-   - **Base**: `dev`
+   - **Base**: `beta` (v2.0 - por defecto) o `dev` (v1.0 - solo hotfixes)
    - **Compare**: `feat/tu-funcionalidad`
 4. Rellena la plantilla que aparece
 5. Click **"Create Pull Request"**

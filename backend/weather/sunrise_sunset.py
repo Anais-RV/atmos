@@ -28,9 +28,17 @@ def calculate_sunrise_sunset(latitude, longitude, city_name, observation_date=No
     if observation_date.tzinfo is None:
         observation_date = pytz.UTC.localize(observation_date)
     
+    # If coordinates are missing, avoid calling Astral and return Nones
+    if latitude is None or longitude is None:
+        return {
+            'sunrise': None,
+            'sunset': None,
+            'daylight_duration': None,
+        }
+
     # Crear información de localización
     location = LocationInfo(city_name, region="", timezone="UTC", latitude=latitude, longitude=longitude)
-    
+
     # Calcular sunrise y sunset
     sun_times = sun(location.observer, date=observation_date.date())
     
