@@ -370,11 +370,22 @@ class UserPreferencesView(generics.RetrieveUpdateAPIView):
         prefs = self.get_object()
         # prefs is an EmbeddedDocument
         # Update fields manually
+        # Normalize incoming data so clients can send either
+        # 'favourite_weather_station' (UK) or 'favorite_weather_station' (US)
+        try:
+            incoming = request.data.copy()
+        except Exception:
+            incoming = dict(request.data)
+
+        # map US spelling to the stored field name
+        if 'favorite_weather_station' in incoming and 'favourite_weather_station' not in incoming:
+            incoming['favourite_weather_station'] = incoming.get('favorite_weather_station')
+
         allowed = ['theme', 'language', 'favourite_weather_station']
         updated = False
-        for k, v in request.data.items():
+        for k, v in incoming.items():
             if k in allowed:
-                setattr(prefs, k if k != 'favorite_weather_station' else 'favourite_weather_station', v)
+                setattr(prefs, k, v)
                 updated = True
 
         if updated:
