@@ -1,24 +1,271 @@
-/* Minimal styles exported from TagsPage PAGE_STYLES */
-:root{--bg-dark:#071328;--text-dark:#e6eef6;--muted:rgba(230,238,246,0.55);--primary:#3b82f6}
+/* ==========================================================================
+	Tags page - refactored styles
+	Purpose: scoped, maintainable CSS for TagsPage components
+	==========================================================================
+*/
+
+/* ----------------------
+	Theme variables
+	---------------------- */
+:root{
+  --tags-bg-dark: #071328;
+  --tags-text-dark: #e6eef6;
+  --tags-muted: rgba(230,238,246,0.55);
+  --tags-primary: #3b82f6;
+  --border-light: rgba(0,0,0,0.06);
+  --border-dark: rgba(255,255,255,0.03);
+  --shadow-sm: 0 1px 2px rgba(16,24,40,0.03);
+  --shadow-md: 0 6px 18px rgba(16,24,40,0.04);
+  --shadow-lg: 0 10px 30px rgba(2,6,23,0.12);
+}
+
+/* layout helpers */
 .center-card{padding:1rem;border-radius:10px}
 .tag-manager-container{max-width:920px;margin:0 auto}
-.tag-create-bar{display:flex;gap:0.5rem;align-items:center;margin-bottom:0.8rem}
-.btn{padding:0.45rem 0.8rem;border-radius:8px;border:none;cursor:pointer}
-.btn-primary{background:linear-gradient(135deg,var(--primary),#2563eb);color:#fff}
-.btn-secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit}
-.tag-form-card{padding:0.75rem;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:#fff}
-.color-picker{display:flex;gap:0.5rem;margin:0.5rem 0}
+.history-main-viewport{padding-top:0.4rem}
+
+/* ----------------------
+	Buttons (reusable)
+	---------------------- */
+.btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.45rem 0.8rem;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn-primary{background:linear-gradient(135deg,var(--tags-primary),#2563eb);color:#fff;box-shadow:0 8px 20px rgba(37,99,235,0.12)}
+.btn-secondary{background:transparent;border:1px solid var(--border-light);color:inherit}
+.btn-danger{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#7f1d1d;border:1px solid #fca5a5}
+.btn-sm{padding:.28rem .5rem;font-size:0.86rem}
+
+/* ----------------------
+	Create bar / top area
+	---------------------- */
+.tag-create-bar{display:flex;gap:.75rem;align-items:center;margin-bottom:0.8rem}
+
+/* ----------------------
+	Forms
+	---------------------- */
+.tag-form-card{display:flex;flex-direction:column;gap:.75rem;padding:.9rem;border-radius:10px;border:1px solid var(--border-light);background:#fff}
+.tag-form-card .form-group label{display:block;margin-bottom:6px;color:#374151}
+.tag-form-card input[type="text"], .tag-form-card textarea{width:100%;padding:.6rem;border-radius:8px;border:1px solid rgba(0,0,0,0.08);box-shadow:var(--shadow-sm)}
+.form-actions{display:flex;gap:.6rem;margin-top:.4rem}
+
+/* color picker */
+.color-picker{display:flex;gap:.6rem;align-items:center}
 .color-swatch{width:28px;height:28px;border-radius:999px;border:2px solid transparent;cursor:pointer}
 .color-swatch.active{box-shadow:0 6px 14px rgba(0,0,0,0.06);border-color:#fff}
-.tag-manager-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem}
-.tag-card{display:flex;align-items:center;justify-content:space-between;padding:0.6rem;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:#fff}
-.tag-badge{padding:0.35rem 0.65rem;border-radius:999px;color:#fff;font-weight:700}
-.tag-card-editing,.tag-card-deleting{flex-direction:column;gap:0.5rem}
-.tag-form-card input[type=text]{width:100%;padding:0.6rem;border-radius:8px;border:1px solid rgba(0,0,0,0.08)}
+
+/* ----------------------
+	Grid & cards
+	---------------------- */
+.tag-manager-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem}
+.tag-card{display:flex;align-items:center;justify-content:space-between;padding:.6rem;border-radius:10px;border:1px solid var(--border-light);background:#fff}
+.tag-card.selected{outline:3px solid rgba(59,130,246,0.12);transform:translateY(-2px)}
+.tag-badge{padding:.35rem .65rem;border-radius:999px;color:#fff;font-weight:700}
+.tag-card-editing,.tag-card-deleting{display:flex;flex-direction:column;gap:.6rem}
+.tag-card-actions{display:flex;gap:.5rem}
+
+/* tag color helpers (keep existing classes) */
+.tag-color-1{background:#3b82f6}
+.tag-color-2{background:#ef4444}
+.tag-color-3{background:#10b981}
+.tag-color-4{background:#f59e0b}
+.tag-color-5{background:#8b5cf6}
+.tag-color-6{background:#ec4899}
+.tag-color-7{background:#14b8a6}
+.tag-color-8{background:#f97316}
+
+/* ----------------------
+	Alerts / toasts
+	---------------------- */
+.tag-manager-alert{display:flex;align-items:center;gap:.6rem;padding:.6rem;border-radius:8px;margin-bottom:.8rem}
+.tag-manager-alert-error{background:#fff1f2;color:#7f1d1d;border:1px solid rgba(220,38,38,0.3)}
+.tag-manager-alert-close{background:transparent;border:none;margin-left:auto;cursor:pointer}
+
+/* Ensure the message node (<span>) inside alerts has explicit colors for
+	 light and dark themes. In light theme keep readable dark text; in dark
+	 theme force near-black text per design request. */
+.tag-manager-alert span {
+	color: rgba(0,0,0,0.88); /* light theme default */
+}
+
+/* Dark theme: force black-ish text for alert messages (scoped and global)
+	 to cover alerts rendered inside center-card or as portal/toast-root. */
+.center-card.theme-dark .tag-manager-alert span,
+html.theme-dark .tag-manager-alert span,
+.toast-root .tag-manager-alert span {
+	color: rgba(0,0,0,0.88) !important;
+}
 .toast-root{position:fixed;right:18px;bottom:18px;z-index:11000}
-.toast{background:#fff;padding:0.6rem 0.85rem;border-radius:10px;box-shadow:0 10px 30px rgba(2,6,23,0.12)}
-.theme-dark .center-card{background:transparent;color:var(--text-dark)}
-.theme-dark .tag-form-card,.theme-dark .tag-card{background:var(--bg-dark);border:1px solid rgba(255,255,255,0.03);color:var(--text-dark)}
-.theme-dark .tag-form-card input[type=text]{background:rgba(255,255,255,0.03);color:var(--text-dark);border:1px solid rgba(255,255,255,0.06)}
-.theme-dark .btn-primary{box-shadow:0 8px 20px rgba(37,99,235,0.12)}
+.toast{background:#fff;padding:.6rem .85rem;border-radius:10px;box-shadow:var(--shadow-lg);display:flex;align-items:center}
+
+/* ----------------------
+	Loading / empty
+	---------------------- */
+.loading-center{display:flex;align-items:center;justify-content:center;min-height:120px}
+.empty-state{padding:2rem;color:#6b7280;text-align:center}
+
+/* ----------------------
+	Dark theme (scoped)
+	Prefer scoping under .center-card.theme-dark and html.theme-dark
+	---------------------- */
+.center-card.theme-dark{color:var(--tags-text-dark)}
+.center-card.theme-dark .tag-form-card,.center-card.theme-dark .tag-card{background:var(--tags-bg-dark);border:1px solid var(--border-dark);color:var(--tags-text-dark);box-shadow:none}
+.center-card.theme-dark .tag-form-card input[type="text"],.center-card.theme-dark .tag-form-card textarea{background:rgba(255,255,255,0.03);color:var(--tags-text-dark);border:1px solid rgba(255,255,255,0.06)}
+.center-card.theme-dark .tag-form-card .form-group label{color:rgba(230,238,246,0.6)}
+.center-card.theme-dark .btn{background:rgba(255,255,255,0.02);color:var(--tags-text-dark);border:1px solid rgba(255,255,255,0.03)}
+.center-card.theme-dark .btn-primary{background:linear-gradient(135deg,#2563eb,#1e40af);box-shadow:0 8px 20px rgba(37,99,235,0.08);color:#fff}
+.center-card.theme-dark .btn-secondary{background:transparent;color:rgba(230,238,246,0.7);border:1px solid rgba(255,255,255,0.04)}
+
+/* focus cleanup (avoid browser-specific inner highlights) */
+.center-card.theme-dark input:focus,.center-card.theme-dark textarea:focus{outline:none;box-shadow:none;border-color:rgba(255,255,255,0.08)}
+
+/* Fix contrast issues seen in some browsers: force readable colors for specific inputs and badges */
+.center-card.theme-dark .tag-form-card input[type="text"],
+.center-card.theme-dark .tag-edit-input,
+.center-card.theme-dark .tag-form-card textarea {
+	color: var(--tags-text-dark) !important;
+	background: rgba(255,255,255,0.02) !important;
+	-webkit-text-fill-color: var(--tags-text-dark) !important; /* for autofill/text rendering */
+}
+
+.center-card.theme-dark .tag-form-card input::placeholder,
+.center-card.theme-dark .tag-form-card textarea::placeholder,
+.center-card.theme-dark .tag-edit-input::placeholder {
+	color: rgba(230,238,246,0.45) !important;
+	opacity: 1 !important;
+}
+
+/* Ensure badges text remains white on dark backgrounds */
+.center-card.theme-dark .tag-badge { color: #fff !important; }
+
+/* Remove any residual strong outlines from accessibility/highlight */
+.center-card.theme-dark .tag-form-card input:-webkit-autofill,
+.center-card.theme-dark .tag-form-card input:-webkit-autofill:focus {
+	box-shadow: 0 0 0 30px rgba(255,255,255,0.03) inset !important;
+	-webkit-text-fill-color: var(--tags-text-dark) !important;
+}
+
+/* Alerts / toasts in dark mode: ensure readable background, border and text */
+.center-card.theme-dark .tag-manager-alert {
+	background: rgba(255,255,255,0.03) !important;
+	color: var(--tags-text-dark) !important;
+	border: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+.center-card.theme-dark .tag-manager-alert-error {
+	/* subtle red tint on dark background, with high-contrast text */
+	background: linear-gradient(180deg, rgba(220,38,38,0.06), rgba(255,255,255,0.01)) !important;
+	color: rgba(230,238,246,0.95) !important;
+	border: 1px solid rgba(220,38,38,0.14) !important;
+}
+
+.center-card.theme-dark .tag-manager-alert svg,
+.center-card.theme-dark .tag-manager-alert .tag-manager-alert-close {
+	color: rgba(230,238,246,0.9) !important;
+}
+
+/* ensure the alert message text is readable and selectable */
+.center-card.theme-dark .tag-manager-alert span {
+	color: var(--tags-text-dark) !important;
+}
+
+/* selection inside alerts (optional): keep contrast when user selects the text */
+.center-card.theme-dark .tag-manager-alert ::selection {
+	background: rgba(59,130,246,0.18);
+	color: var(--tags-text-dark);
+}
+
+/* Global fallbacks for alerts/toasts rendered outside the center-card (portals)
+	 Use html.theme-dark so these match the global theme class applied to <html>. */
+html.theme-dark .tag-manager-alert,
+.toast-root.html-theme-dark .tag-manager-alert,
+.toast-root .tag-manager-alert {
+	background: rgba(255,255,255,0.03) !important;
+	color: var(--tags-text-dark) !important;
+	border: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+html.theme-dark .tag-manager-alert-error,
+.toast-root.html-theme-dark .tag-manager-alert-error,
+.toast-root .tag-manager-alert-error {
+	background: linear-gradient(180deg, rgba(220,38,38,0.06), rgba(255,255,255,0.01)) !important;
+	color: rgba(230,238,246,0.95) !important;
+	border: 1px solid rgba(220,38,38,0.14) !important;
+}
+
+/* User requested: alert text should be black in dark theme. Force black text
+	 for alert message, icons and close button both scoped and globally. */
+.center-card.theme-dark .tag-manager-alert,
+.center-card.theme-dark .tag-manager-alert-error,
+html.theme-dark .tag-manager-alert,
+html.theme-dark .tag-manager-alert-error,
+.toast-root .tag-manager-alert,
+.toast-root .tag-manager-alert-error {
+	color: rgba(0,0,0,0.88) !important;
+}
+
+.center-card.theme-dark .tag-manager-alert svg,
+.center-card.theme-dark .tag-manager-alert .tag-manager-alert-close,
+html.theme-dark .tag-manager-alert svg,
+html.theme-dark .tag-manager-alert .tag-manager-alert-close,
+.toast-root .tag-manager-alert svg,
+.toast-root .tag-manager-alert .tag-manager-alert-close {
+	color: rgba(0,0,0,0.9) !important;
+	fill: rgba(0,0,0,0.9) !important;
+}
+
+/* Toast container itself */
+html.theme-dark .toast .toast-content,
+.toast-root .toast .toast-content {
+	color: var(--tags-text-dark) !important;
+}
+
+/* In some setups the html may get class "theme-dark" instead of "theme-dark" on the center card;
+	 allow either to match by targeting html.theme-dark and also the toast-root container. */
+
+/* Make the 'Cancelar' / secondary buttons in the form readable in dark theme
+	 even when they are rendered disabled while the form is empty. Scope narrowly
+	 to the tag form so other disabled controls aren't affected. */
+.center-card.theme-dark .tag-form-card .btn-secondary:disabled {
+	opacity: 1 !important; /* avoid overly faded look */
+	color: rgba(230,238,246,0.78) !important;
+	background: transparent !important;
+	border-color: rgba(255,255,255,0.08) !important;
+	box-shadow: none !important;
+	cursor: pointer !important; /* allow user to cancel even if primary is disabled */
+}
+
+/* ensure regular secondary buttons inside the tag form also have clear focus/hover */
+.center-card.theme-dark .tag-form-card .btn-secondary:hover,
+.center-card.theme-dark .tag-form-card .btn-secondary:focus {
+	background: rgba(255,255,255,0.02);
+	border-color: rgba(255,255,255,0.12);
+	color: var(--tags-text-dark);
+}
+
+/* Stronger, narrowly-scoped rules for the Cancel button in the form to avoid
+	 visual artifacts from other global rules or browser rendering. These rules
+	 intentionally use higher specificity and !important only when necessary. */
+.center-card.theme-dark .tag-form-card .form-actions .btn.btn-secondary {
+	background: transparent !important;
+	color: rgba(230,238,246,0.9) !important;
+	border: 1px solid rgba(255,255,255,0.12) !important;
+	padding: 0.45rem 0.75rem !important;
+	box-shadow: none !important;
+	opacity: 1 !important;
+	-webkit-text-fill-color: rgba(230,238,246,0.9) !important;
+}
+
+/* If some UA styles or scripts accidentally set the cancel button as disabled,
+	 still keep it readable and interactive for cancel actions. */
+.center-card.theme-dark .tag-form-card .form-actions .btn.btn-secondary[disabled] {
+	opacity: 1 !important;
+	color: rgba(230,238,246,0.78) !important;
+	border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* keep small compat helpers */
+.tag-batch-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+.tag-batch-delete-btn{display:flex;align-items:center;gap:.5rem}
+
+/* end of file */
+
 

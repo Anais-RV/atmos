@@ -354,7 +354,11 @@ function TagFormCard({ onCancel, onSubmit }) {
       </div>
 
       <div className="form-actions">
-        <button type="button" onClick={onCancel} className="btn btn-secondary">Cancelar</button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="btn btn-primary"
+        >Cancelar</button>
         <button type="submit" className="btn btn-primary">Crear</button>
       </div>
     </form>
@@ -442,7 +446,10 @@ function TagCard({
           ))}
         </div>
         <div className="tag-card-actions">
-          <button onClick={onCancelEdit} className="btn btn-sm btn-secondary">Cancelar</button>
+          <button
+            onClick={onCancelEdit}
+            className="btn btn-sm btn-primary"
+          >Cancelar</button>
           <button 
             onClick={() => onSaveEdit(tag.id, editName, editColor)} 
             className="btn btn-sm btn-primary"
@@ -459,7 +466,10 @@ function TagCard({
       <div className="tag-card tag-card-deleting">
         <p>¿Eliminar {tag.name}?</p>
         <div className="tag-card-actions">
-          <button onClick={onCancelDelete} className="btn btn-sm btn-secondary">Cancelar</button>
+          <button
+            onClick={onCancelDelete}
+            className="btn btn-sm btn-primary"
+          >Cancelar</button>
           <button onClick={onConfirmDelete} className="btn btn-sm btn-danger">Eliminar</button>
         </div>
       </div>
