@@ -17,7 +17,8 @@ from datetime import datetime, timedelta
 from rest_framework.test import APIClient
 from rest_framework import status
 
-from weather.models import City, WeatherObservation
+from weather.documents import CityDocument, WeatherObservationDocument
+from datetime import datetime
 from weather.time_series_service import (
     normalize_variable,
     normalize_time_range,
@@ -39,25 +40,14 @@ class TestTimeSeriesValidation(TestCase):
 
     def setUp(self):
         """Crear datos de prueba"""
-        self.city = City.objects.create(
-            name="Madrid",
-            latitud=40.4168,
-            longitud=-3.7038,
-            altitud=646
-        )
-        
+        self.city = CityDocument(id=20, name="Madrid", latitud=40.4168, longitud=-3.7038, altitud=646)
+        self.city.save()
+
         # Crear observaciones para las últimas 48 horas
-        now = timezone.now()
+        now = datetime.utcnow()
         for i in range(48):
             timestamp = now - timedelta(hours=i)
-            WeatherObservation.objects.create(
-                city=self.city,
-                timestamp=timestamp,
-                temperature=20 + (i % 10),
-                humidity=60 + (i % 20),
-                pressure=1013,
-                wind_speed=5 + (i % 5),
-            )
+            WeatherObservationDocument(city_id=self.city.id, timestamp=timestamp, temperature=20 + (i % 10), humidity=60 + (i % 20), pressure=1013, wind_speed=5 + (i % 5)).save()
 
     def test_normalize_variable_temperature(self):
         """Debe normalizar variantes de temperatura"""
@@ -150,28 +140,17 @@ class TestTimeSeriesAggregation(TestCase):
 
     def setUp(self):
         """Crear datos de prueba"""
-        self.city = City.objects.create(
-            name="Barcelona",
-            latitud=41.3851,
-            longitud=2.1734,
-            altitud=2
-        )
-        
+        self.city = CityDocument(id=21, name="Barcelona", latitud=41.3851, longitud=2.1734, altitud=2)
+        self.city.save()
+
         # Crear observaciones para 48 horas con patrón predecible
-        now = timezone.now()
+        now = datetime.utcnow()
         base_temp = 20
         for i in range(48):
             timestamp = now - timedelta(hours=i)
             # Temperatura varía de 15 a 25°C
             temp = base_temp + 5 * ((i % 10) / 10)
-            WeatherObservation.objects.create(
-                city=self.city,
-                timestamp=timestamp,
-                temperature=temp,
-                humidity=60,
-                pressure=1013,
-                wind_speed=5,
-            )
+            WeatherObservationDocument(city_id=self.city.id, timestamp=timestamp, temperature=temp, humidity=60, pressure=1013, wind_speed=5).save()
 
     def test_build_time_series_raw(self):
         """Debe construir series temporales sin agregar"""
@@ -225,11 +204,8 @@ class TestTimeSeriesAggregation(TestCase):
 
     def test_build_time_series_no_data(self):
         """Debe manejar ciudades sin datos"""
-        city_no_data = City.objects.create(
-            name="NoData City",
-            latitud=0,
-            longitud=0
-        )
+        city_no_data = CityDocument(id=22, name="NoData City", latitud=0, longitud=0)
+        city_no_data.save()
         
         result = build_time_series(
             city_id=city_no_data.id,
@@ -262,23 +238,13 @@ class TestTimeSeriesCache(TestCase):
 
     def setUp(self):
         """Crear datos de prueba"""
-        self.city = City.objects.create(
-            name="Valencia",
-            latitud=39.4699,
-            longitud=-0.3763
-        )
-        
-        now = timezone.now()
+        self.city = CityDocument(id=23, name="Valencia", latitud=39.4699, longitud=-0.3763)
+        self.city.save()
+
+        now = datetime.utcnow()
         for i in range(24):
             timestamp = now - timedelta(hours=i)
-            WeatherObservation.objects.create(
-                city=self.city,
-                timestamp=timestamp,
-                temperature=20 + (i % 10),
-                humidity=60,
-                pressure=1013,
-                wind_speed=5,
-            )
+            WeatherObservationDocument(city_id=self.city.id, timestamp=timestamp, temperature=20 + (i % 10), humidity=60, pressure=1013, wind_speed=5).save()
         
         # Limpiar caché antes de cada test
         cache.clear()
@@ -334,23 +300,13 @@ class TestTimeSeriesEndpoint(TestCase):
     def setUp(self):
         """Crear datos de prueba"""
         self.client = APIClient()
-        self.city = City.objects.create(
-            name="Sevilla",
-            latitud=37.3891,
-            longitud=-5.9844
-        )
-        
-        now = timezone.now()
+        self.city = CityDocument(id=24, name="Sevilla", latitud=37.3891, longitud=-5.9844)
+        self.city.save()
+
+        now = datetime.utcnow()
         for i in range(48):
             timestamp = now - timedelta(hours=i)
-            WeatherObservation.objects.create(
-                city=self.city,
-                timestamp=timestamp,
-                temperature=25 + (i % 10),
-                humidity=65 + (i % 15),
-                pressure=1010 + (i % 5),
-                wind_speed=7 + (i % 3),
-            )
+            WeatherObservationDocument(city_id=self.city.id, timestamp=timestamp, temperature=25 + (i % 10), humidity=65 + (i % 15), pressure=1010 + (i % 5), wind_speed=7 + (i % 3)).save()
         
         cache.clear()
 
@@ -505,29 +461,14 @@ class TestTimeSeriesPerformance(TestCase):
 
     def setUp(self):
         """Crear datos de prueba grandes"""
-        self.city = City.objects.create(
-            name="PerformanceCity",
-            latitud=0,
-            longitud=0
-        )
-        
+        self.city = CityDocument(id=25, name="PerformanceCity", latitud=0, longitud=0)
+        self.city.save()
+
         # Crear muchas observaciones para pruebas de rendimiento
-        now = timezone.now()
-        observations = []
+        now = datetime.utcnow()
         for i in range(1000):  # 1000 observaciones (~41 días)
             timestamp = now - timedelta(hours=i)
-            observations.append(
-                WeatherObservation(
-                    city=self.city,
-                    timestamp=timestamp,
-                    temperature=20 + (i % 10),
-                    humidity=60 + (i % 20),
-                    pressure=1013,
-                    wind_speed=5 + (i % 5),
-                )
-            )
-        
-        WeatherObservation.objects.bulk_create(observations)
+            WeatherObservationDocument(city_id=self.city.id, timestamp=timestamp, temperature=20 + (i % 10), humidity=60 + (i % 20), pressure=1013, wind_speed=5 + (i % 5)).save()
         cache.clear()
 
     def tearDown(self):

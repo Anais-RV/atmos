@@ -3,7 +3,7 @@
  * Gestiona login, registro y manejo de tokens JWT
  */
 
-const API_BASE = 'http://localhost:8000/api/auth';
+const API_BASE = '/api/auth';
 
 export const authService = {
   /**

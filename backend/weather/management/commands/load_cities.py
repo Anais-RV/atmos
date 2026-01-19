@@ -1,7 +1,7 @@
 import json
 import os
 from django.core.management.base import BaseCommand
-from weather.models import City
+from weather.documents import CityDocument
 
 
 class Command(BaseCommand):
@@ -46,23 +46,26 @@ class Command(BaseCommand):
 
         for city_data in cities_data:
             try:
-                # Usar get_or_create para evitar duplicados
-                # Criterio: nombre + comunidad_autonoma (combinación única)
-                city, created = City.objects.get_or_create(
-                    name=city_data.get('nombre', '').strip(),
-                    defaults={
-                        'latitud': float(city_data.get('latitud', 0)),
-                        'longitud': float(city_data.get('longitud', 0)),
-                        'altitud': float(city_data.get('altitud', 0)) if city_data.get('altitud') else None,
-                        'comunidad_autonoma': city_data.get('comunidad_autonoma', '').strip(),
-                    }
-                )
-                
-                if created:
-                    created_count += 1
-                else:
+                nombre = city_data.get('nombre', '').strip()
+                comunidad = city_data.get('comunidad_autonoma', '').strip()
+
+                # Buscar si ya existe (nombre + comunidad)
+                existing = CityDocument.objects(name=nombre, comunidad_autonoma=comunidad).first()
+                if existing:
                     skipped_count += 1
-                    
+                    continue
+
+                city = CityDocument(
+                    id=CityDocument.get_next_id(),
+                    name=nombre,
+                    latitud=float(city_data.get('latitud', 0) or 0),
+                    longitud=float(city_data.get('longitud', 0) or 0),
+                    altitud=(float(city_data.get('altitud')) if city_data.get('altitud') not in (None, '') else None),
+                    comunidad_autonoma=comunidad,
+                )
+                city.save()
+                created_count += 1
+
             except (ValueError, KeyError, TypeError) as e:
                 errors.append(f"Ciudad {city_data.get('nombre', 'desconocida')}: {str(e)}")
             except Exception as e:
@@ -73,7 +76,7 @@ class Command(BaseCommand):
         self.stdout.write(f'Ciudades creadas: {created_count}')
         self.stdout.write(f'Ciudades omitidas (duplicadas): {skipped_count}')
         
-        total_cities = City.objects.count()
+        total_cities = CityDocument.objects.count()
         self.stdout.write(f'Total de ciudades en BD: {total_cities}\n')
 
         if errors:

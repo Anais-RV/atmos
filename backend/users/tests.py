@@ -1,7 +1,6 @@
-from django.test import TestCase, TransactionTestCase
-from django.contrib.auth import get_user_model, authenticate
-from django.contrib.auth.models import User
+from django.test import TestCase
 from rest_framework.test import APIClient
+from users.documents import UserDocument
 from rest_framework import status
 import re
 
@@ -25,7 +24,7 @@ class AuthenticationTests(TestCase):
         }
         response = self.client.post(self.register_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(User.objects.filter(username='testuser').exists())
+        self.assertIsNotNone(UserDocument.objects(username='testuser').first())
 
     def test_user_registration_password_mismatch(self):
         """Test: Registro falla si las contraseñas no coinciden"""
@@ -40,12 +39,14 @@ class AuthenticationTests(TestCase):
 
     def test_user_login(self):
         """Test: Login exitoso con JWT"""
-        # Crear usuario
-        user = User.objects.create_user(
+        # Crear usuario en Mongo
+        user = UserDocument(
+            id=1,
             username='testuser',
-            password='testpass123',
-            email='test@example.com'
+            email='test@example.com',
         )
+        user.set_password('testpass123')
+        user.save()
         
         # Intentar login
         data = {
@@ -65,12 +66,14 @@ class AuthenticationTests(TestCase):
 
     def test_me_endpoint_with_authentication(self):
         """Test: Endpoint /me/ devuelve datos del usuario autenticado"""
-        # Crear usuario y obtener token
-        user = User.objects.create_user(
+        # Crear usuario en Mongo
+        user = UserDocument(
+            id=2,
             username='testuser',
-            password='testpass123',
             email='test@example.com'
         )
+        user.set_password('testpass123')
+        user.save()
         
         login_data = {
             'email': 'test@example.com',
@@ -89,8 +92,6 @@ class AuthenticationTests(TestCase):
 
 # Test contraseñas seguras
 
-User = get_user_model()
-
 class PasswordHashingTestCase(TestCase):
     """
     Tests para verificar que las contraseñas se hashean correctamente.
@@ -102,11 +103,9 @@ class PasswordHashingTestCase(TestCase):
         
     def test_create_user_hashea_password(self):
         """Verifica que create_user() hashea la contraseña"""
-        user = User.objects.create_user(
-            username='testuser',
-            email='test@ejemplo.com',
-            password=self.password_plano
-        )
+        user = UserDocument(id=10, username='testuser', email='test@ejemplo.com')
+        user.set_password(self.password_plano)
+        user.save()
         
         # La contraseña NO debe ser texto plano
         self.assertNotEqual(user.password, self.password_plano)
@@ -120,7 +119,7 @@ class PasswordHashingTestCase(TestCase):
         
     def test_set_password_hashea_password(self):
         """Verifica que set_password() hashea la contraseña"""
-        user = User(username='testuser2', email='test2@ejemplo.com')
+        user = UserDocument(id=11, username='testuser2', email='test2@ejemplo.com')
         user.set_password(self.password_plano)
         user.save()
         
@@ -130,14 +129,12 @@ class PasswordHashingTestCase(TestCase):
         
     def test_password_no_se_guarda_en_texto_plano(self):
         """Verifica que la contraseña NUNCA se guarda en texto plano"""
-        user = User.objects.create_user(
-            username='testuser3',
-            email='test3@ejemplo.com',
-            password='SuperSecret123!'
-        )
+        user = UserDocument(id=12, username='testuser3', email='test3@ejemplo.com')
+        user.set_password('SuperSecret123!')
+        user.save()
         
-        # Recargar usuario desde BD
-        user_from_db = User.objects.get(pk=user.pk)
+        # Recargar usuario desde BD (Mongo)
+        user_from_db = UserDocument.objects(id=user.id).first()
         
         # La contraseña en BD NO debe ser texto plano
         self.assertNotIn('SuperSecret123!', user_from_db.password)
@@ -149,30 +146,21 @@ class PasswordAuthenticationTestCase(TestCase):
     
     def setUp(self):
         self.password = 'TestPassword123!'
-        self.user = User.objects.create_user(
-            username='authtest',
-            email='authtest@ejemplo.com',
-            password=self.password
-        )
+        self.user = UserDocument(id=3, username='authtest', email='authtest@ejemplo.com')
+        self.user.set_password(self.password)
+        self.user.save()
     
     def test_authenticate_con_password_correcta(self):
         """Verifica que authenticate() funciona con contraseña correcta"""
-        user = authenticate(
-            username='authtest',
-            password=self.password
-        )
-        
-        self.assertIsNotNone(user)
-        self.assertEqual(user.username, 'authtest')
+        # Comprobar directamente el documento
+        user_doc = UserDocument.objects(username='authtest').first()
+        self.assertIsNotNone(user_doc)
+        self.assertTrue(user_doc.check_password(self.password))
         
     def test_authenticate_con_password_incorrecta(self):
         """Verifica que authenticate() rechaza contraseña incorrecta"""
-        user = authenticate(
-            username='authtest',
-            password='PasswordIncorrecta'
-        )
-        
-        self.assertIsNone(user)
+        user_doc = UserDocument.objects(username='authtest').first()
+        self.assertFalse(user_doc.check_password('PasswordIncorrecta'))
         
     def test_check_password_con_password_correcta(self):
         """Verifica que check_password() funciona correctamente"""

@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-v5m=4q4)lopw%dfij@%sz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver', '*']
 
 
 # Application definition
@@ -144,8 +144,7 @@ AUTH_TYPE = 'JWT'
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication", # Para JWT
-        "rest_framework.authentication.SessionAuthentication", # Para sesiones
+        "users.auth_backends.MongoJWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.AllowAny",  # Permite acceso público a weather API
@@ -159,12 +158,34 @@ REST_FRAMEWORK = {
     }
 }
 
+# Disable DRF throttling during local development (DEBUG=True) to avoid
+# ``429 Too Many Requests`` while testing. In production DEBUG should be False
+# and throttling will apply as configured above.
+if DEBUG:
+    REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"] = []
+    # Optionally increase rates in development instead of disabling entirely
+    REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = {
+        "user": "10000/hour",
+        "anon": "2000/hour",
+    }
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
+
+# ------------------ MongoDB / MongoEngine ------------------
+# Use mongomock for development (reliable, no SSL issues)
+# Set MONGODB_USE_MOCK=False to use real MongoDB Atlas
+MONGODB_USE_MOCK = config('MONGODB_USE_MOCK', default=False, cast=bool)
+MONGODB_URI = config('MONGODB_URI', default='mongodb+srv://sergiomadrid135:sergiomadrid135@cluster0.loijxvu.mongodb.net/?appName=Cluster0')
+MONGODB_DB = config('MONGODB_DB', default='atmos_db')
+
+# Inicializar mongoengine en users/apps.py
+MONGOENGINE_ENABLED = False
+
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -277,6 +298,20 @@ LOGGING = {
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
+
+        # MongoEngine initialization (connect to MongoDB Atlas)
+        try:
+            from .mongo_config import init_mongo
+            # Initialize connection (will raise if MONGODB_URI not set)
+            try:
+                init_mongo()
+                MONGOENGINE_ENABLED = True
+            except Exception as _e:
+                print(f"Aviso: mongoengine no inicializado: {_e}")
+                MONGOENGINE_ENABLED = False
+        except Exception:
+            MONGOENGINE_ENABLED = False
+
         },
         "file": {
             "class": "logging.FileHandler",

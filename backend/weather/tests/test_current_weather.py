@@ -3,34 +3,25 @@ from django.utils import timezone
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-from weather.models import City, WeatherObservation
+from weather.documents import CityDocument, WeatherObservationDocument
+from datetime import datetime, timedelta
 
 
 class CurrentWeatherTests(APITestCase):
     def setUp(self):
         """Crear datos de prueba"""
-        self.city_madrid = City.objects.create(name="Madrid")
-        self.city_barcelona = City.objects.create(name="Barcelona")
+        self.city_madrid = CityDocument(id=40, name="Madrid")
+        self.city_madrid.save()
+        self.city_barcelona = CityDocument(id=41, name="Barcelona")
+        self.city_barcelona.save()
 
         # Crear observaciones para Madrid
-        now = timezone.now()
-        WeatherObservation.objects.create(
-            city=self.city_madrid,
-            timestamp=now - timezone.timedelta(hours=2),
-            temperature=15.5,
-        )
-        WeatherObservation.objects.create(
-            city=self.city_madrid,
-            timestamp=now,  # La más reciente
-            temperature=18.3,
-        )
+        now = datetime.utcnow()
+        WeatherObservationDocument(city_id=self.city_madrid.id, timestamp=now - timedelta(hours=2), temperature=15.5).save()
+        WeatherObservationDocument(city_id=self.city_madrid.id, timestamp=now, temperature=18.3).save()
 
         # Crear observación para Barcelona
-        WeatherObservation.objects.create(
-            city=self.city_barcelona,
-            timestamp=now - timezone.timedelta(hours=1),
-            temperature=22.0,
-        )
+        WeatherObservationDocument(city_id=self.city_barcelona.id, timestamp=now - timedelta(hours=1), temperature=22.0).save()
 
     def test_current_weather_returns_latest_observation(self):
         """
@@ -70,7 +61,8 @@ class CurrentWeatherTests(APITestCase):
     def test_current_weather_no_observations(self):
         """Verificar que aunque no haya observaciones BD, AEMET mock devuelve datos"""
         # Crear una ciudad sin observaciones
-        city_no_data = City.objects.create(name="Sevilla")
+        city_no_data = CityDocument(id=42, name="Sevilla")
+        city_no_data.save()
         url = reverse("current-weather")
         response = self.client.get(url, {"city_id": city_no_data.id})
 

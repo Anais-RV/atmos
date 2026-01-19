@@ -29,9 +29,9 @@ function WeatherHistoryPage() {
       <section className="dashboard-center">
         {/* Tarjeta superior */}
         <section className="center-card center-card-top">
-          <h2 className="center-card-title">WEATHER HISTORY</h2>
+          <h2 className="center-card-title">HISTORIAL DE ALERTAS</h2>
           <p className="center-card-text">
-            Consulta el historial meteorológico registrado por ATMOS.
+            Consulta el historial de alertas generadas por ATMOS (si tu API las expone en <code>/api/alerts/</code>).
           </p>
 
           {/* Zona donde irán las gráficas de historial */}

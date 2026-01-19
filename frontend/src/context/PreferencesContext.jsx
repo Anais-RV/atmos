@@ -65,17 +65,23 @@ export const PreferencesProvider = ({ children }) => {
 
   const setLanguage = useCallback((language) => {
     setPreferences((prev) => ({ ...prev, language }));
-    updatePreferences({ ...preferences, language });
+    updatePreferences({ ...preferences, language }).catch((err) => {
+      console.error('Error updating language:', err);
+    });
   }, [preferences, updatePreferences]);
 
   const setTheme = useCallback((theme) => {
     setPreferences((prev) => ({ ...prev, theme }));
-    updatePreferences({ ...preferences, theme });
+    updatePreferences({ ...preferences, theme }).catch((err) => {
+      console.error('Error updating theme:', err);
+    });
   }, [preferences, updatePreferences]);
 
   const setFavoriteStation = useCallback((favorite_station) => {
     setPreferences((prev) => ({ ...prev, favorite_station }));
-    updatePreferences({ ...preferences, favorite_station });
+    updatePreferences({ ...preferences, favorite_station }).catch((err) => {
+      console.error('Error updating favorite station:', err);
+    });
   }, [preferences, updatePreferences]);
 
   const value = {
@@ -87,6 +93,21 @@ export const PreferencesProvider = ({ children }) => {
     setFavoriteStation,
     updatePreferences,
   };
+
+  // Ensure the selected theme is applied globally on the document element so
+  // fixed/modals and other top-level UI elements can style based on it.
+  useEffect(() => {
+    try {
+      const root = document.documentElement;
+      if (!root) return;
+      root.classList.remove('theme-dark', 'theme-light');
+      const cls = preferences?.theme === 'dark' ? 'theme-dark' : 'theme-light';
+      root.classList.add(cls);
+    } catch {
+      // defensive: document may not be available in some environments
+      // swallow silently
+    }
+  }, [preferences.theme]);
 
   return (
     <PreferencesContext.Provider value={value}>
