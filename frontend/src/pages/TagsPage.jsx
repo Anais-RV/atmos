@@ -1,11 +1,11 @@
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect, useReducer, useCallback } from "react";
 import PropTypes from 'prop-types';
 import { Trash2, Plus, Loader, AlertCircle, Edit2, X } from "lucide-react";
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
 import { usePreferences } from '../context/usePreferences';
 import { tagsService } from "../services/tagsService";
-import "../styles/Tags.css";
+import "../styles/tags.css";
 
 // ============================================================================
 // Constants
@@ -43,6 +43,8 @@ const initialState = {
   deletingId: null,
   selectedIds: new Set(),
 };
+
+// styles moved to ../styles/tags.css
 
 // ============================================================================
 // Reducer
@@ -103,20 +105,31 @@ export default function TagsPage() {
   // Load tags on mount
   useEffect(() => {
     const token = localStorage.getItem("access_token");
-    if (!token) return;
+    if (!token) {
+      dispatch({ type: ACTIONS.SET_ERROR, payload: "No estás autenticado" });
+      return;
+    }
 
+    let mounted = true;
     const load = async () => {
       dispatch({ type: ACTIONS.SET_LOADING, payload: true });
       try {
         const data = await tagsService.getTags();
-        dispatch({ type: ACTIONS.LOAD_TAGS, payload: Array.isArray(data) ? data : [] });
+        if (mounted) {
+          dispatch({ type: ACTIONS.LOAD_TAGS, payload: Array.isArray(data) ? data : [] });
+        }
       } catch (err) {
-        dispatch({ type: ACTIONS.SET_ERROR, payload: err.message || "Error al cargar" });
+        if (mounted) {
+          dispatch({ type: ACTIONS.SET_ERROR, payload: err.message || "Error al cargar etiquetas" });
+        }
       } finally {
-        dispatch({ type: ACTIONS.SET_LOADING, payload: false });
+        if (mounted) {
+          dispatch({ type: ACTIONS.SET_LOADING, payload: false });
+        }
       }
     };
     load();
+    return () => { mounted = false; };
   }, []);
 
   // Toast timeout
@@ -127,10 +140,10 @@ export default function TagsPage() {
   }, [state.toast]);
 
   // Operations
-  const createTag = async (name, color) => {
-    if (!name.trim()) {
+  const createTag = useCallback(async (name, color) => {
+    if (!name || !name.trim()) {
       dispatch({ type: ACTIONS.SET_ERROR, payload: "El nombre no puede estar vacío" });
-      return;
+      return false;
     }
     dispatch({ type: ACTIONS.SET_LOADING, payload: true });
     try {
@@ -139,17 +152,19 @@ export default function TagsPage() {
       dispatch({ type: ACTIONS.LOAD_TAGS, payload: Array.isArray(data) ? data : [] });
       dispatch({ type: ACTIONS.SET_TOAST, payload: "Etiqueta creada" });
       dispatch({ type: ACTIONS.CANCEL_CREATE });
+      return true;
     } catch (err) {
       dispatch({ type: ACTIONS.SET_ERROR, payload: err.message });
+      return false;
     } finally {
       dispatch({ type: ACTIONS.SET_LOADING, payload: false });
     }
-  };
+  }, []);
 
-  const updateTag = async (id, name, color) => {
-    if (!name.trim()) {
+  const updateTag = useCallback(async (id, name, color) => {
+    if (!name || !name.trim()) {
       dispatch({ type: ACTIONS.SET_ERROR, payload: "El nombre no puede estar vacío" });
-      return;
+      return false;
     }
     dispatch({ type: ACTIONS.SET_LOADING, payload: true });
     try {
@@ -158,14 +173,16 @@ export default function TagsPage() {
       dispatch({ type: ACTIONS.LOAD_TAGS, payload: Array.isArray(data) ? data : [] });
       dispatch({ type: ACTIONS.SET_TOAST, payload: "Etiqueta actualizada" });
       dispatch({ type: ACTIONS.CANCEL_EDIT });
+      return true;
     } catch (err) {
       dispatch({ type: ACTIONS.SET_ERROR, payload: err.message });
+      return false;
     } finally {
       dispatch({ type: ACTIONS.SET_LOADING, payload: false });
     }
-  };
+  }, []);
 
-  const deleteTag = async (id) => {
+  const deleteTag = useCallback(async (id) => {
     dispatch({ type: ACTIONS.SET_LOADING, payload: true });
     try {
       await tagsService.deleteTag(id);
@@ -173,34 +190,43 @@ export default function TagsPage() {
       dispatch({ type: ACTIONS.LOAD_TAGS, payload: Array.isArray(data) ? data : [] });
       dispatch({ type: ACTIONS.SET_TOAST, payload: "Etiqueta eliminada" });
       dispatch({ type: ACTIONS.CANCEL_DELETE });
+      return true;
     } catch (err) {
       dispatch({ type: ACTIONS.SET_ERROR, payload: err.message });
+      return false;
     } finally {
       dispatch({ type: ACTIONS.SET_LOADING, payload: false });
     }
-  };
+  }, []);
 
-  const batchDelete = async () => {
+  const batchDelete = useCallback(async () => {
     const ids = Array.from(state.selectedIds);
-    if (!ids.length) return;
-
+    if (!ids.length) return false;
     dispatch({ type: ACTIONS.SET_LOADING, payload: true });
     let deleted = 0;
-    
+    const errors = [];
     try {
-      await Promise.all(ids.map(id => 
-        tagsService.deleteTag(id).then(() => { deleted++; }).catch(() => {})
-      ));
+      await Promise.all(ids.map(async (id) => {
+        try {
+          await tagsService.deleteTag(id);
+          deleted++;
+        } catch {
+          errors.push(id);
+        }
+      }));
       const data = await tagsService.getTags();
       dispatch({ type: ACTIONS.LOAD_TAGS, payload: Array.isArray(data) ? data : [] });
       dispatch({ type: ACTIONS.SET_TOAST, payload: `${deleted} eliminada${deleted !== 1 ? 's' : ''}` });
       dispatch({ type: ACTIONS.CLEAR_SELECTED });
+      if (errors.length) dispatch({ type: ACTIONS.SET_ERROR, payload: `${errors.length} eliminación(es) fallida(s)` });
+      return true;
     } catch (err) {
       dispatch({ type: ACTIONS.SET_ERROR, payload: err.message });
+      return false;
     } finally {
       dispatch({ type: ACTIONS.SET_LOADING, payload: false });
     }
-  };
+  }, [state.selectedIds]);
 
   return (
     <BasePageLayout 
@@ -216,35 +242,19 @@ export default function TagsPage() {
           <div className="history-main-viewport">
             <div className="tag-manager-container">
               {state.error && (
-                <Alert 
-                  type="error" 
-                  message={state.error}
-                  onClose={() => dispatch({ type: ACTIONS.CLEAR_ERROR })}
-                />
+                <Alert type="error" message={state.error} onClose={() => dispatch({ type: ACTIONS.CLEAR_ERROR })} />
               )}
 
               <div className="tag-create-bar">
-                <button 
-                  className="tag-create-action" 
-                  onClick={() => dispatch({ type: ACTIONS.START_CREATE })}
-                >
-                  <Plus size={16} /> Crear etiqueta
-                </button>
+                <button className="btn btn-primary" onClick={() => dispatch({ type: ACTIONS.START_CREATE })}><Plus size={14} /> Crear etiqueta</button>
               </div>
 
               {state.selectedIds.size > 0 && (
-                <BatchBar 
-                  count={state.selectedIds.size}
-                  onDelete={batchDelete}
-                  disabled={state.loading}
-                />
+                <BatchBar count={state.selectedIds.size} onDelete={batchDelete} disabled={state.loading} />
               )}
 
               {state.creating && (
-                <TagFormCard 
-                  onCancel={() => dispatch({ type: ACTIONS.CANCEL_CREATE })}
-                  onSubmit={createTag}
-                />
+                <TagFormCard onCancel={() => dispatch({ type: ACTIONS.CANCEL_CREATE })} onSubmit={createTag} />
               )}
 
               <TagGrid
@@ -263,10 +273,7 @@ export default function TagsPage() {
               />
 
               {state.toast && (
-                <Toast 
-                  message={state.toast}
-                  onClose={() => dispatch({ type: ACTIONS.CLEAR_TOAST })}
-                />
+                <Toast message={state.toast} onClose={() => dispatch({ type: ACTIONS.CLEAR_TOAST })} />
               )}
             </div>
           </div>
