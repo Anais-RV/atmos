@@ -78,7 +78,8 @@ export const languagesService = {
       { code: 'en', name: 'English', flag: '🇺🇸' },
       { code: 'pt', name: 'Português', flag: '🇵🇹' },
       { code: 'pt_BR', name: 'Português Brasileiro', flag: '🇧🇷' },
-      { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
     ];
   },
 };

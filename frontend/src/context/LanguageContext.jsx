@@ -9,6 +9,7 @@ import enTranslations from '../components/features/languages/en.json';
 import ptTranslations from '../components/features/languages/pt.json';
 import ptBRTranslations from '../components/features/languages/pt_BR.json';
 import ruTranslations from '../components/features/languages/ru.json';
+import frTranslations from '../components/features/languages/fr.json';
 
 const LANGUAGE_TRANSLATIONS = {
   es: esTranslations,
@@ -16,6 +17,7 @@ const LANGUAGE_TRANSLATIONS = {
   pt: ptTranslations,
   pt_BR: ptBRTranslations,
   ru: ruTranslations,
+  fr: frTranslations,
 };
 
 export const LanguageProvider = ({ children }) => {

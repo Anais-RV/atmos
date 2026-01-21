@@ -170,6 +170,18 @@ function HamburgerMenu() {
                     🇷🇺 {t('hamburger.russian')}
                   </button>
                 </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLanguage('fr');
+                      closeMenu();
+                    }}
+                    className={language === 'fr' ? 'active' : ''}
+                  >
+                    🇫🇷 {t('hamburger.french')}
+                  </button>
+                </li>
               </ul>
             )}
           </li>

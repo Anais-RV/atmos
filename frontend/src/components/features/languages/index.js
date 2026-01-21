@@ -8,6 +8,7 @@ import enTranslations from './en.json';
 import ptTranslations from './pt.json';
 import ptBRTranslations from './pt_BR.json';
 import ruTranslations from './ru.json';
+import frTranslations from './fr.json';
 
 export const LANGUAGE_CODES = {
   SPANISH: 'es',
@@ -15,6 +16,7 @@ export const LANGUAGE_CODES = {
   PORTUGUESE: 'pt',
   BRAZILIAN_PORTUGUESE: 'pt_BR',
   RUSSIAN: 'ru',
+  FRENCH: 'fr',
 };
 
 export const LANGUAGE_NAMES = {
@@ -23,6 +25,7 @@ export const LANGUAGE_NAMES = {
   pt: 'Português',
   pt_BR: 'Português Brasileiro',
   ru: 'Русский',
+  fr: 'Français',
 };
 
 export const LANGUAGE_FLAGS = {
@@ -31,6 +34,7 @@ export const LANGUAGE_FLAGS = {
   pt: '🇵🇹',
   pt_BR: '🇧🇷',
   ru: '🇷🇺',
+  fr: '🇫🇷',
 };
 
 export const TRANSLATIONS = {
@@ -39,6 +43,7 @@ export const TRANSLATIONS = {
   [LANGUAGE_CODES.PORTUGUESE]: ptTranslations,
   [LANGUAGE_CODES.BRAZILIAN_PORTUGUESE]: ptBRTranslations,
   [LANGUAGE_CODES.RUSSIAN]: ruTranslations,
+  [LANGUAGE_CODES.FRENCH]: frTranslations,
 };
 
 export const AVAILABLE_LANGUAGES = Object.keys(LANGUAGE_CODES).map((key) => {

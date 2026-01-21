@@ -82,6 +82,7 @@ function SettingsForm({ cities = [] }) {
             <option value="pt">{t('hamburger.portuguese')}</option>
             <option value="pt_BR">{t('hamburger.brazilianPortuguese')}</option>
             <option value="ru">{t('hamburger.russian')}</option>
+            <option value="fr">{t('hamburger.french')}</option>
           </select>
         </div>
       </div>
