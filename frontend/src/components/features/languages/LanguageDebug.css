@@ -1,0 +1,132 @@
+.language-debug {
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.debug-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  font-family: 'Courier New', monospace;
+}
+
+.debug-card h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.5em;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 10px;
+}
+
+.debug-card h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+  color: #fff;
+}
+
+.debug-section {
+  margin: 15px 0;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.current-lang {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #ffd700;
+}
+
+.language-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lang-btn {
+  padding: 8px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.1);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.lang-btn:hover {
+  border-color: white;
+  background: rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.lang-btn.active {
+  background: #ffd700;
+  color: #333;
+  border-color: #ffd700;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+.translations-sample {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+.translations-sample p {
+  margin: 5px 0;
+}
+
+.translations-sample strong {
+  color: #ffd700;
+}
+
+details {
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+details summary {
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  user-select: none;
+}
+
+details summary:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+pre {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.8em;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .debug-card {
+    padding: 15px;
+  }
+
+  .language-buttons {
+    gap: 5px;
+  }
+
+  .lang-btn {
+    padding: 6px 12px;
+    font-size: 0.9em;
+  }
+
+  .current-lang {
+    font-size: 1.5em;
+  }
+}
