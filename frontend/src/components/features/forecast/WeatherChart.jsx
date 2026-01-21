@@ -99,10 +99,10 @@ function WeatherChart({ cityId, variable = 'temp', timeRange = '24h' }) {
 
   const getVariableLabel = (variable) => {
     const labels = {
-      temp: 'Temperatura (°C)',
-      humidity: 'Humedad (%)',
-      pressure: 'Presión (hPa)',
-      wind_speed: 'Velocidad del viento (km/h)'
+      temp: t('weather.temperatureUnit'),
+      humidity: t('weather.humidityUnit'),
+      pressure: t('weather.pressureUnit'),
+      wind_speed: t('weather.windSpeedUnit')
     };
     return labels[variable] || variable;
   };

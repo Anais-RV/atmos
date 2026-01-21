@@ -46,7 +46,7 @@ function WeatherHistoryPage() {
         <section className="center-card center-card-bottom">
           <h2 className="center-card-title">{t('weatherHistory.alertsSummary')}</h2>
           <p className="center-card-text">
-            Mostrará max/min del día anterior
+            {t('weatherHistory.summaryDescription')}
           </p>
 
           <div className="history-summary-grid">

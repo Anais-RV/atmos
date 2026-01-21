@@ -23,6 +23,10 @@
     "history": "Histórico",
     "charts": "Gráficos"
   },
+  "navbar": {
+    "signIn": "Entrar",
+    "notificationsComingSoon": "Em breve: notificações"
+  },
   "hamburger": {
     "userMenu": "Menu do Usuário",
     "viewPanel": "Ver seu painel e preferências",
@@ -62,17 +66,6 @@
     "errorSaving": "Erro ao salvar as preferências",
     "loadingPreferences": "Carregando preferências..."
   },
-  "auth": {
-    "login": "Entrar",
-    "register": "Registrar",
-    "email": "Email",
-    "password": "Senha",
-    "passwordConfirm": "Confirmar Senha",
-    "username": "Nome de Usuário",
-    "loginSuccess": "Login bem-sucedido",
-    "registerSuccess": "Registro concluído com sucesso",
-    "forgotPassword": "Esqueceu sua senha?"
-  },
   "weather": {
     "temperature": "Temperatura",
     "humidity": "Umidade",
@@ -99,7 +92,11 @@
     "loadingSunTimes": "Carregando dados. Aguarde.",
     "noSunData": "Dados de nascer/pôr do sol não disponíveis",
     "errorSunData": "Erro ao obter dados de nascer/pôr do sol",
-    "selectCityForSun": "Selecione uma cidade para ver os dados de nascer, pôr do sol e total de horas de luz"
+    "selectCityForSun": "Selecione uma cidade para ver os dados de nascer, pôr do sol e total de horas de luz",
+    "temperatureUnit": "Temperatura (°C)",
+    "humidityUnit": "Umidade (%)",
+    "pressureUnit": "Pressão (hPa)",
+    "windSpeedUnit": "Velocidade do vento (km/h)"
   },
   "dashboard": {
     "title": "Painel",
@@ -115,13 +112,17 @@
     "quickAccess": "Acesso rápido às seções mais importantes do seu painel:",
     "alertHistory": "Histórico de Alertas",
     "customAlerts": "Alertas Personalizados",
-    "accountSettings": "Configurações da Conta"
+    "accountSettings": "Configurações da conta",
+    "guest": "Convidado",
+    "myTags": "Minhas tags"
   },
   "weatherHistory": {
     "title": "Histórico de Alertas",
     "alertsSummary": "Resumo de Alertas",
     "noAlerts": "Sem alertas registradas",
-    "errorLoading": "Não foi possível carregar o histórico de alertas"
+    "errorLoading": "Não foi possível carregar o histórico de alertas",
+    "apiNotice": "Se quiser, tente com uma API que exponha /api/alerts/.",
+    "summaryDescription": "Mostrará máx/mín do dia anterior"
   },
   "tags": {
     "title": "Tags",
@@ -158,7 +159,13 @@
     "forecastSummary": "Resumo de previsão",
     "nextDaysForecasts": "Previsões dos próximos dias",
     "charts": "Gráficos",
-    "chartsDescription": "Visualize as previsões e séries temporais geradas por ATMOS.",
+    "temperature": "Temperatura",
+    "humidity": "Umidade",
+    "pressure": "Pressão",
+    "wind": "Vento",
+    "last24h": "Últimas 24h",
+    "last7days": "Últimos 7 dias",
+    "lastMonth": "Último mês",    "chartsDescription": "Visualize as previsões e séries temporais geradas por ATMOS.",
     "chartsSummary": "Resumo de gráficos",
     "byPeriod": "Acesse visualizações por período temporal.",
     "chartsDay": "Gráficos do dia",
@@ -167,6 +174,8 @@
     "extendedTitle": "PREVISÃO ESTENDIDA",
     "extendedDescription": "Visualização ampliada da previsão meteorológica.",
     "extendedPlaceholder": "Aqui irá a versão estendida: mais gráficos, mais detalhes, etc.",
+    "placeholderText": "Aqui será exibida a previsão meteorológica e os gráficos correspondentes.",
+    "clickToExpand": "Clique para ver a versão estendida.",
     "variable": "Variável",
     "period": "Período",
     "selectVariable": "Selecione uma variável",
@@ -186,7 +195,6 @@
     "loginDescription": "Faça login para acessar seu painel ATMOS.",
     "createAccount": "Crie sua conta",
     "registerDescription": "Junte-se ao ATMOS e monitore seu ambiente com contexto.",
-    "resetPassword": "Redefinir senha",
     "resetSubtitleLink": "Enviaremos um link para você redefinir sua senha.",
     "resetSubtitleForm": "Insira seu e-mail e nova senha para recuperar sua conta.",
     "recoveryMethodLink": "📧 Link de recuperação",
@@ -200,6 +208,23 @@
     "dataRetention": "Mantemos os registros apenas pelo tempo necessário para garantir a segurança e depurar possíveis erros.",
     "legalPlaceholder": "Esta página é um marcador para seu texto legal real. Aqui, mais tarde, você colará o documento completo adaptado ao RGPD e aos regulamentos atuais.",
     "backToLogin": "Voltar ao login",
+    "passwordReset": "Recuperar senha",
+    "passwordResetSubtitle": "Digite seu email e receberá uma senha temporária",
+    "sendTemporaryPassword": "Enviar senha temporária",
+    "sending": "Enviando...",
+    "validEmail": "Por favor, digite um endereço de email válido.",
+    "emailNotFound": "Email não está registrado ou ocorreu um erro.",
+    "passwordSent": "✅ Senha temporária enviada para seu email. Verifique sua caixa de entrada.",
+    "resetFormTitle": "Redefinir senha",
+    "tokenFromUrl": "Token (da URL)",
+    "optional": "(opcional)",
+    "pasteToken": "Cole o token aqui se você tiver",
+    "newPassword": "Nova senha",
+    "minimumCharacters": "Mínimo 6 caracteres",
+    "confirmNewPassword": "Confirmar senha",
+    "repeatPassword": "Repita sua nova senha",
+    "resetPassword": "Redefinir senha",
+    "processing": "Processando...",
     "signIn": "Iniciar sessão",
     "signing": "Iniciando sessão...",
     "emailPlaceholder": "seu@email.com",
@@ -214,7 +239,15 @@
     "passwordMinLength": "A senha deve ter pelo menos 8 caracteres",
     "registerError": "Erro ao registrar usuário",
     "creating": "Criando...",
-    "haveAccount": "Já tem uma conta?"
+    "haveAccount": "Já tem uma conta?",
+    "signOut": "Sair",
+    "resetSuccess": "Senha redefinida com sucesso! Você será redirecionado para o login.",
+    "resetError": "Erro ao redefinir a senha.",
+    "requestFailed": "Não foi possível enviar a solicitação. Tente novamente mais tarde."
+  },
+  "dataProtection": {
+    "notice": "Usamos seus dados apenas para fornecer o serviço ATMOS. Você pode ler mais detalhes em nossa",
+    "policy": "política de proteção de dados"
   },
   "messages": {
     "success": "Operação concluída",

@@ -63,7 +63,7 @@ function WeatherHistory() {
     return (
       <div className="history-placeholder">
         <p className="history-placeholder-text">{t('weatherHistory.errorLoading')}</p>
-        <p className="history-placeholder-text">{error}. Si deseas, prueba con una API que exponga <code>/api/alerts/</code>.</p>
+        <p className="history-placeholder-text">{error}. {t('weatherHistory.apiNotice')}</p>
       </div>
     )
   }

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../../../context/useLanguage";
 
 function PasswordResetRequest() {
     const [email, setEmail] = useState("");
@@ -8,6 +9,7 @@ function PasswordResetRequest() {
     const [loading, setLoading] = useState(false);
     const messageRef = useRef(null);
     const abortControllerRef = useRef(null);
+    const { t } = useLanguage();
 
     const validateEmail = (value) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -22,7 +24,7 @@ function PasswordResetRequest() {
 
         if (!validateEmail(trimmed)) {
             setIsError(true);
-            setMessage("Por favor ingresa un correo electrónico válido.");
+            setMessage(t('auth.validEmail'));
             return;
         }
 
@@ -42,7 +44,7 @@ function PasswordResetRequest() {
                 signal: controller.signal,
             });
 
-            let text = "El correo no está registrado o hubo un error.";
+            let text = t('auth.emailNotFound');
             let data = null;
             try {
                 data = await res.json();
@@ -57,12 +59,12 @@ function PasswordResetRequest() {
                 // If backend returns the token (for testing/dev), show link
                 if (data && data.token) {
                     setMessage(
-                        "✅ Enviado. También puedes usar el siguiente enlace: " +
+                        t('auth.passwordSent') + " " +
                         window.location.origin + "/password-reset/" + data.token
                     );
                     setEmail("");
                 } else {
-                    setMessage("✅ Contraseña temporal enviada a tu correo. Revisa tu bandeja de entrada.");
+                    setMessage(t('auth.passwordSent'));
                     setEmail("");
                 }
             } else {
@@ -72,7 +74,7 @@ function PasswordResetRequest() {
         } catch (err) {
             if (err.name === 'AbortError') return;
             setIsError(true);
-            setMessage("No se pudo enviar la solicitud. Intenta nuevamente más tarde.");
+            setMessage(t('common.error'));
         } finally {
             setLoading(false);
             abortControllerRef.current = null;
@@ -81,16 +83,16 @@ function PasswordResetRequest() {
 
     return (
         <form className="auth-form" onSubmit={handleSubmit} aria-labelledby="password-reset-title" aria-busy={loading}>
-            <h3 id="password-reset-title">Recuperar contraseña</h3>
-            <p className="auth-subtitle">Ingresa tu correo y recibirás una contraseña temporal</p>
+            <h3 id="password-reset-title">{t('auth.passwordReset')}</h3>
+            <p className="auth-subtitle">{t('auth.passwordResetSubtitle')}</p>
 
             <div className="auth-field">
-                <label htmlFor="password-reset-email" className="auth-label">Correo electrónico</label>
+                <label htmlFor="password-reset-email" className="auth-label">{t('auth.email')}</label>
                 <input
                     id="password-reset-email"
                     type="email"
                     className="auth-input"
-                    placeholder="tu@correo.com"
+                    placeholder={t('auth.emailPlaceholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -105,10 +107,10 @@ function PasswordResetRequest() {
                     disabled={loading || !validateEmail(email.trim())}
                     aria-disabled={loading || !validateEmail(email.trim())}
                 >
-                    {loading ? "Enviando..." : "Enviar contraseña temporal"}
+                    {loading ? t('auth.sending') : t('auth.sendTemporaryPassword')}
                 </button>
                 <p className="auth-footer-text">
-                    <Link to="/auth" className="auth-link">Volver al inicio de sesión</Link>
+                    <Link to="/auth" className="auth-link">{t('auth.backToLogin')}</Link>
                 </p>
             </div>
 

@@ -7,15 +7,17 @@
  *  - auth.css (.auth-data-notice, .auth-data-text, .auth-link)
  */
 
-// src/auth/DataProtectionNotice.jsx
+import { useLanguage } from '../../../context/useLanguage'
 
 function DataProtectionNotice() {
+  const { t } = useLanguage()
+
   return (
     <div className="auth-data-notice">
       <p className="auth-data-text">
-        Usamos tus datos únicamente para poder ofrecerte el servicio de ATMOS. Puedes leer más detalles en nuestra{" "}
+        {t('dataProtection.notice')}{" "}
         <a href="/data-protection" className="auth-link">
-          política de protección de datos
+          {t('dataProtection.policy')}
         </a>.
       </p>
     </div>

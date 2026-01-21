@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { useLanguage } from "../../../context/useLanguage";
 
 function PasswordResetForm() {
 	const [email, setEmail] = useState("");
@@ -12,6 +13,7 @@ function PasswordResetForm() {
 
 	const { token: paramToken } = useParams();
 	const navigate = useNavigate();
+	const { t } = useLanguage();
 
 	const validateEmail = (value) => {
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -33,20 +35,20 @@ function PasswordResetForm() {
 			// if no token in URL, require email (user may be using direct form)
 			if (!validateEmail(email)) {
 				setIsError(true);
-				setMessage("Por favor ingresa un correo electrónico válido o pega el token.");
+				setMessage(t('auth.validEmail'));
 				return;
 			}
 		}
 
 		if (!validatePassword(newPassword)) {
 			setIsError(true);
-			setMessage("La contraseña debe tener al menos 6 caracteres.");
+			setMessage(t('auth.minimumCharacters'));
 			return;
 		}
 
 		if (newPassword !== confirmPassword) {
 			setIsError(true);
-			setMessage("Las contraseñas no coinciden.");
+			setMessage(t('auth.passwordMismatch'));
 			return;
 		}
 
@@ -68,14 +70,14 @@ function PasswordResetForm() {
 
 			if (res.ok) {
 				setIsError(false);
-				setMessage("¡Contraseña restablecida exitosamente! Serás redirigido al inicio de sesión.");
+				setMessage(t('auth.resetSuccess'));
 				setEmail("");
 				setNewPassword("");
 				setConfirmPassword("");
 				setManualToken("");
 				setTimeout(() => navigate('/login'), 1600);
 			} else {
-				let text = "Hubo un error al restablecer la contraseña.";
+				let text = t('auth.resetError');
 				try {
 					const data = await res.json();
 					if (data && data.detail) text = data.detail;
@@ -83,15 +85,15 @@ function PasswordResetForm() {
 					else if (data && data.new_password) text = Array.isArray(data.new_password) ? data.new_password.join(" ") : data.new_password;
 					else if (data && data.new_password_confirm) text = Array.isArray(data.new_password_confirm) ? data.new_password_confirm.join(" ") : data.new_password_confirm;
 					else if (data && data.token) text = Array.isArray(data.token) ? data.token.join(" ") : data.token;
-				} catch (err) {
+				} catch {
 					// ignore JSON parse error
 				}
 				setIsError(true);
 				setMessage(text);
 			}
-		} catch (err) {
+		} catch {
 			setIsError(true);
-			setMessage("No se pudo enviar la solicitud. Intenta nuevamente más tarde.");
+			setMessage(t('auth.requestFailed'));
 		} finally {
 			setLoading(false);
 		}
@@ -99,11 +101,11 @@ function PasswordResetForm() {
 
 	return (
 		<form className="auth-form" onSubmit={handleSubmit} aria-labelledby="password-reset-form-title">
-			<h3 id="password-reset-form-title">Restablecer contraseña</h3>
+			<h3 id="password-reset-form-title">{t('auth.resetFormTitle')}</h3>
 
 			{paramToken ? (
 				<div className="auth-field">
-					<label className="auth-label">Token (desde la URL)</label>
+					<label className="auth-label">{t('auth.tokenFromUrl')}</label>
 					<input
 						className="auth-input"
 						type="text"
@@ -116,13 +118,13 @@ function PasswordResetForm() {
 				<>
 					<div className="auth-field">
 						<label htmlFor="reset-email" className="auth-label">
-							Correo electrónico
+							{t('auth.email')}
 						</label>
 						<input
 							id="reset-email"
 							type="email"
 							className="auth-input"
-							placeholder="tu@correo.com"
+							placeholder={t('auth.emailPlaceholder')}
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
 							aria-required="true"
@@ -131,13 +133,13 @@ function PasswordResetForm() {
 
 					<div className="auth-field">
 						<label htmlFor="manual-token" className="auth-label">
-							Token (opcional)
+							{t('auth.tokenFromUrl')} {t('auth.optional')}
 						</label>
 						<input
 							id="manual-token"
 							type="text"
 							className="auth-input"
-							placeholder="Pega aquí el token si lo tienes"
+							placeholder={t('auth.pasteToken')}
 							value={manualToken}
 							onChange={(e) => setManualToken(e.target.value)}
 						/>
@@ -147,13 +149,13 @@ function PasswordResetForm() {
 
 			<div className="auth-field">
 				<label htmlFor="new-password" className="auth-label">
-					Nueva contraseña
+					{t('auth.newPassword')}
 				</label>
 				<input
 					id="new-password"
 					type="password"
 					className="auth-input"
-					placeholder="Mínimo 6 caracteres"
+					placeholder={t('auth.minimumCharacters')}
 					value={newPassword}
 					onChange={(e) => setNewPassword(e.target.value)}
 					required
@@ -164,13 +166,13 @@ function PasswordResetForm() {
 
 			<div className="auth-field">
 				<label htmlFor="confirm-password" className="auth-label">
-					Confirmar contraseña
+					{t('auth.confirmNewPassword')}
 				</label>
 				<input
 					id="confirm-password"
 					type="password"
 					className="auth-input"
-					placeholder="Repite tu nueva contraseña"
+					placeholder={t('auth.repeatPassword')}
 					value={confirmPassword}
 					onChange={(e) => setConfirmPassword(e.target.value)}
 					required
@@ -181,11 +183,11 @@ function PasswordResetForm() {
 
 			<div className="auth-form-footer">
 				<button type="submit" className="auth-button-primary" disabled={loading}>
-					{loading ? "Procesando..." : "Restablecer contraseña"}
+					{loading ? t('auth.processing') : t('auth.resetPassword')}
 				</button>
 				<p className="auth-footer-text">
 					<Link to="/login" className="auth-link">
-						Volver al inicio de sesión
+						{t('auth.backToLogin')}
 					</Link>
 				</p>
 			</div>

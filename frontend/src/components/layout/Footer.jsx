@@ -11,11 +11,14 @@
 // src/components/layout/Footer.jsx
 
 import FooterMenu from "./FooterMenu";
+import { useLanguage } from "../../context/useLanguage";
 
 function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="footer">
-      <div className="footer-inner" aria-label="footer menu">
+      <div className="footer-inner" aria-label={t('navigation.menu')}>
         {/* Tres huecos centrados para componentes de botones */}
         <FooterMenu />
       </div>

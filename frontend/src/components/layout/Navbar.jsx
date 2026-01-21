@@ -9,10 +9,13 @@ import { useNavigate } from "react-router-dom";
 import HamburgerMenu from "../ui/HamburgerMenu/HamburgerMenu";
 import "../../styles/Navbar.css";
 import { useAuth } from '../../context/AuthContext'
+import { useLanguage } from '../../context/useLanguage'
 
 function Navbar() {
   const navigate = useNavigate();
   const [leavingTarget, setLeavingTarget] = useState(null);
+  const { user } = useAuth()
+  const { t } = useLanguage()
 
   const animateAndNavigate = (target) => {
     setLeavingTarget(target);
@@ -24,8 +27,6 @@ function Navbar() {
       setLeavingTarget(null);
     }, 420);
   };
-
-  const { user } = useAuth()
 
   const displayName = user?.first_name && user?.last_name
     ? `${user.first_name} ${user.last_name}`
@@ -39,9 +40,9 @@ function Navbar() {
         <div className="navbar-left">
           <button
             className="navbar-icon-button"
-            aria-label="View notifications"
+            aria-label={t('navbar.notificationsComingSoon')}
             type="button"
-            title="Próximamente: notificaciones"
+            title={t('navbar.notificationsComingSoon')}
           >
             🔔
           </button>
@@ -55,7 +56,7 @@ function Navbar() {
             className={`navbar-brand-button nav-animatable ${
               leavingTarget === "home" ? "leaving" : ""
             }`}
-            aria-label="Go to homepage"
+            aria-label={t('navigation.dashboard')}
           >
             <span className="navbar-brand-main">ATMOS</span>
             <span className="navbar-brand-sub">climate intelligence</span>
@@ -71,7 +72,7 @@ function Navbar() {
               leavingTarget === (displayName ? 'user' : 'login') ? "leaving" : ""
             }`}
           >
-            {displayName || 'Sign in'}
+            {displayName || t('navbar.signIn')}
           </button>
 
           {/* ❌ SIN animación de salida */}

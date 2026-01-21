@@ -11,25 +11,27 @@
 
 // src/components/layout/FooterMenu.jsx
 import { Link, useLocation } from "react-router-dom";
+import { useLanguage } from "../../context/useLanguage";
 
 function FooterMenu() {
   const location = useLocation();
   const pathname = location.pathname;
+  const { t } = useLanguage();
 
   const items = [
     {
       key: "history",
-      label: "Historial",
+      label: t('navigation.history'),
       to: "/history",
     },
     {
       key: "charts",
-      label: "Gráficas",
+      label: t('navigation.charts'),
       to: "/charts",
     },
     {
       key: "predictions",
-      label: "Predicción",
+      label: t('navigation.forecast'),
       to: "/", // usamos el dashboard como página de predicciones
     },
   ];

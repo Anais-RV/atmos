@@ -23,6 +23,10 @@
     "history": "Historial",
     "charts": "Gráficos"
   },
+  "navbar": {
+    "signIn": "Iniciar sesión",
+    "notificationsComingSoon": "Próximamente: notificaciones"
+  },
   "hamburger": {
     "userMenu": "Menú de usuario",
     "viewPanel": "Ver tu panel y preferencias",
@@ -62,17 +66,6 @@
     "errorSaving": "Error al guardar las preferencias",
     "loadingPreferences": "Cargando preferencias..."
   },
-  "auth": {
-    "login": "Iniciar sesión",
-    "register": "Registrarse",
-    "email": "Correo electrónico",
-    "password": "Contraseña",
-    "passwordConfirm": "Confirmar contraseña",
-    "username": "Nombre de usuario",
-    "loginSuccess": "Sesión iniciada correctamente",
-    "registerSuccess": "Registro completado correctamente",
-    "forgotPassword": "¿Olvidaste tu contraseña?"
-  },
   "weather": {
     "temperature": "Temperatura",
     "humidity": "Humedad",
@@ -99,7 +92,11 @@
     "loadingSunTimes": "Se está cargando los datos. Por favor, espere.",
     "noSunData": "No hay datos de amanecer/atardecer disponibles",
     "errorSunData": "Error al obtener datos de amanecer/atardecer",
-    "selectCityForSun": "Selecciona una ciudad para ver los datos de amanecer, atardecer y horas de luz totales"
+    "selectCityForSun": "Selecciona una ciudad para ver los datos de amanecer, atardecer y horas de luz totales",
+    "temperatureUnit": "Temperatura (°C)",
+    "humidityUnit": "Humedad (%)",
+    "pressureUnit": "Presión (hPa)",
+    "windSpeedUnit": "Velocidad del viento (km/h)"
   },
   "dashboard": {
     "title": "Panel de control",
@@ -115,13 +112,17 @@
     "quickAccess": "Accede rápidamente a las secciones más importantes de tu panel:",
     "alertHistory": "Historial de alertas",
     "customAlerts": "Alertas personalizadas",
-    "accountSettings": "Ajustes de cuenta"
+    "accountSettings": "Ajustes de cuenta",
+    "guest": "Invitado",
+    "myTags": "Mis etiquetas"
   },
   "weatherHistory": {
     "title": "Historial de alertas",
     "alertsSummary": "Resumen de alertas",
     "noAlerts": "No hay alertas registradas",
-    "errorLoading": "No se pudo cargar el historial de alertas"
+    "errorLoading": "No se pudo cargar el historial de alertas",
+    "apiNotice": "Si deseas, prueba con una API que exponga /api/alerts/.",
+    "summaryDescription": "Mostrará máx/mín del día anterior"
   },
   "tags": {
     "title": "Etiquetas",
@@ -158,6 +159,13 @@
     "forecastSummary": "Resumen de pronóstico",
     "nextDaysForecasts": "Predicciones de días próximos",
     "charts": "Gráficas",
+    "temperature": "Temperatura",
+    "humidity": "Humedad",
+    "pressure": "Presión",
+    "wind": "Viento",
+    "last24h": "Últimas 24h",
+    "last7days": "Últimos 7 días",
+    "lastMonth": "Último mes",
     "chartsDescription": "Visualiza las predicciones y series temporales generadas por ATMOS.",
     "chartsSummary": "Resumen de gráficas",
     "byPeriod": "Accede a las visualizaciones por periodo temporal.",
@@ -167,6 +175,8 @@
     "extendedTitle": "PRONÓSTICO EXTENDIDO",
     "extendedDescription": "Vista ampliada de la predicción meteorológica.",
     "extendedPlaceholder": "Aquí irá la versión extendida: más gráficas, más detalles, etc.",
+    "placeholderText": "Aquí se mostrará la predicción meteorológica y las gráficas correspondientes.",
+    "clickToExpand": "Haz clic para ver la versión extendida.",
     "variable": "Variable",
     "period": "Período",
     "selectVariable": "Selecciona una variable",
@@ -186,7 +196,6 @@
     "loginDescription": "Inicia sesión para acceder a tu panel de ATMOS.",
     "createAccount": "Crea tu cuenta",
     "registerDescription": "Únete a ATMOS y sigue tu entorno con contexto.",
-    "resetPassword": "Recuperar contraseña",
     "resetSubtitleLink": "Te enviaremos un enlace para restablecerla.",
     "resetSubtitleForm": "Ingresa tu correo y nueva contraseña para recuperar tu cuenta.",
     "recoveryMethodLink": "📧 Enlace de recuperación",
@@ -200,6 +209,23 @@
     "dataRetention": "Solo conservamos los registros el tiempo necesario para garantizar la seguridad y depurar posibles errores.",
     "legalPlaceholder": "Esta página es un marcador de posición para tu texto legal real. Aquí, más adelante, pegarás el documento completo adaptado al RGPD y a la normativa vigente.",
     "backToLogin": "Volver al inicio de sesión",
+    "passwordReset": "Recuperar contraseña",
+    "passwordResetSubtitle": "Ingresa tu correo y recibirás una contraseña temporal",
+    "sendTemporaryPassword": "Enviar contraseña temporal",
+    "sending": "Enviando...",
+    "validEmail": "Por favor ingresa un correo electrónico válido.",
+    "emailNotFound": "El correo no está registrado o hubo un error.",
+    "passwordSent": "✅ Contraseña temporal enviada a tu correo. Revisa tu bandeja de entrada.",
+    "resetFormTitle": "Restablecer contraseña",
+    "tokenFromUrl": "Token (desde la URL)",
+    "optional": "(opcional)",
+    "pasteToken": "Pega aquí el token si lo tienes",
+    "newPassword": "Nueva contraseña",
+    "minimumCharacters": "Mínimo 6 caracteres",
+    "confirmNewPassword": "Confirmar contraseña",
+    "repeatPassword": "Repite tu nueva contraseña",
+    "resetPassword": "Restablecer contraseña",
+    "processing": "Procesando...",
     "signIn": "Iniciar sesión",
     "signing": "Iniciando...",
     "emailPlaceholder": "tu@email.com",
@@ -214,7 +240,15 @@
     "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
     "registerError": "Error al registrar usuario",
     "creating": "Creando...",
-    "haveAccount": "¿Ya tienes cuenta?"
+    "haveAccount": "¿Ya tienes cuenta?",
+    "signOut": "Cerrar sesión",
+    "resetSuccess": "¡Contraseña restablecida exitosamente! Serás redirigido al inicio de sesión.",
+    "resetError": "Hubo un error al restablecer la contraseña.",
+    "requestFailed": "No se pudo enviar la solicitud. Intenta nuevamente más tarde."
+  },
+  "dataProtection": {
+    "notice": "Usamos tus datos únicamente para poder ofrecerte el servicio de ATMOS. Puedes leer más detalles en nuestra",
+    "policy": "política de protección de datos"
   },
   "messages": {
     "success": "Operación completada",

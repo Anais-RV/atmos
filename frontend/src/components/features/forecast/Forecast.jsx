@@ -27,9 +27,11 @@
 // frontend/src/components/features/forecast/Forecast.jsx
 
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from '../../../context/useLanguage';
 
 function Forecast() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleClick = () => {
     navigate("/forecast-extended"); // ⬅️ va a la nueva página
@@ -42,9 +44,9 @@ function Forecast() {
       onClick={handleClick}
     >
       <p className="forecast-placeholder-text">
-        Aquí se mostrará la predicción meteorológica y las gráficas correspondientes.
+        {t('forecast.placeholderText')}
         <br />
-        <strong>Haz clic para ver la versión extendida.</strong>
+        <strong>{t('forecast.clickToExpand')}</strong>
       </p>
     </div>
   );

@@ -15,7 +15,7 @@ import process from 'process';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const LANGUAGES = ['es', 'en', 'pt', 'pt_BR', 'ru'];
+const LANGUAGES = ['es', 'en', 'fr', 'pt', 'pt_BR', 'ru'];
 const LANG_DIR = __dirname;
 
 function getKeys(obj, prefix = '') {
