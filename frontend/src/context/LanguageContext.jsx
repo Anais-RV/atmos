@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { LanguageContext } from './LanguageContextDef';
 import languagesService from '../services/languagesService';
+import TRANSLATIONS from '../components/features/languages';
 
 // Import all language files
 import esTranslations from '../components/features/languages/es.json';
@@ -70,19 +71,36 @@ export const LanguageProvider = ({ children }) => {
   // Translation function - safely navigate nested objects
   const t = useCallback((key) => {
     const keys = key.split('.');
-    let current = translations;
-
+    // prefer live translations state; fallback to static TRANSLATIONS for the current language
+    let current = translations && Object.keys(translations).length ? translations : (TRANSLATIONS[language] || TRANSLATIONS.es);
     for (const k of keys) {
       if (current && typeof current === 'object' && k in current) {
         current = current[k];
       } else {
-        // Return the key if translation not found
+        // Attempt fallbacks: english then spanish
+        const english = TRANSLATIONS.en;
+        const spanish = TRANSLATIONS.es;
+        const resolveFrom = (obj) => {
+          let cur = obj;
+          for (const kk of keys) {
+            if (cur && typeof cur === 'object' && kk in cur) cur = cur[kk];
+            else return null;
+          }
+          return typeof cur === 'string' ? cur : null;
+        };
+
+        const fromEn = resolveFrom(english);
+        if (fromEn) return fromEn;
+        const fromEs = resolveFrom(spanish);
+        if (fromEs) return fromEs;
+
+        // Return the key if translation not found anywhere
+        console.warn(`Missing translation for key '${key}' (current language: ${language})`);
         return key;
       }
     }
-
     return typeof current === 'string' ? current : key;
-  }, [translations]);
+  }, [translations, language]);
 
   // Set language and save to localStorage and backend
   const setLanguage = useCallback(
