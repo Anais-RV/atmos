@@ -11,10 +11,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import { useLanguage } from "../../../context/useLanguage";
 
 function LoginForm() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -40,7 +42,7 @@ function LoginForm() {
       await login(formData.email, formData.password);
       navigate('/user-panel');
     } catch (err) {
-      setError(err.message || 'Error al iniciar sesión');
+      setError(err.message || t('auth.loginError'));
     } finally {
       setLoading(false);
     }
@@ -62,14 +64,14 @@ function LoginForm() {
 
       <div className="auth-field">
         <label className="auth-label" htmlFor="login-email">
-          Email
+          {t('auth.email')}
         </label>
         <input
           id="login-email"
           name="email"
           type="email"
           className="auth-input"
-          placeholder="SomosLaHostia@SuperKode.com"
+          placeholder={t('auth.emailPlaceholder')}
           value={formData.email}
           onChange={handleChange}
           required
@@ -78,14 +80,14 @@ function LoginForm() {
 
       <div className="auth-field">
         <label className="auth-label" htmlFor="login-password">
-          Password
+          {t('auth.password')}
         </label>
         <input
           id="login-password"
           name="password"
           type="password"
           className="auth-input"
-          placeholder="••••••••"
+          placeholder={t('auth.passwordPlaceholder')}
           value={formData.password}
           onChange={handleChange}
           required
@@ -94,7 +96,7 @@ function LoginForm() {
 
       <div className="auth-forgot">
         <Link to="/password-reset" className="auth-link">
-          ¿Olvidaste tu contraseña?
+          {t('auth.forgotPassword')}
         </Link>
       </div>
 
@@ -109,7 +111,7 @@ function LoginForm() {
             onChange={handleChange}
           />
           <label htmlFor="remember-me" className="auth-remember-label">
-            Remember me
+            {t('auth.rememberMe')}
           </label>
         </div>
 
@@ -120,11 +122,11 @@ function LoginForm() {
             className="auth-button-primary"
             disabled={loading}
           >
-            {loading ? 'Iniciando...' : 'Sign in'}
+            {loading ? t('auth.signing') : t('auth.signIn')}
           </button>
 
           <Link to="/register" className="auth-button-secondary">
-            Register
+            {t('auth.register')}
           </Link>
         </div>
       </div>

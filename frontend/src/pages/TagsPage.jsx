@@ -4,6 +4,7 @@ import { Trash2, Plus, Loader, AlertCircle, Edit2, X } from "lucide-react";
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
 import { usePreferences } from '../context/usePreferences';
+import { useLanguage } from "../context/useLanguage";
 import { tagsService } from "../services/tagsService";
 import "../styles/tags.css";
 
@@ -97,6 +98,7 @@ function tagReducer(state, action) {
 export default function TagsPage() {
   const [state, dispatch] = useReducer(tagReducer, initialState);
   const { preferences } = usePreferences();
+  const { t } = useLanguage();
   const theme = preferences?.theme || 'dark';
   const containerColor = getTemperatureColor(7);
 
@@ -106,7 +108,7 @@ export default function TagsPage() {
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (!token) {
-      dispatch({ type: ACTIONS.SET_ERROR, payload: "No estás autenticado" });
+      dispatch({ type: ACTIONS.SET_ERROR, payload: t('tags.notAuthenticated') });
       return;
     }
 
@@ -120,7 +122,7 @@ export default function TagsPage() {
         }
       } catch (err) {
         if (mounted) {
-          dispatch({ type: ACTIONS.SET_ERROR, payload: err.message || "Error al cargar etiquetas" });
+          dispatch({ type: ACTIONS.SET_ERROR, payload: err.message || t('tags.errorLoading') });
         }
       } finally {
         if (mounted) {
@@ -130,7 +132,7 @@ export default function TagsPage() {
     };
     load();
     return () => { mounted = false; };
-  }, []);
+  }, [t]);
 
   // Toast timeout
   useEffect(() => {
@@ -142,7 +144,7 @@ export default function TagsPage() {
   // Operations
   const createTag = useCallback(async (name, color) => {
     if (!name || !name.trim()) {
-      dispatch({ type: ACTIONS.SET_ERROR, payload: "El nombre no puede estar vacío" });
+      dispatch({ type: ACTIONS.SET_ERROR, payload: t('tags.errorEmpty') });
       return false;
     }
     dispatch({ type: ACTIONS.SET_LOADING, payload: true });
@@ -150,7 +152,7 @@ export default function TagsPage() {
       await tagsService.createTag(name.trim(), color);
       const data = await tagsService.getTags();
       dispatch({ type: ACTIONS.LOAD_TAGS, payload: Array.isArray(data) ? data : [] });
-      dispatch({ type: ACTIONS.SET_TOAST, payload: "Etiqueta creada" });
+      dispatch({ type: ACTIONS.SET_TOAST, payload: t('tags.tagCreated') });
       dispatch({ type: ACTIONS.CANCEL_CREATE });
       return true;
     } catch (err) {
@@ -159,11 +161,11 @@ export default function TagsPage() {
     } finally {
       dispatch({ type: ACTIONS.SET_LOADING, payload: false });
     }
-  }, []);
+  }, [t]);
 
   const updateTag = useCallback(async (id, name, color) => {
     if (!name || !name.trim()) {
-      dispatch({ type: ACTIONS.SET_ERROR, payload: "El nombre no puede estar vacío" });
+      dispatch({ type: ACTIONS.SET_ERROR, payload: t('tags.errorEmpty') });
       return false;
     }
     dispatch({ type: ACTIONS.SET_LOADING, payload: true });
@@ -171,7 +173,7 @@ export default function TagsPage() {
       await tagsService.updateTag(id, name.trim(), color);
       const data = await tagsService.getTags();
       dispatch({ type: ACTIONS.LOAD_TAGS, payload: Array.isArray(data) ? data : [] });
-      dispatch({ type: ACTIONS.SET_TOAST, payload: "Etiqueta actualizada" });
+      dispatch({ type: ACTIONS.SET_TOAST, payload: t('tags.tagUpdated') });
       dispatch({ type: ACTIONS.CANCEL_EDIT });
       return true;
     } catch (err) {
@@ -180,7 +182,7 @@ export default function TagsPage() {
     } finally {
       dispatch({ type: ACTIONS.SET_LOADING, payload: false });
     }
-  }, []);
+  }, [t]);
 
   const deleteTag = useCallback(async (id) => {
     dispatch({ type: ACTIONS.SET_LOADING, payload: true });
@@ -188,7 +190,7 @@ export default function TagsPage() {
       await tagsService.deleteTag(id);
       const data = await tagsService.getTags();
       dispatch({ type: ACTIONS.LOAD_TAGS, payload: Array.isArray(data) ? data : [] });
-      dispatch({ type: ACTIONS.SET_TOAST, payload: "Etiqueta eliminada" });
+      dispatch({ type: ACTIONS.SET_TOAST, payload: t('tags.tagDeleted') });
       dispatch({ type: ACTIONS.CANCEL_DELETE });
       return true;
     } catch (err) {
@@ -197,7 +199,7 @@ export default function TagsPage() {
     } finally {
       dispatch({ type: ACTIONS.SET_LOADING, payload: false });
     }
-  }, []);
+  }, [t]);
 
   const batchDelete = useCallback(async () => {
     const ids = Array.from(state.selectedIds);
@@ -216,9 +218,9 @@ export default function TagsPage() {
       }));
       const data = await tagsService.getTags();
       dispatch({ type: ACTIONS.LOAD_TAGS, payload: Array.isArray(data) ? data : [] });
-      dispatch({ type: ACTIONS.SET_TOAST, payload: `${deleted} eliminada${deleted !== 1 ? 's' : ''}` });
+      dispatch({ type: ACTIONS.SET_TOAST, payload: `${deleted} ${t('tags.tagDeleted')}` });
       dispatch({ type: ACTIONS.CLEAR_SELECTED });
-      if (errors.length) dispatch({ type: ACTIONS.SET_ERROR, payload: `${errors.length} eliminación(es) fallida(s)` });
+      if (errors.length) dispatch({ type: ACTIONS.SET_ERROR, payload: `${errors.length} ${t('tags.errorDeleting')}` });
       return true;
     } catch (err) {
       dispatch({ type: ACTIONS.SET_ERROR, payload: err.message });
@@ -226,18 +228,18 @@ export default function TagsPage() {
     } finally {
       dispatch({ type: ACTIONS.SET_LOADING, payload: false });
     }
-  }, [state.selectedIds]);
+  }, [state.selectedIds, t]);
 
   return (
     <BasePageLayout 
-      title="Mis etiquetas" 
-      description="Gestiona tus etiquetas" 
+      title={t('tags.title')} 
+      description={t('tags.title')} 
       containerColor={containerColor}
     >
       <section className="dashboard-center">
         <section className={`center-card center-card-full ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`}>
-          <h2 className="center-card-title">Mis etiquetas</h2>
-          <p className="center-card-text">Crea, edita y elimina tus etiquetas personalizadas</p>
+          <h2 className="center-card-title">{t('tags.title')}</h2>
+          <p className="center-card-text">{t('tags.title')}</p>
 
           <div className="history-main-viewport">
             <div className="tag-manager-container">
@@ -246,15 +248,15 @@ export default function TagsPage() {
               )}
 
               <div className="tag-create-bar">
-                <button className="btn btn-primary" onClick={() => dispatch({ type: ACTIONS.START_CREATE })}><Plus size={14} /> Crear etiqueta</button>
+                <button className="btn btn-primary" onClick={() => dispatch({ type: ACTIONS.START_CREATE })}><Plus size={14} /> {t('tags.newTag')}</button>
               </div>
 
               {state.selectedIds.size > 0 && (
-                <BatchBar count={state.selectedIds.size} onDelete={batchDelete} disabled={state.loading} />
+                <BatchBar count={state.selectedIds.size} onDelete={batchDelete} disabled={state.loading} t={t} />
               )}
 
               {state.creating && (
-                <TagFormCard onCancel={() => dispatch({ type: ACTIONS.CANCEL_CREATE })} onSubmit={createTag} />
+                <TagFormCard onCancel={() => dispatch({ type: ACTIONS.CANCEL_CREATE })} onSubmit={createTag} t={t} />
               )}
 
               <TagGrid
@@ -270,6 +272,7 @@ export default function TagsPage() {
                 onDelete={(id) => dispatch({ type: ACTIONS.START_DELETE, payload: id })}
                 onCancelDelete={() => dispatch({ type: ACTIONS.CANCEL_DELETE })}
                 onConfirmDelete={deleteTag}
+                t={t}
               />
 
               {state.toast && (
@@ -297,24 +300,24 @@ function Alert({ type, message, onClose }) {
   );
 }
 
-function BatchBar({ count, onDelete, disabled }) {
+function BatchBar({ count, onDelete, disabled, t }) {
   return (
     <div className="tag-batch-actions">
       <span className="tag-batch-count">
-        {count} seleccionada{count !== 1 ? 's' : ''}
+        {count} {t('tags.deleteTag')}
       </span>
       <button 
         className="tag-batch-delete-btn" 
         onClick={onDelete}
         disabled={disabled}
       >
-        <Trash2 size={16} /> Eliminar
+        <Trash2 size={16} /> {t('common.delete')}
       </button>
     </div>
   );
 }
 
-function TagFormCard({ onCancel, onSubmit }) {
+function TagFormCard({ onCancel, onSubmit, t }) {
   const [name, setName] = useState('');
   const [color, setColor] = useState(TAG_COLORS[0]);
 
@@ -328,12 +331,12 @@ function TagFormCard({ onCancel, onSubmit }) {
   return (
     <form onSubmit={handleSubmit} className="tag-form-card">
       <div className="form-group">
-        <label>Nombre</label>
+        <label>{t('tags.tagName')}</label>
         <input 
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Nombre de la etiqueta"
+          placeholder={t('tags.tagName')}
           autoFocus
           required
         />
@@ -358,8 +361,8 @@ function TagFormCard({ onCancel, onSubmit }) {
           type="button"
           onClick={onCancel}
           className="btn btn-primary"
-        >Cancelar</button>
-        <button type="submit" className="btn btn-primary">Crear</button>
+        >{t('common.cancel')}</button>
+        <button type="submit" className="btn btn-primary">{t('tags.create')}</button>
       </div>
     </form>
   );
@@ -378,13 +381,14 @@ function TagGrid({
   onDelete,
   onCancelDelete,
   onConfirmDelete,
+  t,
 }) {
   if (isLoading) {
     return <div className="loading-center"><Loader size={32} /></div>;
   }
 
   if (tags.length === 0) {
-    return <div className="empty-state"><p>No hay etiquetas todavía</p></div>;
+    return <div className="empty-state"><p>{t('tags.noTags')}</p></div>;
   }
 
   return (
@@ -403,6 +407,7 @@ function TagGrid({
           onDelete={() => onDelete(tag.id)}
           onCancelDelete={onCancelDelete}
           onConfirmDelete={() => onConfirmDelete(tag.id)}
+          t={t}
         />
       ))}
     </div>
@@ -421,6 +426,7 @@ function TagCard({
   onDelete,
   onCancelDelete,
   onConfirmDelete,
+  t,
 }) {
   const [editName, setEditName] = useState(tag.name);
   const [editColor, setEditColor] = useState(tag.color);
@@ -449,12 +455,12 @@ function TagCard({
           <button
             onClick={onCancelEdit}
             className="btn btn-sm btn-primary"
-          >Cancelar</button>
+          >{t('common.cancel')}</button>
           <button 
             onClick={() => onSaveEdit(tag.id, editName, editColor)} 
             className="btn btn-sm btn-primary"
           >
-            Guardar
+            {t('common.save')}
           </button>
         </div>
       </div>
@@ -464,13 +470,13 @@ function TagCard({
   if (isDeleting) {
     return (
       <div className="tag-card tag-card-deleting">
-        <p>¿Eliminar {tag.name}?</p>
+        <p>{t('tags.confirmDelete')} {tag.name}?</p>
         <div className="form-actions">
           <button
             onClick={onCancelDelete}
             className="btn btn-primary"
-          >Cancelar</button>
-          <button onClick={onConfirmDelete} className="btn btn-danger">Eliminar</button>
+          >{t('common.cancel')}</button>
+          <button onClick={onConfirmDelete} className="btn btn-danger">{t('common.delete')}</button>
         </div>
       </div>
     );
@@ -489,10 +495,10 @@ function TagCard({
         {tag.name}
       </span>
       <div className="tag-card-actions">
-        <button onClick={onEdit} className="btn btn-sm" title="Editar">
+        <button onClick={onEdit} className="btn btn-sm" title={t('common.edit')}>
           <Edit2 size={16} />
         </button>
-        <button onClick={onDelete} className="btn btn-sm btn-danger" title="Eliminar">
+        <button onClick={onDelete} className="btn btn-sm btn-danger" title={t('common.delete')}>
           <Trash2 size={16} />
         </button>
       </div>
@@ -523,10 +529,12 @@ BatchBar.propTypes = {
   count: PropTypes.number.isRequired,
   onDelete: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
+  t: PropTypes.func.isRequired,
 };
 TagFormCard.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
 };
 TagGrid.propTypes = {
   isLoading: PropTypes.bool.isRequired,
@@ -541,6 +549,7 @@ TagGrid.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onCancelDelete: PropTypes.func.isRequired,
   onConfirmDelete: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
 };
 TagCard.propTypes = {
   tag: PropTypes.object.isRequired,
@@ -551,10 +560,10 @@ TagCard.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onCancelEdit: PropTypes.func.isRequired,
   onSaveEdit: PropTypes.func.isRequired,
-
   onDelete: PropTypes.func.isRequired,
   onCancelDelete: PropTypes.func.isRequired,
   onConfirmDelete: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 Toast.propTypes = {

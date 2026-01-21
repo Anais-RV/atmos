@@ -2,8 +2,10 @@ import BasePageLayout from '../components/layout/BasePageLayout';
 import SettingsForm from '../components/features/settings/SettingsForm';
 import { getTemperatureColor } from '../styles/temperatureColors';
 import { useState, useEffect } from 'react';
+import { useLanguage } from "../context/useLanguage";
 
 function SettingsPage() {
+  const { t } = useLanguage();
   const temperatureC = 7;
   const containerColor = getTemperatureColor(temperatureC);
   const [cities, setCities] = useState([]);
@@ -30,22 +32,22 @@ function SettingsPage() {
 
   return (
     <BasePageLayout
-      title="Configuración"
-      description="Personaliza tu experiencia en ATMOS"
+      title={t('settings.title')}
+      description={t('settings.selectLanguage')}
       containerColor={containerColor}
     >
       <section className="settings-page">
         <div className="settings-container">
           <header className="settings-header">
-            <h1 className="settings-title">Configuración</h1>
+            <h1 className="settings-title">{t('settings.title')}</h1>
             <p className="settings-subtitle">
-              Personaliza tu experiencia en ATMOS ajustando tus preferencias
+              {t('settings.appearance')}
             </p>
           </header>
 
           {loading ? (
             <div className="settings-loading-container">
-              <p>Cargando ciudades...</p>
+              <p>{t('common.loading')}</p>
             </div>
           ) : (
             <SettingsForm cities={cities} />

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { usePreferences } from '../../../context/usePreferences';
+import { useLanguage } from '../../../context/useLanguage';
 import PropTypes from 'prop-types';
 
 function SettingsForm({ cities = [] }) {
   const { preferences, loading, error, updatePreferences } = usePreferences();
+  const { t } = useLanguage();
 
   const [formData, setFormData] = useState({
     language: 'es',
@@ -43,18 +45,18 @@ function SettingsForm({ cities = [] }) {
     try {
       await updatePreferences(formData);
       setIsError(false);
-      setMessage('✓ Preferencias guardadas exitosamente');
+      setMessage(t('settings.successMessage'));
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
       setIsError(true);
-      setMessage(err.message || 'Error al guardar las preferencias');
+      setMessage(err.message || t('settings.errorSaving'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   if (loading && !preferences.language) {
-    return <div className="settings-loading">Cargando preferencias...</div>;
+    return <div className="settings-loading">{t('settings.loadingPreferences')}</div>;
   }
 
   return (
@@ -63,10 +65,10 @@ function SettingsForm({ cities = [] }) {
 
       {/* Sección: Idioma */}
       <div className="settings-section">
-        <h3 className="settings-section-title">Idioma</h3>
+        <h3 className="settings-section-title">{t('settings.language')}</h3>
         <div className="settings-field">
           <label htmlFor="language" className="settings-label">
-            Selecciona tu idioma preferido
+            {t('settings.selectLanguage')}
           </label>
           <select
             id="language"
@@ -75,20 +77,21 @@ function SettingsForm({ cities = [] }) {
             onChange={handleChange}
             className="settings-input settings-select"
           >
-            <option value="es">Español</option>
-            <option value="en">English</option>
-            <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
+            <option value="es">{t('hamburger.spanish')}</option>
+            <option value="en">{t('hamburger.english')}</option>
+            <option value="pt">{t('hamburger.portuguese')}</option>
+            <option value="pt_BR">{t('hamburger.brazilianPortuguese')}</option>
+            <option value="ru">{t('hamburger.russian')}</option>
           </select>
         </div>
       </div>
 
       {/* Sección: Tema */}
       <div className="settings-section">
-        <h3 className="settings-section-title">Apariencia</h3>
+        <h3 className="settings-section-title">{t('settings.appearance')}</h3>
         <div className="settings-field">
           <label htmlFor="theme" className="settings-label">
-            Modo de tema
+            {t('settings.themeMode')}
           </label>
           <select
             id="theme"
@@ -97,12 +100,12 @@ function SettingsForm({ cities = [] }) {
             onChange={handleChange}
             className="settings-input settings-select"
           >
-            <option value="light">Claro</option>
-            <option value="dark">Oscuro</option>
-            <option value="auto">Automático</option>
+            <option value="light">{t('settings.light')}</option>
+            <option value="dark">{t('settings.dark')}</option>
+            <option value="auto">{t('settings.auto')}</option>
           </select>
           <p className="settings-help-text">
-            El modo automático usa la preferencia de tu sistema
+            {t('settings.autoHelpText')}
           </p>
         </div>
       </div>
@@ -110,10 +113,10 @@ function SettingsForm({ cities = [] }) {
       {/* Sección: Estación Meteorológica Favorita */}
       {cities && cities.length > 0 && (
         <div className="settings-section">
-          <h3 className="settings-section-title">Estación Meteorológica Favorita</h3>
+          <h3 className="settings-section-title">{t('settings.favoriteStation')}</h3>
           <div className="settings-field">
             <label htmlFor="favorite_station" className="settings-label">
-              Selecciona tu estación meteorológica preferida
+              {t('settings.selectStation')}
             </label>
             <select
               id="favorite_station"
@@ -122,7 +125,7 @@ function SettingsForm({ cities = [] }) {
               onChange={handleChange}
               className="settings-input settings-select"
             >
-              <option value="">Sin seleccionar</option>
+              <option value="">{t('settings.noSelection')}</option>
               {cities.map((city) => (
                 <option key={city.id} value={city.id}>
                   {city.name}
@@ -130,7 +133,7 @@ function SettingsForm({ cities = [] }) {
               ))}
             </select>
             <p className="settings-help-text">
-              Se mostrará como tu estación predeterminada en el dashboard
+              {t('settings.stationHelpText')}
             </p>
           </div>
         </div>
@@ -150,7 +153,7 @@ function SettingsForm({ cities = [] }) {
           className="settings-button settings-button-primary"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Guardando...' : 'Guardar cambios'}
+          {isSubmitting ? t('settings.saving') : t('settings.saveChanges')}
         </button>
       </div>
     </form>

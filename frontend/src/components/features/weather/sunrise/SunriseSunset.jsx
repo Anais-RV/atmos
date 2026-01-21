@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Sun, AlertCircle, Loader } from 'lucide-react'
+import { useLanguage } from '../../../../context/useLanguage'
 import './SunriseSunset.css'
 
 function SunriseSunset({ city }) {
+  const { t } = useLanguage()
   const [sunTimes, setSunTimes] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -37,18 +39,18 @@ function SunriseSunset({ city }) {
             daylight_duration: data.daylight_duration_formatted || null
           })
         } else {
-          setError('No hay datos de amanecer/atardecer disponibles')
+          setError(t('weather.noSunData'))
         }
       } catch (err) {
         console.error('Error fetching sun times:', err)
-        setError('Error al obtener datos de amanecer/atardecer')
+        setError(t('weather.errorSunData'))
       } finally {
         setLoading(false)
       }
     }
 
     fetchSunTimes()
-  }, [city])
+  }, [city, t])
 
   const formatTime = (timeString) => {
     if (!timeString) return '--:--'
@@ -64,12 +66,12 @@ function SunriseSunset({ city }) {
 
   return (
     <div className="sunrise-sunset-container">
-      <h2 className="sunrise-sunset-title">Amanecer y Atardecer</h2>
+      <h2 className="sunrise-sunset-title">{t('weather.sunriseSunsetTitle')}</h2>
 
       {loading && (
         <div className="sunrise-sunset-loading">
           <Loader className="spinner" />
-          <p>Se está cargando los datos. Por favor, espere.</p>
+          <p>{t('weather.loadingSunTimes')}</p>
         </div>
       )}
 
@@ -88,11 +90,11 @@ function SunriseSunset({ city }) {
           <div className="sun-time-card sunrise-card">
             <div className="sun-time-header">
               <Sun className="sun-icon sunrise-icon" />
-              <h3>Amanecer</h3>
+              <h3>{t('weather.sunrise')}</h3>
             </div>
             <div className="sun-time-content">
               <span className="sun-time-value">{formatTime(sunTimes.sunrise)}</span>
-              <span className="sun-time-label">Hora local</span>
+              <span className="sun-time-label">{t('weather.localTime')}</span>
             </div>
           </div>
 
@@ -101,11 +103,11 @@ function SunriseSunset({ city }) {
           <div className="sun-time-card sunset-card">
             <div className="sun-time-header">
               <Sun className="sun-icon sunset-icon" />
-              <h3>Atardecer</h3>
+              <h3>{t('weather.sunset')}</h3>
             </div>
             <div className="sun-time-content">
               <span className="sun-time-value">{formatTime(sunTimes.sunset)}</span>
-              <span className="sun-time-label">Hora local</span>
+              <span className="sun-time-label">{t('weather.localTime')}</span>
             </div>
           </div>
 
@@ -115,11 +117,11 @@ function SunriseSunset({ city }) {
             <div className="sun-time-card daylight-card">
               <div className="sun-time-header">
                 <Sun className="sun-icon daylight-icon" />
-                <h3>Duración del día</h3>
+                <h3>{t('weather.daylightDuration')}</h3>
               </div>
               <div className="sun-time-content">
                 <span className="sun-time-value">{formatDuration(sunTimes.daylight_duration)}</span>
-                <span className="sun-time-label">Horas totales de luz</span>
+                <span className="sun-time-label">{t('weather.totalDaylight')}</span>
               </div>
             </div>
           )}
@@ -128,7 +130,7 @@ function SunriseSunset({ city }) {
 
       {!loading && !error && !sunTimes && city && (
         <div className="sunrise-sunset-empty">
-          <p>Selecciona una ciudad para ver los datos de amanecer, atardecer y horas de luz totales</p>
+          <p>{t('weather.selectCityForSun')}</p>
         </div>
       )}
     </div>

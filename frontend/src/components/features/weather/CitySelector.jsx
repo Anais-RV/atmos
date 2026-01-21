@@ -11,9 +11,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { Search } from 'lucide-react'
 import apiClient from '../../../services/apiClient'
+import { useLanguage } from '../../../context/useLanguage'
 import './weather.css'
 
 function CitySelector({ onCitySelect }) {
+  const { t } = useLanguage()
   const [cities, setCities] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCity, setSelectedCity] = useState(null)
@@ -33,7 +35,7 @@ function CitySelector({ onCitySelect }) {
         setCities(Array.isArray(data) ? data : [])
       } catch (err) {
         console.error('Error al cargar ciudades:', err)
-        setError('Error al cargar ciudades')
+        setError(t('weather.errorLoadingCities'))
         setCities([])
       } finally {
         setLoading(false)
@@ -41,7 +43,7 @@ function CitySelector({ onCitySelect }) {
     }
     
     fetchCities()
-  }, [])
+  }, [t])
 
   // Cerrar el dropdown cuando se hace click fuera del componente
   useEffect(() => {
@@ -124,11 +126,11 @@ function CitySelector({ onCitySelect }) {
           <input
             type="text"
             className="city-search-input"
-            placeholder="Buscar ciudad..."
+            placeholder={t('weather.searchCity')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             readOnly={!!selectedRegion}
-            title={selectedRegion ? 'Filtrado por comunidad: ' + selectedRegion + ' — pulsa "Todas" para editar' : 'Buscar ciudad'}
+            title={selectedRegion ? t('weather.citySelector') + ': ' + selectedRegion + ' — ' + t('weather.selectYourCity') : t('weather.searchCity')}
             onFocus={() => setIsOpen(true)}
           />
         </div>
@@ -147,7 +149,7 @@ function CitySelector({ onCitySelect }) {
                 }}
                 type="button"
               >
-                Todas
+                {t('weather.allRegions')}
               </button>
               {/* Si hay región seleccionada, mostrar solo ese chip. Si no, mostrar todos */}
               {selectedRegion ? (
@@ -195,7 +197,7 @@ function CitySelector({ onCitySelect }) {
               </ul>
             ) : (
               <div className="city-no-results">
-                No se encontraron ciudades
+                {t('weather.noResults')}
               </div>
             )}
           </div>
@@ -215,7 +217,7 @@ function CitySelector({ onCitySelect }) {
               setIsOpen(false)
               if (typeof onCitySelect === 'function') onCitySelect(null)
             }}
-            title="Limpiar selección"
+            title={t('common.close')}
           >
             ×
           </button>

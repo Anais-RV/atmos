@@ -13,11 +13,13 @@
 import { useState } from "react";
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
+import { useLanguage } from "../context/useLanguage";
 import ForecastChart from "../components/features/forecast/ForecastChart";
 import WeatherInfo from "../components/features/weather/WeatherInfo";
 import "../components/features/forecast/charts.css";
 
 function ForecastChartPage() {
+  const { t } = useLanguage();
   const [temperatureC, setTemperatureC] = useState(15);
   const [selectedCity, setSelectedCity] = useState(null);
   const containerColor = getTemperatureColor(temperatureC);
@@ -37,9 +39,9 @@ function ForecastChartPage() {
         </section>
 
         <section className="center-card center-card-middle" style={{ marginTop: '1rem' }}>
-          <h2 className="center-card-title">GRÁFICAS</h2>
+          <h2 className="center-card-title">{t('forecast.charts')}</h2>
           <p className="center-card-text">
-            Visualiza las predicciones y series temporales generadas por ATMOS.
+            {t('forecast.chartsDescription')}
           </p>
 
           <div className="chart-main-viewport">
@@ -48,20 +50,20 @@ function ForecastChartPage() {
         </section>
 
         <section className="center-card center-card-bottom">
-          <h2 className="center-card-title">Resumen de gráficas</h2>
+          <h2 className="center-card-title">{t('forecast.chartsSummary')}</h2>
           <p className="center-card-text">
-            Accede a las visualizaciones por periodo temporal.
+            {t('forecast.byPeriod')}
           </p>
 
           <div className="chart-summary-grid">
             <section className="chart-summary-item">
-              <h3 className="chart-summary-title">Gráficas del día</h3>
+              <h3 className="chart-summary-title">{t('forecast.chartsDay')}</h3>
             </section>
             <section className="chart-summary-item">
-              <h3 className="chart-summary-title">Gráficas de la semana</h3>
+              <h3 className="chart-summary-title">{t('forecast.chartsWeek')}</h3>
             </section>
             <section className="chart-summary-item">
-              <h3 className="chart-summary-title">Gráficas del mes</h3>
+              <h3 className="chart-summary-title">{t('forecast.chartsMonth')}</h3>
             </section>
           </div>
         </section>

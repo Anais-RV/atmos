@@ -15,10 +15,11 @@ import BasePageLayout from "../components/layout/BasePageLayout";
 import LoginForm from "../components/features/auth/LoginForm";
 import DataProtectionNotice from "../components/features/auth/DataProtectionNotice";
 import { getTemperatureColor } from "../styles/temperatureColors";
+import { useLanguage } from "../context/useLanguage";
 
 function LoginPage() {
-  // MISMA temperatura que en DashboardPage
-  const temperatureC = 7; // usa el mismo valor que en DashboardPage
+  const { t } = useLanguage();
+  const temperatureC = 7;
   const containerColor = getTemperatureColor(temperatureC);
 
   return (
@@ -37,9 +38,9 @@ function LoginPage() {
           {/* Contenido de login */}
           <div className="auth-login-content">
             <header className="auth-card-header">
-              <h1 className="auth-card-title">Bienvenido de nuevo</h1>
+              <h1 className="auth-card-title">{t('auth.welcomeBack')}</h1>
               <p className="auth-card-subtitle">
-                Inicia sesión para acceder a tu panel de ATMOS.
+                {t('auth.loginDescription')}
               </p>
             </header>
 

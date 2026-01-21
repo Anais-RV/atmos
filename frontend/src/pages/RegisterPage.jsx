@@ -15,8 +15,10 @@ import BasePageLayout from "../components/layout/BasePageLayout";
 import AuthCard from "../components/features/auth/AuthCard";
 import RegisterForm from "../components/features/auth/RegisterForm";
 import { getTemperatureColor } from "../styles/temperatureColors";
+import { useLanguage } from "../context/useLanguage";
 
 function RegisterPage() {
+  const { t } = useLanguage();
   const temperatureC = 7;
   const containerColor = getTemperatureColor(temperatureC);
 
@@ -27,8 +29,8 @@ function RegisterPage() {
       containerColor={containerColor}
     >
       <AuthCard
-        title="Crea tu cuenta"
-        subtitle="Únete a ATMOS y sigue tu entorno con contexto."
+        title={t('auth.createAccount')}
+        subtitle={t('auth.registerDescription')}
       >
         <RegisterForm />
       </AuthCard>

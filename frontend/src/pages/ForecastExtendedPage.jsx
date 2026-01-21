@@ -11,10 +11,12 @@
 
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
+import { useLanguage } from "../context/useLanguage";
 import "../components/features/forecast/forecast.css";
 
 function ForecastExtendedPage() {
-  const temperatureC = 7; // mismo criterio que ForecastPage
+  const { t } = useLanguage();
+  const temperatureC = 7;
   const containerColor = getTemperatureColor(temperatureC);
 
   return (
@@ -26,14 +28,14 @@ function ForecastExtendedPage() {
       <section className="dashboard-center">
         {/* Solo una card, más alta que las de ForecastPage */}
         <section className="center-card forecast-extended-card">
-          <h2 className="center-card-title">FORECAST EXTENDIDO</h2>
+          <h2 className="center-card-title">{t('forecast.extendedTitle')}</h2>
           <p className="center-card-text">
-            Vista ampliada de la predicción meteorológica.
+            {t('forecast.extendedDescription')}
           </p>
 
           <div className="forecast-main-viewport">
             <p className="forecast-placeholder-text">
-              Aquí irá la versión extendida: más gráficas, más detalles, etc.
+              {t('forecast.extendedPlaceholder')}
             </p>
           </div>
         </section>

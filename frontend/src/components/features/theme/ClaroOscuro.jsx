@@ -1,15 +1,17 @@
 import { useContext } from 'react';
 import { ThemeContext } from '../../../context/ThemeContext';
+import { useLanguage } from '../../../context/useLanguage';
 import './ClaroOscuro.css';
 
 function ClaroOscuro() {
     // Obtener el contexto del tema global
     const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+    const { t } = useLanguage();
 
     // Emoji y texto que refleja el tema actual
     const emoji = isDarkMode ? '🌙' : '🌞'; 
-    const themeText = isDarkMode ? 'Modo Oscuro Activado' : 'Modo Claro Activado';
-    const buttonText = isDarkMode ? 'Cambiar a Claro' : 'Cambiar a Oscuro';
+    const themeText = isDarkMode ? t('theme.darkModeActive') : t('theme.lightModeActive');
+    const buttonText = isDarkMode ? t('theme.changeToLight') : t('theme.changeToDark');
 
     return (
         <div 
@@ -25,7 +27,7 @@ function ClaroOscuro() {
                 onClick={toggleTheme}
                 className="theme-button"
                 style={styles.button}
-                aria-label={`Cambiar a modo ${isDarkMode ? 'claro' : 'oscuro'}`}
+                aria-label={t('theme.switchMode')}
             >
                 {buttonText}
             </button>

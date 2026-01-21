@@ -13,9 +13,11 @@
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
 import WeatherHistory from "../components/features/history/WeatherHistory";
+import { useLanguage } from "../context/useLanguage";
 import "../components/features/history/history.css";
 
 function WeatherHistoryPage() {
+  const { t } = useLanguage();
   const temperatureC = 7; // igual que Dashboard/Charts para mantener coherencia
   const containerColor = getTemperatureColor(temperatureC);
 
@@ -29,9 +31,9 @@ function WeatherHistoryPage() {
       <section className="dashboard-center">
         {/* Tarjeta superior */}
         <section className="center-card center-card-top">
-          <h2 className="center-card-title">HISTORIAL DE ALERTAS</h2>
+          <h2 className="center-card-title">{t('weatherHistory.title')}</h2>
           <p className="center-card-text">
-            Consulta el historial de alertas generadas por ATMOS (si tu API las expone en <code>/api/alerts/</code>).
+            {t('weatherHistory.noAlerts')}
           </p>
 
           {/* Zona donde irán las gráficas de historial */}
@@ -42,7 +44,7 @@ function WeatherHistoryPage() {
 
         {/* Tarjeta inferior */}
         <section className="center-card center-card-bottom">
-          <h2 className="center-card-title">History summary</h2>
+          <h2 className="center-card-title">{t('weatherHistory.alertsSummary')}</h2>
           <p className="center-card-text">
             Mostrará max/min del día anterior
           </p>

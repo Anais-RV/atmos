@@ -20,6 +20,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { Loader, AlertCircle } from 'lucide-react';
 import { apiClient } from '../../../services/apiClient';
+import { useLanguage } from '../../../context/useLanguage';
 
 // Registrar componentes de Chart.js
 ChartJS.register(
@@ -34,6 +35,7 @@ ChartJS.register(
 );
 
 function WeatherChart({ cityId, variable = 'temp', timeRange = '24h' }) {
+  const { t } = useLanguage()
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -82,18 +84,18 @@ function WeatherChart({ cityId, variable = 'temp', timeRange = '24h' }) {
             ]
           });
         } else {
-          setError('Datos inválidos recibidos del servidor');
+          setError(t('forecast.noData'));
         }
       } catch (err) {
         console.error('Error fetching chart data:', err);
-        setError('Error al cargar datos del gráfico: ' + err.message);
+        setError(t('common.error'));
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [cityId, variable, timeRange]);
+  }, [cityId, variable, timeRange, t]);
 
   const getVariableLabel = (variable) => {
     const labels = {
@@ -170,7 +172,7 @@ function WeatherChart({ cityId, variable = 'temp', timeRange = '24h' }) {
     return (
       <div className="chart-loading">
         <Loader className="spinner" />
-        <p>Cargando datos del gráfico...</p>
+        <p>{t('common.loading')}</p>
       </div>
     );
   }
@@ -187,7 +189,7 @@ function WeatherChart({ cityId, variable = 'temp', timeRange = '24h' }) {
   if (!chartData) {
     return (
       <div className="chart-empty">
-        <p>Selecciona una ciudad para ver el gráfico</p>
+        <p>{t('dashboard.selectCity')}</p>
       </div>
     );
   }

@@ -12,11 +12,13 @@
 
 import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
+import { useLanguage } from "../context/useLanguage";
 import Forecast from "../components/features/forecast/Forecast";
 import "../components/features/forecast/forecast.css";
 
 function ForecastPage() {
-  const temperatureC = 7; // igual que Dashboard/Charts para mantener coherencia
+  const { t } = useLanguage();
+  const temperatureC = 7;
   const containerColor = getTemperatureColor(temperatureC);
 
   return (
@@ -29,9 +31,9 @@ function ForecastPage() {
       <section className="dashboard-center">
         {/* Tarjeta superior */}
         <section className="center-card center-card-top">
-          <h2 className="center-card-title">FORECAST</h2>
+          <h2 className="center-card-title">{t('forecast.title')}</h2>
           <p className="center-card-text">
-            Consulta la predicción meteorológica de PROPET.
+            {t('forecast.nextDaysForecasts')}
           </p>
 
           {/* Zona donde irán las gráficas de predicción */}
@@ -42,9 +44,9 @@ function ForecastPage() {
 
         {/* Tarjeta inferior */}
         <section className="center-card center-card-bottom">
-          <h2 className="center-card-title">Forecast summary</h2>
+          <h2 className="center-card-title">{t('forecast.forecastSummary')}</h2>
           <p className="center-card-text">
-            Predicciones de días próximos
+            {t('forecast.nextDaysForecasts')}
           </p>
 
           <div className="forecast-summary-grid">

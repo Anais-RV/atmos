@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../context/AuthContext'
+import { useLanguage } from '../../../context/useLanguage'
 
 function UserPanelInfo() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
+  const { t } = useLanguage()
 
   if (!user) {
     return (
@@ -11,7 +13,7 @@ function UserPanelInfo() {
         <div className="auth-user-header">
           <div className="auth-user-avatar guest">I</div>
           <div>
-            <h2 className="auth-user-name">Invitado</h2>
+            <h2 className="auth-user-name">{t('userPanel.guest')}</h2>
           </div>
         </div>
 
@@ -20,7 +22,7 @@ function UserPanelInfo() {
             className="auth-button-primary"
             onClick={() => navigate('/login')}
           >
-            Inicia sesión
+            {t('auth.signIn')}
           </button>
         </div>
       </div>
@@ -30,7 +32,7 @@ function UserPanelInfo() {
   const displayUser = {
     name: user?.first_name && user?.last_name
       ? `${user.first_name} ${user.last_name}`
-      : user?.username || 'Invitado',
+      : user?.username || t('userPanel.guest'),
     email: user?.email || null,
   }
 
@@ -58,7 +60,7 @@ function UserPanelInfo() {
           className="auth-button-secondary"
           onClick={() => navigate('/tags')}
         >
-          Mis etiquetas
+          {t('userPanel.myTags')}
         </button>
 
         {user && (
@@ -66,7 +68,7 @@ function UserPanelInfo() {
             className="auth-button-secondary"
             onClick={handleLogout}
           >
-            Sign out
+            {t('common.logout')}
           </button>
         )}
       </div>

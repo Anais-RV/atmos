@@ -14,9 +14,10 @@ import { Link } from "react-router-dom";
 import BasePageLayout from "../components/layout/BasePageLayout";
 import AuthCard from "../components/features/auth/AuthCard";
 import { getTemperatureColor } from "../styles/temperatureColors";
+import { useLanguage } from "../context/useLanguage";
 
 function DataProtectionPage() {
-  // Misma lógica de contenedor que en LoginPage / DashboardPage
+  const { t } = useLanguage();
   const temperatureC = 7;
   const containerColor = getTemperatureColor(temperatureC);
 
@@ -27,43 +28,36 @@ function DataProtectionPage() {
       containerColor={containerColor}
     >
       <AuthCard
-        title="Protección de datos"
-        subtitle="Resumen de cómo usamos, almacenamos y protegemos tu información."
+        title={t('auth.dataProtectionTitle')}
+        subtitle={t('auth.dataProtectionSubtitle')}
       >
         <div className="auth-text-block">
           <p>
-            ATMOS recopila únicamente la información necesaria para ofrecerte el
-            servicio: datos de cuenta (correo electrónico, contraseña cifrada) y
-            datos básicos de uso (consultas realizadas, ubicaciones guardadas,
-            preferencias).
+            {t('auth.dataCollected')}
           </p>
 
           <ul className="auth-list">
-            <li>Nunca vendemos tus datos a terceros.</li>
+            <li>{t('auth.noSelling')}</li>
             <li>
-              Tu contraseña se almacena utilizando técnicas de cifrado y hash seguras.
+              {t('auth.passwordEncrypted')}
             </li>
             <li>
-              Puedes solicitar la eliminación de tu cuenta y de tus datos en
-              cualquier momento.
+              {t('auth.deleteRequest')}
             </li>
             <li>
-              Solo conservamos los registros el tiempo necesario para garantizar
-              la seguridad y depurar posibles errores.
+              {t('auth.dataRetention')}
             </li>
           </ul>
 
           <p>
-            Esta página es un marcador de posición para tu texto legal real. Aquí,
-            más adelante, pegarás el documento completo adaptado al RGPD y a la
-            normativa vigente.
+            {t('auth.legalPlaceholder')}
           </p>
         </div>
 
         <div className="auth-form-footer" style={{ marginTop: "1.2rem" }}>
           <Link to="/login">
             <button type="button" className="auth-button-primary">
-              Volver al inicio de sesión
+              {t('auth.backToLogin')}
             </button>
           </Link>
         </div>

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import "./HamburgerMenu.css";
 import { ThemeContext } from "../../../context/ThemeContext";
+import { useLanguage } from "../../../context/useLanguage";
 
 function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +21,7 @@ function HamburgerMenu() {
   const [isAccOpen, setIsAccOpen] = useState(false);
 
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { language, setLanguage, t } = useLanguage();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = () => {
@@ -37,7 +39,7 @@ function HamburgerMenu() {
         type="button"
         className={`navbar-menu-button ${isOpen ? "open" : ""}`}
         onClick={toggleMenu}
-        aria-label="Abrir menú"
+        aria-label={t('hamburger.menu')}
         aria-expanded={isOpen}
       >
         ☰
@@ -65,8 +67,8 @@ function HamburgerMenu() {
             >
               <User size={20} />
               <div className="menu-text">
-                <span className="hamburger-menu-item-title">Menu de usuario</span>
-                <span className="hamburger-menu-item-sub">Ver tu panel y preferencias</span>
+                <span className="hamburger-menu-item-title">{t('hamburger.userMenu')}</span>
+                <span className="hamburger-menu-item-sub">{t('hamburger.viewPanel')}</span>
               </div>
             </Link>
           </li>
@@ -84,9 +86,9 @@ function HamburgerMenu() {
               {isDarkMode ? <Moon size={20} /> : <Sun size={20} />}
               <div className="menu-text">
                 <span className="hamburger-menu-item-title">
-                  {isDarkMode ? "Modo claro" : "Modo oscuro"}
+                  {isDarkMode ? t('hamburger.lightMode') : t('hamburger.darkMode')}
                 </span>
-                <span className="hamburger-menu-item-sub">Ajustar tema de la interfaz</span>
+                <span className="hamburger-menu-item-sub">{t('hamburger.themeSub')}</span>
               </div>
             </button>
           </li>
@@ -101,17 +103,73 @@ function HamburgerMenu() {
             >
               <Globe size={20} />
               <div className="menu-text">
-                <span className="hamburger-menu-item-title">Idiomas</span>
-                <span className="hamburger-menu-item-sub">Cambiar idioma de la app</span>
+                <span className="hamburger-menu-item-title">{t('hamburger.languages')}</span>
+                <span className="hamburger-menu-item-sub">{t('hamburger.changeLanguage')}</span>
               </div>
             </button>
 
             {isLangOpen && (
               <ul className="hamburger-submenu">
-                <li><button type="button" onClick={closeMenu}>🇪🇸 Español</button></li>
-                <li><button type="button" onClick={closeMenu}>🇺🇸 Inglés</button></li>
-                <li><button type="button" onClick={closeMenu}>🇷🇺 Ruso</button></li>
-                <li><button type="button" onClick={closeMenu}>🇧🇷 Brasileño</button></li>
+                <li>
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setLanguage('es');
+                      closeMenu();
+                    }}
+                    className={language === 'es' ? 'active' : ''}
+                  >
+                    🇪🇸 {t('hamburger.spanish')}
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setLanguage('en');
+                      closeMenu();
+                    }}
+                    className={language === 'en' ? 'active' : ''}
+                  >
+                    🇺🇸 {t('hamburger.english')}
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setLanguage('pt');
+                      closeMenu();
+                    }}
+                    className={language === 'pt' ? 'active' : ''}
+                  >
+                    🇵🇹 {t('hamburger.portuguese')}
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setLanguage('pt_BR');
+                      closeMenu();
+                    }}
+                    className={language === 'pt_BR' ? 'active' : ''}
+                  >
+                    🇧🇷 {t('hamburger.brazilianPortuguese')}
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setLanguage('ru');
+                      closeMenu();
+                    }}
+                    className={language === 'ru' ? 'active' : ''}
+                  >
+                    🇷🇺 {t('hamburger.russian')}
+                  </button>
+                </li>
               </ul>
             )}
           </li>
@@ -126,16 +184,16 @@ function HamburgerMenu() {
             >
               <Accessibility size={20} />
               <div className="menu-text">
-                <span className="hamburger-menu-item-title">Accesibilidad</span>
-                <span className="hamburger-menu-item-sub">Ajustes de discapacidad</span>
+                <span className="hamburger-menu-item-title">{t('hamburger.accessibility')}</span>
+                <span className="hamburger-menu-item-sub">{t('hamburger.disabilitySettings')}</span>
               </div>
             </button>
 
             {isAccOpen && (
               <ul className="hamburger-submenu">
-                <li><button type="button" onClick={closeMenu}><Eye size={16} /> Discapacidad visual</button></li>
-                <li><button type="button" onClick={closeMenu}><Ear size={16} /> Subtitulado ST</button></li>
-                <li><button type="button" onClick={closeMenu}><UserX size={16} /> Sordo-ciego</button></li>
+                <li><button type="button" onClick={closeMenu}><Eye size={16} /> {t('hamburger.visualDisability')}</button></li>
+                <li><button type="button" onClick={closeMenu}><Ear size={16} /> {t('hamburger.subtitles')}</button></li>
+                <li><button type="button" onClick={closeMenu}><UserX size={16} /> {t('hamburger.deafBlind')}</button></li>
               </ul>
             )}
           </li>

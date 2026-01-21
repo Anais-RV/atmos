@@ -33,6 +33,7 @@ import {
   Loader
 } from 'lucide-react'
 import { useAuth } from '../../../context/AuthContext'
+import { useLanguage } from '../../../context/useLanguage'
 import CitySelector from './CitySelector'
 import './weather.css'
 
@@ -96,6 +97,7 @@ function calculateFeelsLike(temp, windSpeed = 0, humidity = 50) {
 
 function WeatherInfo({ onTemperatureChange, onCityChange }) {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const [cityId, setCityId] = useState(null)
   const [cityName, setCityName] = useState('')
   const [temperature, setTemperature] = useState(null)
@@ -136,7 +138,7 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
       
       // Validar que tengamos datos de temperatura
       if (!data.temperature && data.temperature !== 0) {
-        setError(`No hay datos meteorológicos disponibles para esta ubicación`)
+        setError(t('weather.noData'))
         setTemperature(null)
         setFeelsLike(null)
         setCondition('')
@@ -147,7 +149,7 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
       setCityId(id)
       setCityName(data.city_name)
       setTemperature(data.temperature)
-      setCondition(data.condition || 'Parcialmente nublado')
+      setCondition(data.condition || t('weather.forecast'))
       
       // Notificar cambio de temperatura al padre para actualizar color de fondo
       if (onTemperatureChange) {
@@ -169,9 +171,9 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
     } catch (err) {
       // Manejar error 404 (ciudad sin datos) de forma específica
       if (err.message.includes('404')) {
-        setError(`No hay datos meteorológicos disponibles para esta ubicación`)
+        setError(t('weather.noData'))
       } else {
-        setError(`Error al obtener datos: ${err.message}`)
+        setError(t('common.error'))
       }
       console.error('Weather API Error:', err)
       setTemperature(null)
@@ -198,7 +200,7 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
     <div className="weather-info-container">
       {/* Selector de ciudad */}
       <div className="weather-header">
-        <h2 className="weather-title">Buscar Ciudades</h2>
+        <h2 className="weather-title">{t('weather.citySelector')}</h2>
         <CitySelector onCitySelect={fetchWeatherData} />
       </div>
 
@@ -206,7 +208,7 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
       {loading && (
         <div className="weather-loading">
           <Loader className="weather-spinner" />
-          <p>Cargando datos del clima...</p>
+          <p>{t('common.loading')}</p>
         </div>
       )}
 
@@ -226,7 +228,7 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
             <button 
               className="temp-toggle"
               onClick={() => setIsCelsius(!isCelsius)}
-              title="Cambiar entre Celsius y Fahrenheit"
+              title={t('weather.temperature')}
             >
               {isCelsius ? '°C / °F' : '°F / °C'}
             </button>
@@ -248,7 +250,7 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
 
           {/* Sensación térmica */}
           <div className="feels-like-section">
-            <p className="feels-like-label">Sensación térmica</p>
+            <p className="feels-like-label">{t('weather.feelsLike')}</p>
             <p className="feels-like-value">
               <span>{displayFeelsLike}</span>
               <span className="feels-like-unit">{tempUnit}</span>
@@ -261,7 +263,7 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
       {!loading && temperature === null && !error && (
         <div className="weather-placeholder">
           <Cloud className="weather-placeholder-icon" size={40} />
-          <p className="weather-placeholder-text">Selecciona una ciudad para ver el clima actual</p>
+          <p className="weather-placeholder-text">{t('dashboard.selectCity')}</p>
         </div>
       )}
     </div>
