@@ -407,7 +407,7 @@ class UserPreferencesSerializer(serializers.Serializer):
         """
         Valida que el idioma sea uno de los permitidos.
         """
-        allowed_languages = ['es', 'en', 'fr']
+        allowed_languages = ['es', 'en', 'pt', 'pt_BR', 'ru']
         
         if value not in allowed_languages:
             raise serializers.ValidationError(
@@ -483,7 +483,7 @@ class UserPreferencesUpdateSerializer(serializers.Serializer):
     
     def validate_language(self, value):
         """Validación de idioma"""
-        allowed_languages = ['es', 'en', 'fr']
+        allowed_languages = ['es', 'en', 'pt', 'pt_BR', 'ru']
         if value not in allowed_languages:
             raise serializers.ValidationError(
                 f'Idioma inválido. Valores permitidos: {", ".join(allowed_languages)}'
