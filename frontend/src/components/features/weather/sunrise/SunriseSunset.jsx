@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Sun, AlertCircle, Loader } from 'lucide-react'
 import { useLanguage } from '../../../../context/useLanguage'
+import apiClient from '../../../../services/apiClient'
 import './SunriseSunset.css'
 
 function SunriseSunset({ city }) {
@@ -24,13 +25,7 @@ function SunriseSunset({ city }) {
         setLoading(true)
         setError(null)
 
-        const response = await fetch(`http://localhost:8000/api/weather/sunrise-sunset/?city_id=${city.id}`)
-        
-        if (!response.ok) {
-          throw new Error(`Error ${response.status}`)
-        }
-        
-        const data = await response.json()
+        const data = await apiClient(`/api/weather/sunrise-sunset/?city_id=${city.id}`)
 
         if (data && data.sunrise_formatted && data.sunset_formatted) {
           setSunTimes({

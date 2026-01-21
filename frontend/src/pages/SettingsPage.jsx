@@ -3,6 +3,7 @@ import SettingsForm from '../components/features/settings/SettingsForm';
 import { getTemperatureColor } from '../styles/temperatureColors';
 import { useState, useEffect } from 'react';
 import { useLanguage } from "../context/useLanguage";
+import apiClient from '../services/apiClient';
 
 function SettingsPage() {
   const { t } = useLanguage();
@@ -15,11 +16,8 @@ function SettingsPage() {
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/weather/cities/');
-        if (response.ok) {
-          const data = await response.json();
-          setCities(data.results || data);
-        }
+        const data = await apiClient('/api/weather/cities/');
+        setCities(data.results || data);
       } catch (err) {
         console.error('Error fetching cities:', err);
       } finally {

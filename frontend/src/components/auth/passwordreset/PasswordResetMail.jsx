@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../../context/useLanguage";
+import apiClient from "../../../services/apiClient";
 
 function PasswordResetRequest() {
     const [email, setEmail] = useState("");
@@ -37,44 +38,29 @@ function PasswordResetRequest() {
 
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:8000/api/auth/password-reset/request/`, {
+            const data = await apiClient('/api/auth/password-reset/request/', {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: trimmed }),
+                body: { email: trimmed },
                 signal: controller.signal,
             });
 
-            let text = t('auth.emailNotFound');
-            let data = null;
-            try {
-                data = await res.json();
-                if (data && data.detail) text = data.detail;
-                else if (data && data.email) text = Array.isArray(data.email) ? data.email.join(" ") : data.email;
-            } catch {
-                // no JSON body
-            }
-
-            if (res.ok) {
-                setIsError(false);
-                // If backend returns the token (for testing/dev), show link
-                if (data && data.token) {
-                    setMessage(
-                        t('auth.passwordSent') + " " +
-                        window.location.origin + "/password-reset/" + data.token
-                    );
-                    setEmail("");
-                } else {
-                    setMessage(t('auth.passwordSent'));
-                    setEmail("");
-                }
+            // Success case
+            setIsError(false);
+            // If backend returns the token (for testing/dev), show link
+            if (data && data.token) {
+                setMessage(
+                    t('auth.passwordSent') + " " +
+                    window.location.origin + "/password-reset/" + data.token
+                );
+                setEmail("");
             } else {
-                setIsError(true);
-                setMessage(text);
+                setMessage(t('auth.passwordSent'));
+                setEmail("");
             }
         } catch (err) {
             if (err.name === 'AbortError') return;
             setIsError(true);
-            setMessage(t('common.error'));
+            setMessage(err.message || t('common.error'));
         } finally {
             setLoading(false);
             abortControllerRef.current = null;

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useLanguage } from "../../../context/useLanguage";
+import apiClient from "../../../services/apiClient";
 
 function PasswordResetForm() {
 	const [email, setEmail] = useState("");
@@ -62,38 +63,22 @@ function PasswordResetForm() {
 			if (paramToken || manualToken) body.token = tokenToSend;
 			else body.email = email.trim().toLowerCase();
 
-			const res = await fetch("http://localhost:8000/api/auth/password-reset/confirm/", {
+			await apiClient("/api/auth/password-reset/confirm/", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(body),
+				body: body,
 			});
 
-			if (res.ok) {
-				setIsError(false);
-				setMessage(t('auth.resetSuccess'));
-				setEmail("");
-				setNewPassword("");
-				setConfirmPassword("");
-				setManualToken("");
-				setTimeout(() => navigate('/login'), 1600);
-			} else {
-				let text = t('auth.resetError');
-				try {
-					const data = await res.json();
-					if (data && data.detail) text = data.detail;
-					else if (data && data.email) text = Array.isArray(data.email) ? data.email.join(" ") : data.email;
-					else if (data && data.new_password) text = Array.isArray(data.new_password) ? data.new_password.join(" ") : data.new_password;
-					else if (data && data.new_password_confirm) text = Array.isArray(data.new_password_confirm) ? data.new_password_confirm.join(" ") : data.new_password_confirm;
-					else if (data && data.token) text = Array.isArray(data.token) ? data.token.join(" ") : data.token;
-				} catch {
-					// ignore JSON parse error
-				}
-				setIsError(true);
-				setMessage(text);
-			}
-		} catch {
+			// Success
+			setIsError(false);
+			setMessage(t('auth.resetSuccess'));
+			setEmail("");
+			setNewPassword("");
+			setConfirmPassword("");
+			setManualToken("");
+			setTimeout(() => navigate('/login'), 1600);
+		} catch (err) {
 			setIsError(true);
-			setMessage(t('auth.requestFailed'));
+			setMessage(err.message || t('auth.requestFailed'));
 		} finally {
 			setLoading(false);
 		}

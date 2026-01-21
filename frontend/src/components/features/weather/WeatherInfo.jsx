@@ -34,6 +34,7 @@ import {
   Loader
 } from 'lucide-react'
 import { useLanguage } from '../../../context/useLanguage'
+import apiClient from '../../../services/apiClient'
 import CitySelector from './CitySelector'
 import './weather.css'
 
@@ -125,13 +126,7 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
     setError(null)
 
     try {
-      const response = await fetch(`http://localhost:8000/api/weather/current/?city_id=${id}`)
-      
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}`)
-      }
-      
-      const data = await response.json()
+      const data = await apiClient(`/api/weather/current/?city_id=${id}`)
       
       // Validar que tengamos datos de temperatura
       if (!data.temperature && data.temperature !== 0) {
