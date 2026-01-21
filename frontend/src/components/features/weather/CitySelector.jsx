@@ -10,6 +10,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Search } from 'lucide-react'
+import PropTypes from 'prop-types'
 import apiClient from '../../../services/apiClient'
 import { useLanguage } from '../../../context/useLanguage'
 import './weather.css'
@@ -21,24 +22,17 @@ function CitySelector({ onCitySelect }) {
   const [selectedCity, setSelectedCity] = useState(null)
   const [selectedRegion, setSelectedRegion] = useState('')
   const [isOpen, setIsOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
   const wrapperRef = useRef(null)
 
   useEffect(() => {
     const fetchCities = async () => {
-      setLoading(true)
-      setError(null)
       try {
         const data = await apiClient('/api/weather/cities/')
         // La API devuelve un array de todas las ciudades
         setCities(Array.isArray(data) ? data : [])
       } catch (err) {
         console.error('Error al cargar ciudades:', err)
-        setError(t('weather.errorLoadingCities'))
         setCities([])
-      } finally {
-        setLoading(false)
       }
     }
     
@@ -225,6 +219,10 @@ function CitySelector({ onCitySelect }) {
       )}
     </div>
   )
+}
+
+CitySelector.propTypes = {
+  onCitySelect: PropTypes.func.isRequired,
 }
 
 export default CitySelector

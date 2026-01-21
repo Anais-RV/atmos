@@ -27,7 +27,7 @@ def get_next_sequence(name):
 
 class UserPreferencesDocument(EmbeddedDocument):
     theme = StringField(max_length=20, default='light')
-    language = StringField(max_length=10, default='es', choices=['es', 'en', 'pt', 'pt_BR', 'ru'])
+    language = StringField(max_length=10, default='es', choices=['es', 'en', 'pt', 'pt_BR', 'ru', 'fr'])
     favourite_weather_station = StringField(max_length=200, null=True)
 
 

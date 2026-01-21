@@ -4,7 +4,7 @@
  * Uso: Muestra gráficos de temperatura, humedad, presión, etc.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {
   Chart as ChartJS,
@@ -39,6 +39,27 @@ function WeatherChart({ cityId, variable = 'temp', timeRange = '24h' }) {
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Funciones helper envueltas con useCallback
+  const getVariableLabel = useCallback((variable) => {
+    const labels = {
+      temp: t('weather.temperatureUnit'),
+      humidity: t('weather.humidityUnit'),
+      pressure: t('weather.pressureUnit'),
+      wind_speed: t('weather.windSpeedUnit')
+    };
+    return labels[variable] || variable;
+  }, [t]);
+
+  const getVariableColor = useCallback((variable, alpha = 1) => {
+    const colors = {
+      temp: `rgba(239, 68, 68, ${alpha})`,      // red
+      humidity: `rgba(59, 130, 246, ${alpha})`,  // blue
+      pressure: `rgba(168, 85, 247, ${alpha})`,  // purple
+      wind_speed: `rgba(34, 197, 94, ${alpha})`  // green
+    };
+    return colors[variable] || `rgba(156, 163, 175, ${alpha})`;
+  }, []);
 
   useEffect(() => {
     if (!cityId) {
@@ -95,27 +116,7 @@ function WeatherChart({ cityId, variable = 'temp', timeRange = '24h' }) {
     };
 
     fetchData();
-  }, [cityId, variable, timeRange, t]);
-
-  const getVariableLabel = (variable) => {
-    const labels = {
-      temp: t('weather.temperatureUnit'),
-      humidity: t('weather.humidityUnit'),
-      pressure: t('weather.pressureUnit'),
-      wind_speed: t('weather.windSpeedUnit')
-    };
-    return labels[variable] || variable;
-  };
-
-  const getVariableColor = (variable, alpha = 1) => {
-    const colors = {
-      temp: `rgba(239, 68, 68, ${alpha})`,      // red
-      humidity: `rgba(59, 130, 246, ${alpha})`,  // blue
-      pressure: `rgba(168, 85, 247, ${alpha})`,  // purple
-      wind_speed: `rgba(34, 197, 94, ${alpha})`  // green
-    };
-    return colors[variable] || `rgba(107, 114, 128, ${alpha})`;
-  };
+  }, [cityId, variable, timeRange, t, getVariableLabel, getVariableColor]);
 
   const options = {
     responsive: true,

@@ -24,6 +24,7 @@
  */
 
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 import {
   Cloud,
   CloudRain,
@@ -32,7 +33,6 @@ import {
   AlertCircle,
   Loader
 } from 'lucide-react'
-import { useAuth } from '../../../context/AuthContext'
 import { useLanguage } from '../../../context/useLanguage'
 import CitySelector from './CitySelector'
 import './weather.css'
@@ -96,9 +96,7 @@ function calculateFeelsLike(temp, windSpeed = 0, humidity = 50) {
 }
 
 function WeatherInfo({ onTemperatureChange, onCityChange }) {
-  const { user } = useAuth()
   const { t } = useLanguage()
-  const [cityId, setCityId] = useState(null)
   const [cityName, setCityName] = useState('')
   const [temperature, setTemperature] = useState(null)
   const [feelsLike, setFeelsLike] = useState(null)
@@ -113,7 +111,6 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
   const fetchWeatherData = async (id) => {
     if (!id) {
       // Si se pasa null/undefined, limpiar los datos mostrados
-      setCityId(null)
       setCityName('')
       setTemperature(null)
       setFeelsLike(null)
@@ -146,7 +143,6 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
         return
       }
       
-      setCityId(id)
       setCityName(data.city_name)
       setTemperature(data.temperature)
       setCondition(data.condition || t('weather.forecast'))
@@ -268,6 +264,11 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
       )}
     </div>
   )
+}
+
+WeatherInfo.propTypes = {
+  onTemperatureChange: PropTypes.func,
+  onCityChange: PropTypes.func,
 }
 
 export default WeatherInfo

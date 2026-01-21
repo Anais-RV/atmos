@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../../context/useLanguage";
 
@@ -50,7 +50,7 @@ function PasswordResetRequest() {
                 data = await res.json();
                 if (data && data.detail) text = data.detail;
                 else if (data && data.email) text = Array.isArray(data.email) ? data.email.join(" ") : data.email;
-            } catch (err) {
+            } catch {
                 // no JSON body
             }
 
