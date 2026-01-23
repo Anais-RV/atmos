@@ -31,6 +31,11 @@ body.dark-mode {
 
 /* 3. ESTILOS BASE DE LA PÁGINA (APLICACIÓN DE LAS VARIABLES) */
 body {
+    background-image: url('/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     background-color: var(--background-color);
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;

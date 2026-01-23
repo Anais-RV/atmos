@@ -14,45 +14,42 @@ import BasePageLayout from "../components/layout/BasePageLayout";
 import { getTemperatureColor } from "../styles/temperatureColors";
 import WeatherHistory from "../components/features/history/WeatherHistory";
 import { useLanguage } from "../context/useLanguage";
+import { useWeather } from "../context/WeatherContext";
 import "../components/features/history/history.css";
 
 function WeatherHistoryPage() {
   const { t } = useLanguage();
-  const temperatureC = 7; // igual que Dashboard/Charts para mantener coherencia
-  const containerColor = getTemperatureColor(temperatureC);
+  const { temperatureC } = useWeather();
 
   return (
     <BasePageLayout
       title=""
       description=""
-      containerColor={containerColor}
     >
       {/* MISMO LAYOUT QUE DASHBOARD (dos center-card) */}
-      <section className="dashboard-center">
-        {/* Tarjeta superior */}
-        <section className="center-card center-card-top">
-          <h2 className="center-card-title">{t('weatherHistory.title')}</h2>
-          <p className="center-card-text">
-            {t('weatherHistory.noAlerts')}
-          </p>
+      {/* Tarjeta superior */}
+      <section className="center-card center-card-top">
+        <h2 className="center-card-title">{t('weatherHistory.title')}</h2>
+        <p className="center-card-text">
+          {t('weatherHistory.noAlerts')}
+        </p>
 
-          {/* Zona donde irán las gráficas de historial */}
-          <div className="history-main-viewport">
-            <WeatherHistory />
-          </div>
-        </section>
+        {/* Zona donde irán las gráficas de historial */}
+        <div className="history-main-viewport">
+          <WeatherHistory />
+        </div>
+      </section>
 
-        {/* Tarjeta inferior */}
-        <section className="center-card center-card-bottom">
-          <h2 className="center-card-title">{t('weatherHistory.alertsSummary')}</h2>
-          <p className="center-card-text">
-            {t('weatherHistory.summaryDescription')}
-          </p>
+      {/* Tarjeta inferior */}
+      <section className="center-card center-card-bottom">
+        <h2 className="center-card-title">{t('weatherHistory.alertsSummary')}</h2>
+        <p className="center-card-text">
+          {t('weatherHistory.summaryDescription')}
+        </p>
 
-          <div className="history-summary-grid">
+        <div className="history-summary-grid">
 
-          </div>
-        </section>
+        </div>
       </section>
     </BasePageLayout>
   );

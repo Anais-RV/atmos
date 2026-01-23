@@ -97,7 +97,8 @@
     "temperatureUnit": "Temperatura (°C)",
     "humidityUnit": "Humedad (%)",
     "pressureUnit": "Presión (hPa)",
-    "windSpeedUnit": "Velocidad del viento (km/h)"
+    "windSpeedUnit": "Velocidad del viento (km/h)",
+    "narration_summary": "En {{city}}, el clima está {{cond}}. La temperatura es de {{temp}}{{unit}}, con una humedad del {{hum}}% y vientos de {{wind}} km/h."
   },
   "dashboard": {
     "title": "Panel de control",

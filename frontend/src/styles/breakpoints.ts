@@ -7,6 +7,7 @@ export const BREAKPOINTS = {
   laptop: 1280,
   desktop: 1440,
   wide: 1920,
+  tv: 2560,
 };
 
 export const MEDIA = {
@@ -17,4 +18,5 @@ export const MEDIA = {
   laptop: `@media (min-width: ${BREAKPOINTS.laptop}px)`,
   desktop: `@media (min-width: ${BREAKPOINTS.desktop}px)`,
   wide: `@media (min-width: ${BREAKPOINTS.wide}px)`,
+  tv: `@media (min-width: ${BREAKPOINTS.tv}px)`,
 };

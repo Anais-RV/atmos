@@ -29,42 +29,56 @@ const AppMain = styled.main`
     max-width: 1120px;
     padding: 2.5rem 2rem;
   }
+
+  ${MEDIA.wide} {
+    max-width: 1600px;
+    padding: 3rem 2.5rem;
+  }
+
+  ${MEDIA.tv} {
+    max-width: 2200px;
+    padding: 4rem 3rem;
+  }
 `;
 
 const Dashboard = styled.section`
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid #1e293b;
-  border-radius: 1.25rem;
-  padding: 1rem;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+  background: transparent; /* Changed from rgba(15, 23, 42, 0.7) */
+  backdrop-filter: none; /* Let children handle blur */
+  border: none; /* Let children handle borders */
+  padding: 0.5rem; /* Reduced from 1.25rem */
   width: 100%;
-  max-width: 460px;
+  max-width: 480px;
   margin: 0 auto;
-  min-height: 360px; /* alto base en móvil */
-  overflow-x: hidden; /* previene scroll horizontal */
-  overflow-y: visible; /* permite dropdowns verticales */
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Reduced from 1.5rem */
   box-sizing: border-box;
+  transition: all 0.3s ease;
 
   ${MEDIA.tablet} {
-    max-width: 720px;   /* más ancho en tablet */
-    padding: 1.25rem 1.5rem;
-    min-height: 420px;  /* un poco más alto */
+    max-width: 900px;
+    padding: 1rem;
   }
 
   ${MEDIA.laptop} {
-    max-width: 960px;   /* más ancho en portátil/escritorio */
-    padding: 1.5rem 2rem;
-    min-height: 480px;  /* más alto aún */
+    max-width: 1200px;
+  }
+
+  ${MEDIA.wide} {
+    max-width: 1600px;
+  }
+
+  ${MEDIA.tv} {
+    max-width: 2200px;
   }
 `;
 
 
-function BasePageLayout({ title, description, children, containerColor }) {
+function BasePageLayout({ title, description, children }) {
   return (
     <AppMain>
-      <Dashboard
-        style={containerColor ? { background: containerColor } : undefined}
-      >
+      <Dashboard>
         {(title || description) && (
           <header className="dashboard-header">
             {title && <h1>{title}</h1>}
@@ -82,7 +96,6 @@ BasePageLayout.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   children: PropTypes.node.isRequired,
-  containerColor: PropTypes.string,
 };
 
 export default BasePageLayout;

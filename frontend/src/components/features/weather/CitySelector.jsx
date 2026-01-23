@@ -35,7 +35,7 @@ function CitySelector({ onCitySelect }) {
         setCities([])
       }
     }
-    
+
     fetchCities()
   }, [t])
 
@@ -96,7 +96,7 @@ function CitySelector({ onCitySelect }) {
       setSelectedCity(null)
       setSearchTerm('')
     }
-    
+
     // Luego seleccionamos la nueva ciudad
     setTimeout(() => {
       setSelectedCity(city)
@@ -111,6 +111,19 @@ function CitySelector({ onCitySelect }) {
     }, 0)
   }
 
+  /**
+   * Maneja el teclado para seleccionar con Enter
+   */
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      if (filteredCities.length > 0) {
+        handleSelectCity(filteredCities[0])
+      }
+    } else if (e.key === 'Escape') {
+      setIsOpen(false)
+    }
+  }
+
   return (
     <div className="city-selector-wrapper" ref={wrapperRef}>
       <div className="city-selector-container">
@@ -122,7 +135,11 @@ function CitySelector({ onCitySelect }) {
             className="city-search-input"
             placeholder={t('weather.searchCity')}
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              if (!isOpen) setIsOpen(true)
+            }}
+            onKeyDown={handleKeyDown}
             readOnly={!!selectedRegion}
             title={selectedRegion ? t('weather.citySelector') + ': ' + selectedRegion + ' — ' + t('weather.selectYourCity') : t('weather.searchCity')}
             onFocus={() => setIsOpen(true)}
@@ -197,7 +214,7 @@ function CitySelector({ onCitySelect }) {
           </div>
         )}
       </div>
-      
+
 
       {/* Ciudad seleccionada mostrada como tag */}
       {selectedCity && (

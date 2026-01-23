@@ -23,6 +23,8 @@ class CurrentWeatherSerializer(serializers.Serializer):
     city_id = serializers.IntegerField()
     city_name = serializers.CharField()
     temperature = serializers.FloatField()
+    humidity = serializers.FloatField(required=False)
+    wind_speed = serializers.FloatField(required=False)
     timestamp = serializers.DateTimeField()
     condition = serializers.CharField(required=False)
     sunrise = serializers.DateTimeField(required=False)

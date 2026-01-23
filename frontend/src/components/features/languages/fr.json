@@ -97,7 +97,8 @@
     "temperatureUnit": "Température (°C)",
     "humidityUnit": "Humidité (%)",
     "pressureUnit": "Pression (hPa)",
-    "windSpeedUnit": "Vitesse du vent (km/h)"
+    "windSpeedUnit": "Vitesse du vent (km/h)",
+    "narration_summary": "À {{city}}, le temps est {{cond}}. La température est de {{temp}}{{unit}}, avec une humidité de {{hum}}% et des vents à {{wind}} km/h."
   },
   "dashboard": {
     "title": "Tableau de bord",

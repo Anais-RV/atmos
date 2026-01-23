@@ -10,6 +10,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import { PreferencesProvider } from "./context/PreferencesContext";
 import { LanguageProvider } from "./context/LanguageContext";
+import { WeatherProvider } from "./context/WeatherContext";
+import { AccessibilityProvider } from "./context/AccessibilityContext";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
@@ -31,31 +33,35 @@ function App() {
   return (
     <ThemeProvider>
       <PreferencesProvider>
-        <LanguageProvider>
-          <BrowserRouter>
-            <div className="app">
-              <Navbar />
+        <WeatherProvider>
+          <AccessibilityProvider>
+            <LanguageProvider>
+              <BrowserRouter>
+                <div className="app">
+                  <Navbar />
 
-            <Routes>
-              <Route path="/" element={<DashboardPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/user-panel" element={<UserPanelPage />} />
-              <Route path="/data-protection" element={<DataProtectionPage />} />
-              <Route path="/charts" element={<ForecastChartPage />} />
-              <Route path="/history" element={<WeatherHistoryPage />} />
-              <Route path="/forecast" element={<ForecastPage />} />
-              <Route path="/forecast-extended" element={<ForecastExtendedPage />} />
-              <Route path="/password-reset" element={<PasswordResetPage />} />
-              <Route path="/password-reset/:token" element={<PasswordResetPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/tags" element={<TagsPage />} />
-            </Routes>
+                  <Routes>
+                    <Route path="/" element={<DashboardPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/user-panel" element={<UserPanelPage />} />
+                    <Route path="/data-protection" element={<DataProtectionPage />} />
+                    <Route path="/charts" element={<ForecastChartPage />} />
+                    <Route path="/history" element={<WeatherHistoryPage />} />
+                    <Route path="/forecast" element={<ForecastPage />} />
+                    <Route path="/forecast-extended" element={<ForecastExtendedPage />} />
+                    <Route path="/password-reset" element={<PasswordResetPage />} />
+                    <Route path="/password-reset/:token" element={<PasswordResetPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/tags" element={<TagsPage />} />
+                  </Routes>
 
-            <Footer />
-            </div>
-          </BrowserRouter>
-        </LanguageProvider>
+                  <Footer />
+                </div>
+              </BrowserRouter>
+            </LanguageProvider>
+          </AccessibilityProvider>
+        </WeatherProvider>
       </PreferencesProvider>
     </ThemeProvider>
   );

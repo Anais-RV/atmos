@@ -69,10 +69,14 @@ export const LanguageProvider = ({ children }) => {
   }, []);
 
   // Translation function - safely navigate nested objects
-  const t = useCallback((key) => {
+  const t = useCallback((key, params = {}) => {
     const keys = key.split('.');
     // prefer live translations state; fallback to static TRANSLATIONS for the current language
     let current = translations && Object.keys(translations).length ? translations : (TRANSLATIONS[language] || TRANSLATIONS.es);
+
+    let resolved = null;
+    let found = false;
+
     for (const k of keys) {
       if (current && typeof current === 'object' && k in current) {
         current = current[k];
@@ -90,16 +94,38 @@ export const LanguageProvider = ({ children }) => {
         };
 
         const fromEn = resolveFrom(english);
-        if (fromEn) return fromEn;
+        if (fromEn) {
+          resolved = fromEn;
+          found = true;
+          break;
+        }
         const fromEs = resolveFrom(spanish);
-        if (fromEs) return fromEs;
+        if (fromEs) {
+          resolved = fromEs;
+          found = true;
+          break;
+        }
 
         // Return the key if translation not found anywhere
         console.warn(`Missing translation for key '${key}' (current language: ${language})`);
         return key;
       }
     }
-    return typeof current === 'string' ? current : key;
+
+    if (!found) {
+      resolved = typeof current === 'string' ? current : key;
+    }
+
+    // Handle interpolation if params are provided
+    if (resolved && typeof resolved === 'string') {
+      let interpolated = resolved;
+      Object.entries(params).forEach(([k, v]) => {
+        interpolated = interpolated.replace(new RegExp(`{{${k}}}`, 'g'), v);
+      });
+      return interpolated;
+    }
+
+    return resolved || key;
   }, [translations, language]);
 
   // Set language and save to localStorage and backend

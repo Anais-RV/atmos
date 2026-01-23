@@ -4,25 +4,36 @@
 
 /* Tema OSCURO (por defecto) */
 body.dark-mode {
-  --bg-primary: #020617;          /* Fondo principal muy oscuro */
-  --bg-secondary: #0f172a;        /* Fondo secundario (cards) */
-  --bg-tertiary: #1e293b;         /* Fondo terciario */
-  
-  --text-primary: #e5e7eb;        /* Texto principal */
-  --text-secondary: #9ca3af;      /* Texto secundario */
-  --text-tertiary: #cbd5f5;       /* Texto terciario */
-  
-  --border-color: #1e293b;        /* Borde principal */
-  --border-light: #374151;        /* Borde más claro */
-  
-  --accent-primary: #38bdf8;      /* Azul claro (primary accent) */
-  --accent-success: #16a34a;      /* Verde */
-  --accent-warning: #f97316;      /* Naranja */
-  
+  --bg-primary: #020617;
+  /* Fondo principal muy oscuro */
+  --bg-secondary: #0f172a;
+  /* Fondo secundario (cards) */
+  --bg-tertiary: #1e293b;
+  /* Fondo terciario */
+
+  --text-primary: #e5e7eb;
+  /* Texto principal */
+  --text-secondary: #9ca3af;
+  /* Texto secundario */
+  --text-tertiary: #cbd5f5;
+  /* Texto terciario */
+
+  --border-color: #1e293b;
+  /* Borde principal */
+  --border-light: #374151;
+  /* Borde más claro */
+
+  --accent-primary: #38bdf8;
+  /* Azul claro (primary accent) */
+  --accent-success: #16a34a;
+  /* Verde */
+  --accent-warning: #f97316;
+  /* Naranja */
+
   --shadow-light: 0 4px 8px rgba(0, 0, 0, 0.3);
   --shadow-medium: 0 16px 30px rgba(15, 23, 42, 0.9);
   --shadow-heavy: 0 18px 40px rgba(15, 23, 42, 0.9);
-  
+
   --button-primary-bg: #81b0ff;
   --button-primary-text: #000000;
   --button-secondary-bg: rgba(56, 189, 248, 0.12);
@@ -31,29 +42,93 @@ body.dark-mode {
 
 /* Tema CLARO */
 body.light-mode {
-  --bg-primary: #f8f9fa;          /* Fondo principal claro */
-  --bg-secondary: #ffffff;        /* Fondo secundario (cards) */
-  --bg-tertiary: #f2f2f7;         /* Fondo terciario */
-  
-  --text-primary: #1a202c;        /* Texto principal oscuro */
-  --text-secondary: #4a5568;      /* Texto secundario */
-  --text-tertiary: #2d3748;       /* Texto terciario */
-  
-  --border-color: #e2e8f0;        /* Borde principal */
-  --border-light: #cbd5e1;        /* Borde más claro */
-  
-  --accent-primary: #3b82f6;      /* Azul (primary accent) */
-  --accent-success: #22c55e;      /* Verde */
-  --accent-warning: #f97316;      /* Naranja */
-  
+  --bg-primary: #f8f9fa;
+  /* Fondo principal claro */
+  --bg-secondary: #ffffff;
+  /* Fondo secundario (cards) */
+  --bg-tertiary: #f2f2f7;
+  /* Fondo terciario */
+
+  --text-primary: #1a202c;
+  /* Texto principal oscuro */
+  --text-secondary: #4a5568;
+  /* Texto secundario */
+  --text-tertiary: #2d3748;
+  /* Texto terciario */
+
+  --border-color: #e2e8f0;
+  /* Borde principal */
+  --border-light: #cbd5e1;
+  /* Borde más claro */
+
+  --accent-primary: #3b82f6;
+  /* Azul (primary accent) */
+  --accent-success: #22c55e;
+  /* Verde */
+  --accent-warning: #f97316;
+  /* Naranja */
+
   --shadow-light: 0 4px 8px rgba(0, 0, 0, 0.1);
   --shadow-medium: 0 16px 30px rgba(0, 0, 0, 0.08);
   --shadow-heavy: 0 18px 40px rgba(0, 0, 0, 0.1);
-  
+
   --button-primary-bg: #3b82f6;
   --button-primary-text: #ffffff;
   --button-secondary-bg: rgba(59, 130, 246, 0.1);
   --button-secondary-text: #3b82f6;
+}
+
+/* ACCESSIBILLITY: HIGH CONTRAST */
+body.high-contrast {
+  --bg-primary: #000000 !important;
+  --bg-secondary: #000000 !important;
+  --bg-tertiary: #111111 !important;
+  --text-primary: #ffffff !important;
+  --text-secondary: #ffff00 !important;
+  /* Yellow for high visibility */
+  --text-tertiary: #ffffff !important;
+  --border-color: #ffffff !important;
+  --border-light: #ffffff !important;
+  --accent-primary: #ffff00 !important;
+  --button-primary-bg: #ffffff !important;
+  --button-primary-text: #000000 !important;
+  background-image: none !important;
+  /* Remove background images for readability */
+}
+
+body.high-contrast .center-card,
+body.high-contrast .weather-info-container,
+body.high-contrast .panel,
+body.high-contrast .navbar,
+body.high-contrast .footer-nav {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  backdrop-filter: none !important;
+}
+
+/* ACCESSIBILITY: SIMPLIFIED MODE */
+body.simplified-mode {
+  font-size: 1.25rem !important;
+}
+
+body.simplified-mode .center-card,
+body.simplified-mode .weather-info-container {
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+  max-width: 600px !important;
+  /* Larger display */
+}
+
+body.simplified-mode .navbar-brand-sub,
+body.simplified-mode .footer-info-bar {
+  display: none !important;
+  /* Simplify UI */
+}
+
+body.simplified-mode * {
+  animation: none !important;
+  /* Stop all animations */
 }
 
 /* =========================
@@ -71,11 +146,18 @@ html {
 }
 
 body {
+  background-image: url('/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.5;
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow: hidden;
+  height: 100vh;
 }
 
 /* =========================
@@ -84,12 +166,13 @@ body {
 
 /* Layout general de la app */
 .app {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg-primary);
+  background-color: transparent;
   color: var(--text-primary);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow: hidden;
 }
 
 /* Contenedor principal (entre navbar y footer) */
@@ -98,9 +181,15 @@ body {
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  padding-top: 1.5rem;
+  padding-top: 0.5rem;
+  /* Reduced */
   padding-inline: 1rem;
-  padding-bottom: 0.6rem;
+  padding-bottom: 3.5rem;
+  /* Reduced from 4.5rem */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
 }
 
 /* =========================
@@ -114,9 +203,12 @@ body {
   border-radius: 1.25rem;
   padding: 1rem;
   box-shadow: var(--shadow-heavy);
-  max-width: 460px;
+  max-width: 420px;
+  /* Reduced from 460px */
   margin: 0 auto;
   transition: background-color 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
+  /* Contain everything */
 }
 
 .dashboard-header h1 {
@@ -175,12 +267,6 @@ body {
   border-color: var(--accent-primary);
 }
 
-.panel-current {
-}
-
-.panel-details {
-}
-
 .panel-forecast-main {
   min-height: 220px;
 }
@@ -197,32 +283,55 @@ body {
   margin-top: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
   align-items: center;
+  gap: 0.5rem;
+  /* Reduced from 1.25rem */
+  width: 100%;
+}
+
+/* Force single column even on large screens for a "compact and centralized" look */
+@media (min-width: 900px) {
+  .dashboard-center {
+    flex-direction: column;
+  }
 }
 
 /* Tarjetas centrales */
 .center-card {
   width: 100%;
-  max-width: 100%; /* respeta ancho del contenedor */
-  aspect-ratio: 1 / 1;
-  border-radius: 1.25rem;
-  border: 1px solid var(--border-light);
-  background-color: var(--bg-secondary);
-  padding: 1rem;
+  max-width: 400px;
+  /* Further reduced from 420px */
+  margin: 0 auto;
+  min-height: auto;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(15, 23, 42, 0.45);
+  /* Glass effect */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 0.75rem;
+  /* Reduced from 1rem */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   text-align: center;
-  box-shadow: var(--shadow-medium);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
   position: relative;
-  z-index: 1;
   box-sizing: border-box;
+  overflow: hidden;
+  /* Contain everything */
 }
 
-.center-card, .center-card * {
+.center-card:hover {
+  transform: translateY(-5px);
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.center-card,
+.center-card * {
   transition: color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
 }
 
@@ -237,23 +346,35 @@ body {
 
 .center-card-top {
   background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), transparent);
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
+  /* Reduced from 1rem */
+}
+
+.center-card-middle {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), transparent);
+  margin-top: 0.5rem;
+  /* Reduced from 1rem */
 }
 
 .center-card-bottom {
   background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), transparent);
-  margin-bottom: 1.5rem;
+  margin-top: 0.5rem;
+  /* Reduced from 1rem */
 }
 
 /* Smaller variant for center-card when using the full tag manager */
 .center-card-full {
-  max-width: 640px;         /* narrower than default, more compact */
-  aspect-ratio: 5 / 4;      /* slightly taller than 4/3 but smaller overall */
-  padding: 0.6rem;         /* smaller padding for compact look */
+  max-width: 640px;
+  /* narrower than default, more compact */
+  aspect-ratio: 5 / 4;
+  /* slightly taller than 4/3 but smaller overall */
+  padding: 0.6rem;
+  /* smaller padding for compact look */
 }
 
 /* Asegurar que cards estén detrás del menú hamburguesa */
 @media (max-width: 767px) {
+
   .center-card-top,
   .center-card-bottom {
     margin-top: 1rem;
@@ -463,12 +584,165 @@ body {
    Footer
    ========================= */
 
-.footer {
+.footer-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  border-top: 1px solid var(--border-color);
-  background-color: var(--bg-secondary);
-  margin-top: 0;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  pointer-events: none;
+  /* Let clicks pass to content unless on specific parts */
+}
+
+.footer-nav {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+  /* Reduced */
+  background: rgba(15, 23, 42, 0.4);
+  /* Glass navigation */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: auto;
+}
+
+.footer-info {
+  background: rgba(15, 23, 42, 0.6);
+  /* More transparent */
+  border-top: 1px solid var(--accent-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+}
+
+.footer-info-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.footer-info-text {
+  margin: 0;
+}
+
+.footer-info-chevron {
+  font-size: 0.7rem;
+  transition: transform 0.3s ease;
+  color: var(--accent-primary);
+}
+
+.footer-info-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.footer-info-content {
+  overflow-y: auto;
+  max-height: 80vh;
+  padding-bottom: 2rem;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+
+  to {
+    height: auto;
+    opacity: 1;
+  }
+}
+
+.footer-info--expanded {
+  background-color: rgba(15, 23, 42, 0.98);
+  backdrop-filter: blur(20px);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.credits-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+  text-align: center;
+}
+
+.credits-message {
+  text-align: left;
+  max-width: 700px;
+  margin: 0 auto;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.credits-message p {
+  margin-bottom: 1rem;
+}
+
+.credits-image {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  margin-bottom: 2rem;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.credits-image:hover {
+  transform: scale(1.05);
+}
+
+.credits-highlight {
+  color: var(--accent-primary);
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 1.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.credits-thanks {
+  background: rgba(56, 189, 248, 0.1);
+  border-left: 4px solid var(--accent-primary);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-style: italic;
+}
+
+.credits-thanks strong {
+  color: var(--accent-primary);
+  font-size: 1.1rem;
+}
+
+.credits-closing {
+  margin-top: 1.5rem;
+  font-weight: 500;
+  text-align: right;
+  color: var(--text-secondary);
 }
 
 .footer-inner {
@@ -563,9 +837,11 @@ body {
 @media (min-width: 768px) {
   .app-main {
     max-width: 960px;
-    padding-top: 2rem;
+    padding-top: 1rem;
+    /* Reduced from 2rem */
     padding-inline: 1.5rem;
-    padding-bottom: 1.1rem;
+    padding-bottom: 1rem;
+    /* Reduced from 1.1rem */
   }
 
   .dashboard,
@@ -573,27 +849,6 @@ body {
     max-width: 100%;
     display: flex;
     flex-direction: column;
-  }
-
-  .dashboard-center {
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 1.25rem;
-    width: 100%;
-  }
-
-  .center-card {
-    flex: 1;
-    max-width: none;
-    aspect-ratio: 4 / 5;
-    padding: 1.5rem;
-  }
-
-  .center-card-top,
-  .center-card-bottom {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
   }
 }
 
@@ -603,7 +858,7 @@ body {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .center-card {
     max-width: 500px;
   }
@@ -616,4 +871,49 @@ body {
   }
 }
 
+/* Pantallas extra anchas / Wide */
+@media (min-width: 1920px) {
+  .app-main {
+    max-width: 1600px;
+    padding-top: 3rem;
+  }
 
+  .navbar-inner {
+    max-width: 1600px;
+  }
+
+  .dashboard,
+  .dashboard-card {
+    max-width: 1400px;
+  }
+}
+
+/* Televisores y pantallas gigantes / TV */
+@media (min-width: 2560px) {
+  .app-main {
+    max-width: 2200px;
+    padding-top: 5rem;
+  }
+
+  .navbar-inner {
+    max-width: 2200px;
+  }
+
+  .dashboard,
+  .dashboard-card {
+    max-width: 1800px;
+  }
+
+  body {
+    font-size: 18px;
+    /* Texto un poco más grande para TVs */
+  }
+
+  .weather-city-name {
+    font-size: 2.5rem;
+  }
+
+  .temp-value {
+    font-size: 6rem;
+  }
+}

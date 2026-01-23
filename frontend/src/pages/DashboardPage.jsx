@@ -10,27 +10,25 @@
 
 // frontend/src/pages/DashboardPage.jsx
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BasePageLayout from "../components/layout/BasePageLayout";
 import WeatherInfo from "../components/features/weather/WeatherInfo";
 import SunriseSunset from "../components/features/weather/sunrise/SunriseSunset";
 import { getTemperatureColor } from "../styles/temperatureColors";
 import { useLanguage } from "../context/useLanguage";
+import { useWeather } from "../context/WeatherContext";
 
 function DashboardPage() {
   const { t } = useLanguage();
-  const [temperatureC, setTemperatureC] = useState(15);
-  const [selectedCity, setSelectedCity] = useState(null);
-  const containerColor = getTemperatureColor(temperatureC);
+  const { selectedCity, setSelectedCity, temperatureC, setTemperatureC } = useWeather();
 
   return (
     <BasePageLayout
       title=""
       description=""
-      containerColor={containerColor}
     >
       <section className="center-card center-card-top">
-        <WeatherInfo 
+        <WeatherInfo
           onTemperatureChange={setTemperatureC}
           onCityChange={setSelectedCity}
         />

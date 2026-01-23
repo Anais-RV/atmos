@@ -108,6 +108,8 @@ class CurrentWeatherView(APIView):
             "city_id": city.id,
             "city_name": city.name,
             "temperature": weather_data['temperature'],
+            "humidity": weather_data.get('humidity'),
+            "wind_speed": weather_data.get('wind_speed'),
             "timestamp": weather_data['timestamp'],
             "condition": weather_data.get('condition', 'Parcialmente nublado'),
             "sunrise": sun_data['sunrise'],

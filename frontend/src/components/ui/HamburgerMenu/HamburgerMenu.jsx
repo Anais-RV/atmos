@@ -1,19 +1,20 @@
 // frontend/src/components/ui/HamburgerMenu/HamburgerMenu.jsx
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { 
-  User, 
-  Sun, 
-  Moon, 
-  Globe, 
+import {
+  User,
+  Sun,
+  Moon,
+  Globe,
   Accessibility,
   Eye,
   Ear,
-  UserX 
+  UserX
 } from "lucide-react";
 import "./HamburgerMenu.css";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { useLanguage } from "../../../context/useLanguage";
+import { useAccessibility } from "../../../context/AccessibilityContext";
 
 function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,6 +23,11 @@ function HamburgerMenu() {
 
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const { language, setLanguage, t } = useLanguage();
+  const {
+    highContrast, toggleHighContrast,
+    textNarration, toggleTextNarration,
+    simplifiedMode, toggleSimplifiedMode
+  } = useAccessibility();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = () => {
@@ -111,8 +117,8 @@ function HamburgerMenu() {
             {isLangOpen && (
               <ul className="hamburger-submenu">
                 <li>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => {
                       setLanguage('es');
                       closeMenu();
@@ -123,8 +129,8 @@ function HamburgerMenu() {
                   </button>
                 </li>
                 <li>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => {
                       setLanguage('en');
                       closeMenu();
@@ -135,8 +141,8 @@ function HamburgerMenu() {
                   </button>
                 </li>
                 <li>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => {
                       setLanguage('pt');
                       closeMenu();
@@ -147,8 +153,8 @@ function HamburgerMenu() {
                   </button>
                 </li>
                 <li>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => {
                       setLanguage('pt_BR');
                       closeMenu();
@@ -159,8 +165,8 @@ function HamburgerMenu() {
                   </button>
                 </li>
                 <li>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => {
                       setLanguage('ru');
                       closeMenu();
@@ -203,9 +209,42 @@ function HamburgerMenu() {
 
             {isAccOpen && (
               <ul className="hamburger-submenu">
-                <li><button type="button" onClick={closeMenu}><Eye size={16} /> {t('hamburger.visualDisability')}</button></li>
-                <li><button type="button" onClick={closeMenu}><Ear size={16} /> {t('hamburger.subtitles')}</button></li>
-                <li><button type="button" onClick={closeMenu}><UserX size={16} /> {t('hamburger.deafBlind')}</button></li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleHighContrast();
+                      closeMenu();
+                    }}
+                    className={highContrast ? 'active' : ''}
+                  >
+                    <Eye size={16} /> {t('hamburger.visualDisability')}
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleTextNarration();
+                      closeMenu();
+                    }}
+                    className={textNarration ? 'active' : ''}
+                  >
+                    <Ear size={16} /> {t('hamburger.subtitles')}
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleSimplifiedMode();
+                      closeMenu();
+                    }}
+                    className={simplifiedMode ? 'active' : ''}
+                  >
+                    <UserX size={16} /> {t('hamburger.deafBlind')}
+                  </button>
+                </li>
               </ul>
             )}
           </li>

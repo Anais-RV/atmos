@@ -31,9 +31,13 @@ import {
   Sun,
   CloudSnow,
   AlertCircle,
-  Loader
+  Loader,
+  Droplets,
+  Wind
 } from 'lucide-react'
 import { useLanguage } from '../../../context/useLanguage'
+import { useWeather } from '../../../context/WeatherContext'
+import { useAccessibility } from '../../../context/AccessibilityContext'
 import CitySelector from './CitySelector'
 import './weather.css'
 
@@ -43,7 +47,7 @@ import './weather.css'
  */
 function getWeatherIcon(condition, temperature) {
   const lowerCondition = condition?.toLowerCase() || ''
-  
+
   // Mapeo básico de condiciones
   if (lowerCondition.includes('rain') || lowerCondition.includes('lluvia')) {
     return <CloudRain className="weather-icon weather-icon-rain" />
@@ -57,7 +61,7 @@ function getWeatherIcon(condition, temperature) {
   if (lowerCondition.includes('sun') || lowerCondition.includes('sol') || lowerCondition.includes('clear')) {
     return <Sun className="weather-icon weather-icon-sun" />
   }
-  
+
   // Fallback: inferir del rango de temperatura
   if (temperature > 25) {
     return <Sun className="weather-icon weather-icon-sun" />
@@ -65,7 +69,7 @@ function getWeatherIcon(condition, temperature) {
   if (temperature < 0) {
     return <CloudSnow className="weather-icon weather-icon-snow" />
   }
-  
+
   return <Cloud className="weather-icon weather-icon-cloud" />
 }
 
@@ -79,28 +83,31 @@ function calculateFeelsLike(temp, windSpeed = 0, humidity = 50) {
     const humidityEffect = (humidity - 50) * 0.1
     return Math.round((temp + humidityEffect) * 10) / 10
   }
-  
+
   // Wind chill para temperaturas bajas (< 10°C)
   if (temp < 10) {
     const windChill = 13.12 + 0.6215 * temp - 11.37 * Math.pow(windSpeed, 0.16) + 0.3965 * temp * Math.pow(windSpeed, 0.16)
     return Math.round(windChill * 10) / 10
   }
-  
+
   // Heat index para temperaturas altas (> 26°C)
   if (temp > 26) {
     const heatIndex = -42.379 + 2.04901523 * temp + 10.14333127 * humidity - 0.22475541 * temp * humidity
     return Math.round(heatIndex * 10) / 10
   }
-  
+
   return temp
 }
 
 function WeatherInfo({ onTemperatureChange, onCityChange }) {
   const { t } = useLanguage()
+  const { setSelectedCity, setTemperatureC } = useWeather()
   const [cityName, setCityName] = useState('')
   const [temperature, setTemperature] = useState(null)
   const [feelsLike, setFeelsLike] = useState(null)
   const [condition, setCondition] = useState('')
+  const [humidity, setHumidity] = useState(null)
+  const [windSpeed, setWindSpeed] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [isCelsius, setIsCelsius] = useState(true)
@@ -115,7 +122,12 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
       setTemperature(null)
       setFeelsLike(null)
       setCondition('')
+      setHumidity(null)
+      setWindSpeed(null)
       setError(null)
+      // Actualizar estado global
+      setSelectedCity(null)
+      setTemperatureC(15)
       // Notificar al padre para actualizar componentes dependientes (ej. SunriseSunset)
       if (onCityChange) onCityChange(null)
       return
@@ -126,13 +138,13 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
 
     try {
       const response = await fetch(`http://localhost:8000/api/weather/current/?city_id=${id}`)
-      
+
       if (!response.ok) {
         throw new Error(`Error ${response.status}`)
       }
-      
+
       const data = await response.json()
-      
+
       // Validar que tengamos datos de temperatura
       if (!data.temperature && data.temperature !== 0) {
         setError(t('weather.noData'))
@@ -142,21 +154,26 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
         setCityName(data.city_name || '')
         return
       }
-      
+
       setCityName(data.city_name)
       setTemperature(data.temperature)
       setCondition(data.condition || t('weather.forecast'))
-      
-      // Notificar cambio de temperatura al padre para actualizar color de fondo
+      setHumidity(data.humidity)
+      setWindSpeed(data.wind_speed)
+
+      // Notificar cambio de temperatura al padre y globalmente
       if (onTemperatureChange) {
         onTemperatureChange(data.temperature)
       }
-      
-      // Notificar cambio de ciudad al padre (para SunriseSunset)
+      setTemperatureC(data.temperature)
+
+      // Notificar cambio de ciudad al padre y globalmente
+      const cityData = { id, name: data.city_name }
       if (onCityChange) {
-        onCityChange({ id, name: data.city_name })
+        onCityChange(cityData)
       }
-      
+      setSelectedCity(cityData)
+
       // Calcular sensación térmica
       const feelsLikeTemp = calculateFeelsLike(
         data.temperature,
@@ -185,7 +202,7 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
    */
   const convertTemperature = (celsius) => {
     if (celsius === null) return null
-    return isCelsius ? celsius : Math.round((celsius * 9/5 + 32) * 10) / 10
+    return isCelsius ? celsius : Math.round((celsius * 9 / 5 + 32) * 10) / 10
   }
 
   const displayTemp = convertTemperature(temperature)
@@ -221,7 +238,7 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
           {/* Encabezado con nombre de ciudad */}
           <div className="weather-city-header">
             <h3 className="weather-city-name">{cityName}</h3>
-            <button 
+            <button
               className="temp-toggle"
               onClick={() => setIsCelsius(!isCelsius)}
               title={t('weather.temperature')}
@@ -252,6 +269,52 @@ function WeatherInfo({ onTemperatureChange, onCityChange }) {
               <span className="feels-like-unit">{tempUnit}</span>
             </p>
           </div>
+
+          {/* Métricas adicionales: Humedad y Viento */}
+          <div className="weather-extra-metrics">
+            <div className="metric-item">
+              <Droplets className="metric-icon humidity-icon" size={20} />
+              <div className="metric-details">
+                <span className="metric-label">{t('weather.humidity') || 'Humedad'}</span>
+                <span className="metric-value">{humidity}%</span>
+              </div>
+            </div>
+            <div className="metric-item">
+              <Wind className="metric-icon wind-icon" size={20} />
+              <div className="metric-details">
+                <span className="metric-label">{t('weather.wind') || 'Viento'}</span>
+                <span className="metric-value">{windSpeed} km/h</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ACCESSIBILITY: Text Narration (Subtitles ST) */}
+          {useAccessibility().textNarration && (
+            <div className="weather-narration-box" style={{
+              marginTop: '0.5rem',
+              padding: '0.75rem',
+              background: 'rgba(56, 189, 248, 0.1)',
+              borderRadius: '0.75rem',
+              border: '1px solid var(--accent-primary)',
+              textAlign: 'left',
+              fontSize: '0.85rem',
+              lineHeight: '1.3'
+            }}>
+              <p style={{ fontWeight: '600', marginBottom: '0.2rem', color: 'var(--accent-primary)', fontSize: '0.8rem' }}>
+                📢 {t('hamburger.subtitles')}:
+              </p>
+              <p>
+                {t('weather.narration_summary', {
+                  city: cityName,
+                  temp: displayTemp,
+                  unit: tempUnit,
+                  cond: condition,
+                  hum: humidity,
+                  wind: windSpeed
+                }) || `En ${cityName}, el clima está ${condition}. La temperatura es de ${displayTemp}${tempUnit}, con una humedad del ${humidity}% y vientos de ${windSpeed} km/h.`}
+              </p>
+            </div>
+          )}
         </div>
       )}
 

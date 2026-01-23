@@ -97,7 +97,8 @@
     "temperatureUnit": "Temperatura (°C)",
     "humidityUnit": "Umidade (%)",
     "pressureUnit": "Pressão (hPa)",
-    "windSpeedUnit": "Velocidade do vento (km/h)"
+    "windSpeedUnit": "Velocidade do vento (km/h)",
+    "narration_summary": "Em {{city}}, o tempo está {{cond}}. A temperatura é de {{temp}}{{unit}}, com umidade de {{hum}}% e ventos de {{wind}} km/h."
   },
   "dashboard": {
     "title": "Painel",
@@ -165,7 +166,8 @@
     "wind": "Vento",
     "last24h": "Últimas 24h",
     "last7days": "Últimos 7 dias",
-    "lastMonth": "Último mês",    "chartsDescription": "Visualize as previsões e séries temporais geradas por ATMOS.",
+    "lastMonth": "Último mês",
+    "chartsDescription": "Visualize as previsões e séries temporais geradas por ATMOS.",
     "chartsSummary": "Resumo de gráficos",
     "byPeriod": "Acesse visualizações por período temporal.",
     "chartsDay": "Gráficos do dia",

@@ -97,7 +97,8 @@
     "temperatureUnit": "Температура (°C)",
     "humidityUnit": "Влажность (%)",
     "pressureUnit": "Давление (гПа)",
-    "windSpeedUnit": "Скорость ветра (км/ч)"
+    "windSpeedUnit": "Скорость ветра (км/ч)",
+    "narration_summary": "В {{city}} погода {{cond}}. Температура {{temp}}{{unit}}, влажность {{hum}}%, скорость ветра {{wind}} км/ч."
   },
   "dashboard": {
     "title": "Панель управления",
